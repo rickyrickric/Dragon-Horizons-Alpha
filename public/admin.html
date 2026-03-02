@@ -36,7 +36,7 @@
   </div>
 
   <!-- ── Admin Panel (shown after login) ───────────────────── -->
-  <div id="adminPanel" class="admin-panel">
+  <div id="adminPanel" class="admin-panel" style="display:none;">
 
     <div class="ch rv in" style="margin-bottom:36px;">
       <div class="ch-eyebrow">Control Room</div>
@@ -143,7 +143,7 @@
           al.classList.add('visible');
         } else {
           document.getElementById('loginSection').style.display = 'none';
-          document.getElementById('adminPanel').classList.add('visible');
+          document.getElementById('adminPanel').style.display = 'block';
           r.json().then(d => renderApplications(d.applications || []));
           loadStats();
           loadConfig();
@@ -158,8 +158,8 @@
 
   function logout() {
     token = '';
-    document.getElementById('loginSection').style.display = '';
-    document.getElementById('adminPanel').classList.remove('visible');
+    document.getElementById('loginSection').style.display = 'block';
+    document.getElementById('adminPanel').style.display = 'none';
     document.getElementById('passwordInput').value = '';
   }
 
