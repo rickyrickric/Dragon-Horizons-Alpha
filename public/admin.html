@@ -6,14 +6,364 @@
 <title>Dragon Horizons — Admin</title>
 <link rel="stylesheet" href="style.css">
 <style>
-  /* Fix: ensure login box is always visible on load */
-  .admin-login {
-    opacity: 1 !important;
-    transform: none !important;
-  }
-  /* Fix: tab panels hidden by default */
-  .tab-panel { display: none; }
-  .tab-panel.active { display: block; }
+/* ═══════════════════════════════════════════
+   LOGIN SCREEN
+═══════════════════════════════════════════ */
+.login-screen {
+  min-height: 85vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.login-box {
+  width: 100%;
+  max-width: 420px;
+  background: var(--bg2);
+  border: 1px solid rgba(212,168,83,.2);
+  padding: 52px 40px;
+  text-align: center;
+  position: relative;
+}
+.login-box::before,
+.login-box::after { content:''; position:absolute; width:16px; height:16px; }
+.login-box::before { top:-1px; left:-1px; border-top:2px solid var(--gold-d); border-left:2px solid var(--gold-d); }
+.login-box::after  { bottom:-1px; right:-1px; border-bottom:2px solid var(--gold-d); border-right:2px solid var(--gold-d); }
+.login-dragon { font-size:3rem; margin-bottom:20px; }
+.login-title  {
+  font-family:var(--fc); font-size:1.5rem; font-weight:900;
+  color:var(--gold-l); letter-spacing:.08em; margin-bottom:6px;
+}
+.login-sub {
+  font-family:var(--fc); font-size:.48rem; letter-spacing:.4em;
+  text-transform:uppercase; color:var(--parch-d); margin-bottom:28px;
+}
+.login-rule {
+  width:60px; height:1px; margin:0 auto 32px;
+  background:linear-gradient(90deg,transparent,var(--gold-d),transparent);
+}
+.login-input {
+  width:100%; background:rgba(10,6,6,.9);
+  border:1px solid rgba(212,168,83,.2);
+  color:var(--parch); font-family:var(--fi); font-size:1rem;
+  padding:13px 16px; outline:none; margin-bottom:14px;
+  transition:border-color .2s; text-align:center; letter-spacing:.1em;
+}
+.login-input:focus { border-color:var(--gold-d); }
+.login-input::placeholder { color:var(--parch-d); opacity:.4; letter-spacing:.05em; }
+.login-btn {
+  width:100%; padding:14px;
+  font-family:var(--fc); font-size:.58rem; font-weight:700;
+  letter-spacing:.3em; text-transform:uppercase;
+  background:rgba(212,168,83,.1); border:1px solid var(--gold-d);
+  color:var(--gold-l); cursor:pointer;
+  transition:background .2s; position:relative;
+}
+.login-btn::before,
+.login-btn::after { content:''; position:absolute; width:8px; height:8px; }
+.login-btn::before { top:-1px; left:-1px; border-top:1px solid var(--gold); border-left:1px solid var(--gold); }
+.login-btn::after  { bottom:-1px; right:-1px; border-bottom:1px solid var(--gold); border-right:1px solid var(--gold); }
+.login-btn:hover { background:rgba(212,168,83,.2); }
+.login-btn:disabled { opacity:.5; cursor:not-allowed; }
+.login-error {
+  margin-top:14px; padding:10px 16px;
+  background:rgba(138,26,26,.15); border:1px solid var(--blood);
+  color:#e88; font-size:.85rem; display:none;
+}
+.login-error.show { display:block; }
+
+/* ═══════════════════════════════════════════
+   ADMIN PANEL
+═══════════════════════════════════════════ */
+.admin-wrap { display:none; }
+.admin-wrap.visible { display:block; }
+
+/* Top bar */
+.admin-topbar {
+  display:flex; align-items:center; justify-content:space-between;
+  flex-wrap:wrap; gap:12px;
+  padding:20px 28px;
+  background:var(--bg2); border:1px solid var(--border);
+  margin-bottom:28px;
+}
+.admin-topbar-left { display:flex; flex-direction:column; gap:2px; }
+.admin-topbar-eyebrow {
+  font-family:var(--fc); font-size:.45rem; letter-spacing:.4em;
+  text-transform:uppercase; color:var(--ember);
+}
+.admin-topbar-title {
+  font-family:var(--fc); font-size:1.1rem; font-weight:700;
+  color:var(--gold-l); letter-spacing:.06em;
+}
+.logout-btn {
+  font-family:var(--fc); font-size:.5rem; letter-spacing:.2em;
+  text-transform:uppercase; padding:8px 18px;
+  border:1px solid var(--blood); color:var(--blood-b);
+  background:rgba(138,26,26,.1); cursor:pointer;
+  transition:background .2s;
+}
+.logout-btn:hover { background:rgba(138,26,26,.25); }
+
+/* Stats */
+.stats-row {
+  display:grid; grid-template-columns:repeat(4,1fr);
+  gap:10px; margin-bottom:28px;
+}
+@media(max-width:580px){ .stats-row { grid-template-columns:repeat(2,1fr); } }
+.stat-card {
+  background:var(--bg2); border:1px solid var(--border);
+  padding:20px 16px; text-align:center;
+  border-bottom:2px solid transparent;
+  transition:border-color .2s;
+}
+.stat-card.all      { border-bottom-color:var(--gold-d); }
+.stat-card.pending  { border-bottom-color:var(--gold); }
+.stat-card.accepted { border-bottom-color:#5aaa6a; }
+.stat-card.rejected { border-bottom-color:var(--blood); }
+.stat-num {
+  font-family:var(--fc); font-size:2.2rem; font-weight:900;
+  line-height:1; margin-bottom:6px;
+}
+.stat-card.all      .stat-num { color:var(--gold-l); }
+.stat-card.pending  .stat-num { color:var(--gold); }
+.stat-card.accepted .stat-num { color:#5aaa6a; }
+.stat-card.rejected .stat-num { color:var(--blood-b); }
+.stat-lbl {
+  font-family:var(--fc); font-size:.44rem; letter-spacing:.3em;
+  text-transform:uppercase; color:var(--parch-d);
+}
+
+/* Tabs */
+.tab-bar {
+  display:flex; border-bottom:1px solid var(--border);
+  margin-bottom:24px; gap:0;
+}
+.tab-btn {
+  font-family:var(--fc); font-size:.52rem; letter-spacing:.25em;
+  text-transform:uppercase; padding:12px 24px;
+  color:var(--parch-d); background:none;
+  border:none; border-bottom:2px solid transparent;
+  margin-bottom:-1px; cursor:pointer;
+  transition:color .2s, border-color .2s;
+}
+.tab-btn:hover  { color:var(--parch); }
+.tab-btn.active { color:var(--gold-l); border-bottom-color:var(--gold); }
+
+.tab-pane { display:none; }
+.tab-pane.active { display:block; }
+
+/* Filter row */
+.filter-row {
+  display:flex; align-items:center; gap:8px;
+  flex-wrap:wrap; margin-bottom:20px;
+  padding:14px 16px;
+  background:var(--bg2); border:1px solid var(--border);
+}
+.filter-label {
+  font-family:var(--fc); font-size:.46rem; letter-spacing:.3em;
+  text-transform:uppercase; color:var(--parch-d); margin-right:4px;
+}
+.filter-btn {
+  font-family:var(--fc); font-size:.48rem; letter-spacing:.18em;
+  text-transform:uppercase; padding:6px 14px;
+  border:1px solid var(--border); background:transparent;
+  color:var(--parch-d); cursor:pointer; transition:all .2s;
+}
+.filter-btn:hover { border-color:var(--gold-d); color:var(--gold); }
+.filter-btn.on    { background:rgba(212,168,83,.1); border-color:var(--gold-d); color:var(--gold-l); }
+.refresh-btn {
+  margin-left:auto;
+  font-family:var(--fc); font-size:.48rem; letter-spacing:.18em;
+  text-transform:uppercase; padding:6px 14px;
+  border:1px solid rgba(212,168,83,.15); background:transparent;
+  color:var(--parch-d); cursor:pointer; transition:all .2s;
+}
+.refresh-btn:hover { color:var(--gold); border-color:var(--gold-d); }
+
+/* Application cards */
+.app-list { display:flex; flex-direction:column; gap:8px; }
+.app-card {
+  background:var(--bg2); border:1px solid var(--border);
+  border-left:3px solid transparent;
+  overflow:hidden; transition:border-color .2s;
+}
+.app-card:hover { border-color:rgba(212,168,83,.25); }
+.app-card.pending  { border-left-color:var(--gold); }
+.app-card.accepted { border-left-color:#5aaa6a; }
+.app-card.rejected { border-left-color:var(--blood); }
+
+.app-head {
+  display:flex; align-items:center; gap:16px; flex-wrap:wrap;
+  padding:16px 20px; cursor:pointer;
+  transition:background .15s;
+}
+.app-head:hover { background:rgba(212,168,83,.03); }
+
+.app-avatar {
+  width:38px; height:38px; border-radius:0;
+  background:rgba(212,168,83,.08); border:1px solid var(--border);
+  display:flex; align-items:center; justify-content:center;
+  font-size:1rem; flex-shrink:0;
+}
+.app-info     { flex:1; min-width:0; }
+.app-nickname {
+  font-family:var(--fc); font-size:.8rem; letter-spacing:.06em;
+  color:var(--parch); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+}
+.app-meta {
+  font-size:.78rem; color:var(--parch-d); margin-top:2px;
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+}
+.app-pill {
+  font-family:var(--fc); font-size:.44rem; letter-spacing:.2em;
+  text-transform:uppercase; padding:4px 12px; border:1px solid; flex-shrink:0;
+}
+.pending  .app-pill { color:var(--gold);    border-color:var(--gold-d); }
+.accepted .app-pill { color:#5aaa6a; border-color:#3a7a4a; }
+.rejected .app-pill { color:var(--blood-b); border-color:var(--blood); }
+.app-timestamp {
+  font-family:var(--fc); font-size:.44rem; letter-spacing:.1em;
+  color:var(--parch-d); flex-shrink:0;
+}
+.app-chevron {
+  color:var(--parch-d); font-size:.7rem; flex-shrink:0;
+  transition:transform .2s;
+}
+.app-card.open .app-chevron { transform:rotate(180deg); }
+
+.app-body {
+  display:none; padding:20px 20px 24px;
+  border-top:1px solid rgba(212,168,83,.07);
+  background:rgba(10,6,6,.4);
+}
+.app-card.open .app-body { display:block; }
+
+.app-fields { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:18px; }
+@media(max-width:580px){ .app-fields { grid-template-columns:1fr; } }
+.app-field-full { grid-column:1/-1; }
+.field-label {
+  font-family:var(--fc); font-size:.44rem; letter-spacing:.3em;
+  text-transform:uppercase; color:var(--ember); margin-bottom:5px;
+}
+.field-val {
+  font-size:.9rem; color:var(--parch); line-height:1.65;
+  background:rgba(212,168,83,.03); border:1px solid rgba(212,168,83,.08);
+  padding:10px 14px;
+}
+
+.note-label {
+  font-family:var(--fc); font-size:.44rem; letter-spacing:.3em;
+  text-transform:uppercase; color:var(--parch-d); margin-bottom:6px;
+  margin-top:4px;
+}
+.note-input {
+  width:100%; background:rgba(10,6,6,.8);
+  border:1px solid rgba(212,168,83,.15);
+  color:var(--parch); font-family:var(--fi); font-size:.9rem;
+  padding:10px 14px; outline:none; resize:vertical; min-height:70px;
+  transition:border-color .2s;
+}
+.note-input:focus { border-color:var(--gold-d); }
+.note-input::placeholder { color:var(--parch-d); opacity:.4; }
+
+.app-actions {
+  display:flex; gap:8px; flex-wrap:wrap;
+  margin-top:16px; padding-top:16px;
+  border-top:1px solid rgba(212,168,83,.07);
+}
+.action-btn {
+  font-family:var(--fc); font-size:.48rem; letter-spacing:.2em;
+  text-transform:uppercase; padding:9px 18px;
+  border:1px solid; cursor:pointer; transition:background .2s;
+  background:transparent;
+}
+.action-btn.accept  { color:#5aaa6a; border-color:#3a7a4a; }
+.action-btn.accept:hover  { background:rgba(90,170,106,.12); }
+.action-btn.reject  { color:var(--blood-b); border-color:var(--blood); }
+.action-btn.reject:hover  { background:rgba(138,26,26,.15); }
+.action-btn.pending { color:var(--gold); border-color:var(--gold-d); }
+.action-btn.pending:hover { background:rgba(212,168,83,.08); }
+.action-btn.delete  { color:#888; border-color:#444; margin-left:auto; }
+.action-btn.delete:hover  { color:var(--blood-b); border-color:var(--blood); background:rgba(138,26,26,.1); }
+
+/* Feedback toast */
+.toast {
+  position:fixed; bottom:28px; right:28px; z-index:999;
+  font-family:var(--fc); font-size:.5rem; letter-spacing:.2em; text-transform:uppercase;
+  padding:12px 20px; border:1px solid;
+  opacity:0; transform:translateY(10px);
+  transition:opacity .3s, transform .3s;
+  pointer-events:none;
+}
+.toast.show { opacity:1; transform:none; }
+.toast.success { background:rgba(90,170,106,.12); border-color:#3a7a4a; color:#5aaa6a; }
+.toast.error   { background:rgba(138,26,26,.12); border-color:var(--blood); color:var(--blood-b); }
+
+/* Config form */
+.config-panel {
+  background:var(--bg2); border:1px solid var(--border);
+  padding:32px 28px;
+}
+.config-panel .sh { margin-bottom:6px; }
+.config-panel .sec-title { margin-bottom:24px; }
+.config-fields {
+  display:grid; grid-template-columns:1fr 1fr; gap:16px;
+  margin-bottom:24px;
+}
+@media(max-width:580px){ .config-fields { grid-template-columns:1fr; } }
+.config-full { grid-column:1/-1; }
+.config-label {
+  font-family:var(--fc); font-size:.46rem; letter-spacing:.3em;
+  text-transform:uppercase; color:var(--parch-d); display:block; margin-bottom:7px;
+}
+.config-input {
+  width:100%; background:rgba(10,6,6,.8);
+  border:1px solid rgba(212,168,83,.18);
+  color:var(--parch); font-family:var(--fi); font-size:.95rem;
+  padding:12px 16px; outline:none; transition:border-color .2s;
+}
+.config-input:focus { border-color:var(--gold-d); }
+.config-hint {
+  font-size:.78rem; color:var(--parch-d); margin-top:5px; opacity:.6;
+}
+.config-save-row {
+  display:flex; align-items:center; gap:16px; flex-wrap:wrap;
+}
+.save-btn {
+  font-family:var(--fc); font-size:.54rem; letter-spacing:.25em;
+  text-transform:uppercase; padding:13px 28px;
+  background:rgba(212,168,83,.1); border:1px solid var(--gold-d);
+  color:var(--gold-l); cursor:pointer; transition:background .2s;
+  position:relative;
+}
+.save-btn::before,
+.save-btn::after { content:''; position:absolute; width:8px; height:8px; }
+.save-btn::before { top:-1px; left:-1px; border-top:1px solid var(--gold); border-left:1px solid var(--gold); }
+.save-btn::after  { bottom:-1px; right:-1px; border-bottom:1px solid var(--gold); border-right:1px solid var(--gold); }
+.save-btn:hover { background:rgba(212,168,83,.2); }
+.save-feedback {
+  font-family:var(--fc); font-size:.48rem; letter-spacing:.2em;
+  text-transform:uppercase; display:none;
+}
+.save-feedback.ok  { color:#5aaa6a; display:inline; }
+.save-feedback.err { color:var(--blood-b); display:inline; }
+
+/* Empty / loading states */
+.state-box {
+  text-align:center; padding:64px 24px;
+  background:var(--bg2); border:1px solid var(--border);
+}
+.state-icon { font-size:2.5rem; margin-bottom:12px; opacity:.35; }
+.state-msg  {
+  font-family:var(--fc); font-size:.54rem; letter-spacing:.25em;
+  text-transform:uppercase; color:var(--parch-d);
+}
+.spinner {
+  width:30px; height:30px;
+  border:2px solid var(--border); border-top-color:var(--gold);
+  border-radius:50%; animation:spin .8s linear infinite;
+  margin:40px auto;
+}
+@keyframes spin { to { transform:rotate(360deg); } }
 </style>
 </head>
 <body>
@@ -27,101 +377,118 @@
   <a href="download.html" class="nav-dl">⬇ Download</a>
 </nav>
 
-<div class="page">
-
-  <!-- ── Login Gate ─────────────────────────────────────────── -->
-  <div id="loginSection">
-    <div class="admin-login">
-      <div class="ch-eyebrow" style="margin-bottom:12px;">Restricted Area</div>
-      <div class="ch-title" style="font-size:1.8rem;margin-bottom:4px;">Admin Panel</div>
-      <div style="width:80px;height:1px;background:linear-gradient(90deg,transparent,var(--gold-d),transparent);margin:12px auto 28px;"></div>
-      <div class="form-row" style="margin-bottom:18px;">
-        <label>Admin Password</label>
-        <input type="password" id="passwordInput" placeholder="Enter secret key" onkeydown="if(event.key==='Enter')login()">
-      </div>
-      <button class="btn btn-primary" style="width:100%;" onclick="login()">
-        <span class="btn-t" style="justify-content:center;">⚔️ Enter</span>
-      </button>
-      <div class="alert error" id="loginAlert" style="margin-top:14px;"></div>
+<!-- ══════════════════════════════════════════
+     LOGIN SCREEN
+══════════════════════════════════════════ -->
+<div id="loginScreen">
+  <div class="login-screen">
+    <div class="login-box">
+      <div class="login-dragon">🐉</div>
+      <div class="login-title">Admin Panel</div>
+      <div class="login-sub">Dragon Horizons · Restricted Area</div>
+      <div class="login-rule"></div>
+      <input type="password" class="login-input" id="passwordInput"
+        placeholder="Enter secret key"
+        onkeydown="if(event.key==='Enter') login()">
+      <button class="login-btn" id="loginBtn" onclick="login()">⚔️ &nbsp; Enter</button>
+      <div class="login-error" id="loginError"></div>
     </div>
   </div>
+</div>
 
-  <!-- ── Admin Panel (shown after login) ───────────────────── -->
-  <div id="adminPanel" style="display:none;">
+<!-- ══════════════════════════════════════════
+     ADMIN PANEL
+══════════════════════════════════════════ -->
+<div class="admin-wrap" id="adminWrap">
+  <div class="page" style="padding-top:36px;">
 
-    <div class="ch" style="margin-bottom:36px;">
-      <div class="ch-eyebrow">Control Room</div>
-      <h1 class="ch-title">Admin Panel</h1>
-      <div class="ch-rule"></div>
-      <div style="margin-top:12px;">
-        <button class="btn btn-sm btn-danger" onclick="logout()">
-          <span class="btn-t">🚪 Log Out</span>
-        </button>
+    <!-- Top bar -->
+    <div class="admin-topbar">
+      <div class="admin-topbar-left">
+        <div class="admin-topbar-eyebrow">Control Room</div>
+        <div class="admin-topbar-title">Admin Panel</div>
       </div>
+      <button class="logout-btn" onclick="logout()">🚪 &nbsp;Log Out</button>
     </div>
 
     <!-- Stats -->
-    <div class="stats-bar" id="statsBar">
-      <div class="stat-box"><div class="spinner"></div></div>
+    <div class="stats-row" id="statsRow">
+      <div class="stat-card all"><div class="spinner" style="margin:8px auto;width:20px;height:20px;"></div></div>
     </div>
 
     <!-- Tabs -->
-    <div class="admin-tabs">
-      <button class="admin-tab active" onclick="switchTab('applications', this)">Applications</button>
-      <button class="admin-tab"        onclick="switchTab('config', this)">Site Config</button>
+    <div class="tab-bar">
+      <button class="tab-btn active" onclick="switchTab('applications', this)">📋 &nbsp;Applications</button>
+      <button class="tab-btn"        onclick="switchTab('config', this)">⚙️ &nbsp;Site Config</button>
     </div>
 
-    <!-- Tab: Applications -->
-    <div class="tab-panel active" id="tab-applications">
-      <div class="admin-filters">
-        <span>Filter:</span>
-        <button class="fbtn on" onclick="loadApplications('all', this)">All</button>
-        <button class="fbtn"    onclick="loadApplications('pending', this)">⏳ Pending</button>
-        <button class="fbtn"    onclick="loadApplications('accepted', this)">✅ Accepted</button>
-        <button class="fbtn"    onclick="loadApplications('rejected', this)">❌ Rejected</button>
-        <button class="btn btn-sm" style="margin-left:auto;" onclick="loadApplications(currentFilter, null)">↻ Refresh</button>
+    <!-- ── Tab: Applications ── -->
+    <div class="tab-pane active" id="tab-applications">
+
+      <div class="filter-row">
+        <span class="filter-label">Filter</span>
+        <button class="filter-btn on" onclick="loadApps('all', this)">All</button>
+        <button class="filter-btn"    onclick="loadApps('pending', this)">⏳ Pending</button>
+        <button class="filter-btn"    onclick="loadApps('accepted', this)">✅ Accepted</button>
+        <button class="filter-btn"    onclick="loadApps('rejected', this)">❌ Rejected</button>
+        <button class="refresh-btn"   onclick="loadApps(currentFilter, null)">↻ Refresh</button>
       </div>
-      <div class="alert" id="appAlert"></div>
-      <div id="appList"><div class="spinner"></div></div>
+
+      <div class="app-list" id="appList">
+        <div class="state-box"><div class="spinner"></div></div>
+      </div>
+
     </div>
 
-    <!-- Tab: Site Config -->
-    <div class="tab-panel" id="tab-config">
-      <div class="sh">Drive Link</div>
-      <h2 class="sec-title" style="margin-bottom:20px;">Update Download URL</h2>
-      <div class="scroll" style="margin-bottom:24px;">
-        <div class="scroll-e"><span class="sg">◆</span><span class="st">Update the Google Drive link here anytime you re-upload the mods folder. The change goes live immediately on the Download page.</span></div>
-        <div class="scroll-e"><span class="sg">◆</span><span class="st">Players with <strong>Accepted</strong> status will see the new link as soon as they verify on the download page.</span></div>
-      </div>
-      <div id="configLoader"><div class="spinner"></div></div>
-      <div id="configForm" style="display:none;">
-        <div class="config-grid">
-          <div class="config-item" style="grid-column:1/-1;">
-            <label class="config-label">Google Drive Link</label>
-            <input type="text" class="config-input" id="cfg-drive" placeholder="https://drive.google.com/...">
+    <!-- ── Tab: Site Config ── -->
+    <div class="tab-pane" id="tab-config">
+      <div class="config-panel">
+        <div class="sh">Site Configuration</div>
+        <h2 class="sec-title">Update Server &amp; Download Settings</h2>
+
+        <div class="scroll" style="margin-bottom:28px;">
+          <div class="scroll-e"><span class="sg">◆</span><span class="st">Changes go <strong>live immediately</strong> — no redeploy needed. The download page and home page will reflect updates instantly.</span></div>
+          <div class="scroll-e"><span class="sg">◆</span><span class="st">Paste a new Google Drive link anytime you re-upload the mods folder. Only accepted players will see it.</span></div>
+        </div>
+
+        <div id="configLoader"><div class="spinner"></div></div>
+        <div id="configFields" style="display:none;">
+          <div class="config-fields">
+            <div class="config-full">
+              <label class="config-label">📦 &nbsp;Google Drive Download Link</label>
+              <input type="text" class="config-input" id="cfg-drive"
+                placeholder="https://drive.google.com/drive/folders/...">
+              <div class="config-hint">Paste the updated link here whenever you re-upload the mods folder.</div>
+            </div>
+            <div>
+              <label class="config-label">🌐 &nbsp;Server Address</label>
+              <input type="text" class="config-input" id="cfg-addr"
+                placeholder="yourserver.aternos.me">
+            </div>
+            <div>
+              <label class="config-label">🔌 &nbsp;Server Port</label>
+              <input type="text" class="config-input" id="cfg-port"
+                placeholder="25565">
+            </div>
+            <div>
+              <label class="config-label">🏷️ &nbsp;Pack Version</label>
+              <input type="text" class="config-input" id="cfg-ver"
+                placeholder="v1.0.1 Alpha">
+            </div>
           </div>
-          <div class="config-item">
-            <label class="config-label">Server Address</label>
-            <input type="text" class="config-input" id="cfg-addr" placeholder="yourserver.aternos.me">
-          </div>
-          <div class="config-item">
-            <label class="config-label">Server Port</label>
-            <input type="text" class="config-input" id="cfg-port" placeholder="25565">
-          </div>
-          <div class="config-item">
-            <label class="config-label">Pack Version</label>
-            <input type="text" class="config-input" id="cfg-ver" placeholder="v1.0.1 Alpha">
+          <div class="config-save-row">
+            <button class="save-btn" onclick="saveConfig()">💾 &nbsp;Save Changes</button>
+            <span class="save-feedback" id="saveFeedback"></span>
           </div>
         </div>
-        <div class="alert" id="configAlert" style="margin-bottom:16px;"></div>
-        <button class="btn btn-primary" onclick="saveConfig()">
-          <span class="btn-t">💾 Save Changes</span>
-        </button>
       </div>
     </div>
 
   </div>
 </div>
+
+<!-- Toast notification -->
+<div class="toast" id="toast"></div>
 
 <footer>
   <div class="ft-g">⚜</div>
@@ -134,80 +501,88 @@
   const API = '/api';
   let token = '';
   let currentFilter = 'all';
+  let toastTimer = null;
+
+  // ── Toast ──────────────────────────────────────────────────────
+  function toast(type, msg) {
+    const el = document.getElementById('toast');
+    el.textContent = msg;
+    el.className = `toast ${type} show`;
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => el.classList.remove('show'), 3500);
+  }
 
   // ── Auth ───────────────────────────────────────────────────────
   function login() {
-    const pw = document.getElementById('passwordInput').value.trim();
+    const pw  = document.getElementById('passwordInput').value.trim();
+    const btn = document.getElementById('loginBtn');
+    const err = document.getElementById('loginError');
     if (!pw) return;
 
-    const btn = document.querySelector('#loginSection .btn');
     btn.disabled = true;
-    btn.querySelector('.btn-t').textContent = '⏳ Verifying…';
-
+    btn.textContent = '⏳  Verifying…';
+    err.classList.remove('show');
     token = pw;
-    fetch(`${API}/applications`, {
-      headers: { Authorization: `Bearer ${token}` }
-    })
-    .then(r => {
-      if (r.status === 401) {
+
+    fetch(`${API}/applications`, { headers: { Authorization: `Bearer ${token}` } })
+      .then(r => {
+        if (r.status === 401) {
+          token = '';
+          err.textContent = 'Incorrect password. Try again.';
+          err.classList.add('show');
+          btn.disabled = false;
+          btn.textContent = '⚔️  Enter';
+        } else {
+          document.getElementById('loginScreen').style.display = 'none';
+          document.getElementById('adminWrap').classList.add('visible');
+          r.json().then(d => renderApps(d.applications || []));
+          loadStats();
+          loadConfig();
+        }
+      })
+      .catch(() => {
         token = '';
-        const al = document.getElementById('loginAlert');
-        al.textContent = 'Incorrect password.';
-        al.classList.add('visible');
+        err.textContent = 'Connection failed. Check your network.';
+        err.classList.add('show');
         btn.disabled = false;
-        btn.querySelector('.btn-t').textContent = '⚔️ Enter';
-      } else {
-        // ✅ Success — hide login, show panel
-        document.getElementById('loginSection').style.display = 'none';
-        document.getElementById('adminPanel').style.display = 'block';
-        r.json().then(d => renderApplications(d.applications || []));
-        loadStats();
-        loadConfig();
-      }
-    })
-    .catch(() => {
-      const al = document.getElementById('loginAlert');
-      al.textContent = 'Connection failed. Check your network.';
-      al.classList.add('visible');
-      btn.disabled = false;
-      btn.querySelector('.btn-t').textContent = '⚔️ Enter';
-      token = '';
-    });
+        btn.textContent = '⚔️  Enter';
+      });
   }
 
   function logout() {
     token = '';
-    document.getElementById('loginSection').style.display = 'block';
-    document.getElementById('adminPanel').style.display = 'none';
+    document.getElementById('loginScreen').style.display = '';
+    document.getElementById('adminWrap').classList.remove('visible');
     document.getElementById('passwordInput').value = '';
-    document.getElementById('loginAlert').classList.remove('visible');
+    document.getElementById('loginError').classList.remove('show');
+    document.getElementById('loginBtn').textContent = '⚔️  Enter';
   }
 
   // ── Stats ──────────────────────────────────────────────────────
   async function loadStats() {
     try {
       const [all, pen, acc, rej] = await Promise.all([
-        fetch(`${API}/applications`,                  { headers: authHeader() }).then(r => r.json()),
-        fetch(`${API}/applications?status=pending`,   { headers: authHeader() }).then(r => r.json()),
-        fetch(`${API}/applications?status=accepted`,  { headers: authHeader() }).then(r => r.json()),
-        fetch(`${API}/applications?status=rejected`,  { headers: authHeader() }).then(r => r.json()),
+        fetch(`${API}/applications`,                 { headers: authHeader() }).then(r => r.json()),
+        fetch(`${API}/applications?status=pending`,  { headers: authHeader() }).then(r => r.json()),
+        fetch(`${API}/applications?status=accepted`, { headers: authHeader() }).then(r => r.json()),
+        fetch(`${API}/applications?status=rejected`, { headers: authHeader() }).then(r => r.json()),
       ]);
-      document.getElementById('statsBar').innerHTML = `
-        <div class="stat-box">
-          <div class="stat-n">${(all.applications || []).length}</div>
-          <div class="stat-l">Total</div>
+      document.getElementById('statsRow').innerHTML = `
+        <div class="stat-card all">
+          <div class="stat-num">${(all.applications||[]).length}</div>
+          <div class="stat-lbl">Total</div>
         </div>
-        <div class="stat-box pending">
-          <div class="stat-n">${(pen.applications || []).length}</div>
-          <div class="stat-l">Pending</div>
+        <div class="stat-card pending">
+          <div class="stat-num">${(pen.applications||[]).length}</div>
+          <div class="stat-lbl">Pending</div>
         </div>
-        <div class="stat-box accepted">
-          <div class="stat-n">${(acc.applications || []).length}</div>
-          <div class="stat-l">Accepted</div>
+        <div class="stat-card accepted">
+          <div class="stat-num">${(acc.applications||[]).length}</div>
+          <div class="stat-lbl">Accepted</div>
         </div>
-        <div class="stat-box rejected">
-          <div class="stat-n">${(rej.applications || []).length}</div>
-          <div class="stat-l">Rejected</div>
+        <div class="stat-card rejected">
+          <div class="stat-num">${(rej.applications||[]).length}</div>
+          <div class="stat-lbl">Rejected</div>
         </div>`;
     } catch { /* silent */ }
   }
@@ -217,110 +592,118 @@
     return { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` };
   }
 
-  async function loadApplications(filter, btn) {
+  async function loadApps(filter, btn) {
     currentFilter = filter;
     if (btn) {
-      document.querySelectorAll('.admin-filters .fbtn').forEach(b => b.classList.remove('on'));
+      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('on'));
       btn.classList.add('on');
     }
-    document.getElementById('appList').innerHTML = '<div class="spinner"></div>';
+    document.getElementById('appList').innerHTML = '<div class="state-box"><div class="spinner"></div></div>';
     try {
       const url  = filter === 'all' ? `${API}/applications` : `${API}/applications?status=${filter}`;
       const res  = await fetch(url, { headers: authHeader() });
       const data = await res.json();
-      renderApplications(data.applications || []);
+      renderApps(data.applications || []);
     } catch {
-      document.getElementById('appList').innerHTML =
-        '<div class="empty-state"><div class="es-icon">⚠️</div><div class="es-msg">Failed to load</div></div>';
+      document.getElementById('appList').innerHTML = `
+        <div class="state-box">
+          <div class="state-icon">⚠️</div>
+          <div class="state-msg">Failed to load applications</div>
+        </div>`;
     }
   }
 
-  function renderApplications(apps) {
+  function renderApps(apps) {
     const list = document.getElementById('appList');
     if (!apps.length) {
-      list.innerHTML = '<div class="empty-state"><div class="es-icon">📜</div><div class="es-msg">No applications found</div></div>';
+      list.innerHTML = `
+        <div class="state-box">
+          <div class="state-icon">📜</div>
+          <div class="state-msg">No applications found</div>
+        </div>`;
       return;
     }
     list.innerHTML = apps.map(app => `
       <div class="app-card ${app.status}" id="card-${app.id}">
-        <div class="app-header" onclick="toggleCard('${app.id}')">
-          <div class="app-names">
-            <div class="app-nick">${esc(app.nickname)}</div>
-            <div class="app-user">@${esc(app.aternos_username)} · ${esc(app.discord)}</div>
+        <div class="app-head" onclick="toggleCard('${app.id}')">
+          <div class="app-avatar">⚔️</div>
+          <div class="app-info">
+            <div class="app-nickname">${esc(app.nickname)}</div>
+            <div class="app-meta">@${esc(app.aternos_username)} &nbsp;·&nbsp; ${esc(app.discord)}</div>
           </div>
-          <span class="app-status-pill">${app.status}</span>
-          <span class="app-date">${fmtDate(app.created_at)}</span>
+          <span class="app-pill">${app.status}</span>
+          <span class="app-timestamp">${fmtDate(app.created_at)}</span>
+          <span class="app-chevron">▾</span>
         </div>
         <div class="app-body" id="body-${app.id}">
-          <div class="app-field">
-            <div class="app-field-label">Reason</div>
-            <div class="app-field-val">${esc(app.reason)}</div>
+          <div class="app-fields">
+            <div>
+              <div class="field-label">Aternos Username</div>
+              <div class="field-val">@${esc(app.aternos_username)}</div>
+            </div>
+            <div>
+              <div class="field-label">Discord</div>
+              <div class="field-val">${esc(app.discord)}</div>
+            </div>
+            <div class="app-field-full">
+              <div class="field-label">Reason to Join</div>
+              <div class="field-val">${esc(app.reason)}</div>
+            </div>
+            ${app.admin_note ? `
+            <div class="app-field-full">
+              <div class="field-label">Previous Note</div>
+              <div class="field-val" style="color:var(--parch-d);">${esc(app.admin_note)}</div>
+            </div>` : ''}
           </div>
-          ${app.admin_note ? `
-          <div class="app-field">
-            <div class="app-field-label">Previous Note</div>
-            <div class="app-field-val" style="color:var(--parch-d);">${esc(app.admin_note)}</div>
-          </div>` : ''}
-          <div class="app-field">
-            <div class="app-field-label">Add / Update Note (optional)</div>
-            <textarea class="app-note-input" id="note-${app.id}"
-              placeholder="Note shown to applicant on rejection/acceptance…">${app.admin_note ? esc(app.admin_note) : ''}</textarea>
-          </div>
+          <div class="note-label">Admin Note (optional — shown to applicant)</div>
+          <textarea class="note-input" id="note-${app.id}"
+            placeholder="Add a note for acceptance or rejection reason…">${app.admin_note ? esc(app.admin_note) : ''}</textarea>
           <div class="app-actions">
-            ${app.status !== 'accepted' ? `<button class="btn btn-sm" style="border-color:#3a7a4a;color:#5aaa6a;" onclick="updateStatus('${app.id}','accepted')"><span class="btn-t">✅ Accept</span></button>` : ''}
-            ${app.status !== 'rejected' ? `<button class="btn btn-sm btn-danger" onclick="updateStatus('${app.id}','rejected')"><span class="btn-t">❌ Reject</span></button>` : ''}
-            ${app.status !== 'pending'  ? `<button class="btn btn-sm" onclick="updateStatus('${app.id}','pending')"><span class="btn-t">↩ Set Pending</span></button>` : ''}
-            <button class="btn btn-sm btn-danger" style="margin-left:auto;" onclick="deleteApp('${app.id}')">
-              <span class="btn-t">🗑 Delete</span>
-            </button>
+            ${app.status !== 'accepted' ? `<button class="action-btn accept"  onclick="updateStatus('${app.id}','accepted')">✅ Accept</button>` : ''}
+            ${app.status !== 'rejected' ? `<button class="action-btn reject"  onclick="updateStatus('${app.id}','rejected')">❌ Reject</button>` : ''}
+            ${app.status !== 'pending'  ? `<button class="action-btn pending" onclick="updateStatus('${app.id}','pending')">↩ Set Pending</button>` : ''}
+            <button class="action-btn delete" onclick="deleteApp('${app.id}')">🗑 Delete</button>
           </div>
         </div>
       </div>`).join('');
   }
 
   function toggleCard(id) {
-    document.getElementById(`body-${id}`).classList.toggle('open');
+    const card = document.getElementById(`card-${id}`);
+    card.classList.toggle('open');
   }
 
   async function updateStatus(id, status) {
     const note = document.getElementById(`note-${id}`)?.value.trim() || '';
     try {
       const res  = await fetch(`${API}/applications/${id}`, {
-        method:  'PATCH',
-        headers: authHeader(),
-        body:    JSON.stringify({ status, admin_note: note || null }),
+        method: 'PATCH', headers: authHeader(),
+        body: JSON.stringify({ status, admin_note: note || null }),
       });
       const data = await res.json();
       if (!data.success) throw new Error(data.error);
       const card = document.getElementById(`card-${id}`);
       card.className = `app-card ${status}`;
-      card.querySelector('.app-status-pill').textContent = status;
+      card.querySelector('.app-pill').textContent = status;
       loadStats();
-      showAppAlert('success', `Application ${status} successfully.`);
+      toast('success', `✅ Application ${status}.`);
     } catch (err) {
-      showAppAlert('error', `Failed: ${err.message}`);
+      toast('error', `Failed: ${err.message}`);
     }
   }
 
   async function deleteApp(id) {
-    if (!confirm('Delete this application permanently? This cannot be undone.')) return;
+    if (!confirm('Permanently delete this application? This cannot be undone.')) return;
     try {
       const res = await fetch(`${API}/applications/${id}`, { method: 'DELETE', headers: authHeader() });
       const d   = await res.json();
       if (!d.success) throw new Error(d.error);
       document.getElementById(`card-${id}`)?.remove();
       loadStats();
-      showAppAlert('success', 'Application deleted.');
+      toast('success', '🗑 Application deleted.');
     } catch (err) {
-      showAppAlert('error', `Delete failed: ${err.message}`);
+      toast('error', `Delete failed: ${err.message}`);
     }
-  }
-
-  function showAppAlert(type, msg) {
-    const al = document.getElementById('appAlert');
-    al.className = `alert ${type} visible`;
-    al.textContent = msg;
-    setTimeout(() => al.classList.remove('visible'), 4000);
   }
 
   // ── Config ─────────────────────────────────────────────────────
@@ -334,42 +717,45 @@
       document.getElementById('cfg-port').value  = c.server_port    || '';
       document.getElementById('cfg-ver').value   = c.pack_version   || '';
       document.getElementById('configLoader').style.display = 'none';
-      document.getElementById('configForm').style.display   = 'block';
+      document.getElementById('configFields').style.display = 'block';
     } catch {
-      document.getElementById('configLoader').innerHTML =
-        '<div class="empty-state"><div class="es-icon">⚠️</div><div class="es-msg">Failed to load config</div></div>';
+      document.getElementById('configLoader').innerHTML = `
+        <div class="state-box">
+          <div class="state-icon">⚠️</div>
+          <div class="state-msg">Failed to load config</div>
+        </div>`;
     }
   }
 
   async function saveConfig() {
+    const fb   = document.getElementById('saveFeedback');
     const body = {
       drive_link:     document.getElementById('cfg-drive').value.trim(),
       server_address: document.getElementById('cfg-addr').value.trim(),
       server_port:    document.getElementById('cfg-port').value.trim(),
       pack_version:   document.getElementById('cfg-ver').value.trim(),
     };
-    const al = document.getElementById('configAlert');
     try {
       const res  = await fetch(`${API}/config`, {
-        method:  'PATCH',
-        headers: authHeader(),
-        body:    JSON.stringify(body),
+        method: 'PATCH', headers: authHeader(), body: JSON.stringify(body),
       });
       const data = await res.json();
       if (!data.success) throw new Error(data.error);
-      al.className = 'alert success visible';
-      al.textContent = '✅ Configuration saved. Changes are live immediately.';
-      setTimeout(() => al.classList.remove('visible'), 4000);
+      fb.textContent = '✅ Saved — changes are live.';
+      fb.className = 'save-feedback ok';
+      toast('success', '✅ Config saved. Changes are live.');
+      setTimeout(() => fb.className = 'save-feedback', 4000);
     } catch (err) {
-      al.className = 'alert error visible';
-      al.textContent = `Failed to save: ${err.message}`;
+      fb.textContent = `❌ Failed: ${err.message}`;
+      fb.className = 'save-feedback err';
+      toast('error', `Save failed: ${err.message}`);
     }
   }
 
   // ── Tabs ───────────────────────────────────────────────────────
   function switchTab(name, btn) {
-    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
-    document.querySelectorAll('.admin-tab').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
     document.getElementById(`tab-${name}`).classList.add('active');
     btn.classList.add('active');
   }
@@ -377,12 +763,12 @@
   // ── Utils ──────────────────────────────────────────────────────
   function esc(str) {
     return String(str ?? '')
-      .replace(/&/g, '&amp;').replace(/</g, '&lt;')
-      .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+      .replace(/&/g,'&amp;').replace(/</g,'&lt;')
+      .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
   }
   function fmtDate(iso) {
     if (!iso) return '';
-    return new Date(iso).toLocaleDateString('en-PH', { month: 'short', day: 'numeric', year: 'numeric' });
+    return new Date(iso).toLocaleDateString('en-PH', { month:'short', day:'numeric', year:'numeric' });
   }
 </script>
 </body>
