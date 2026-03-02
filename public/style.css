@@ -1,0 +1,100 @@
+/* ============================================================
+   DRAGON HORIZONS — Global Stylesheet
+   Variables → Reset → Layout → Nav → Components → Pages
+   ============================================================ */
+
+/* ── Variables ─────────────────────────────────────────────── */
+:root {
+  --bg:      #0a0606;
+  --bg2:     #100909;
+  --bg3:     #160d0d;
+  --gold:    #d4a853;
+  --gold-l:  #e8c070;
+  --gold-d:  #8a6424;
+  --ember:   #c8581a;
+  --blood:   #8a1a1a;
+  --blood-b: #c44;
+  --parch:   #c8b48a;
+  --parch-d: #7a6a50;
+  --ink:     #1a1210;
+  --fc: 'Cinzel', Georgia, serif;
+  --fi: 'EB Garamond', Georgia, serif;
+  --text: #c8b48a;
+  --border: rgba(212,168,83,.15);
+  --radius: 2px;
+}
+
+/* ── Google Fonts ───────────────────────────────────────────── */
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=EB+Garamond:ital,wght@0,400;0,500;1,400&display=swap');
+
+/* ── Reset ──────────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--fi);
+  font-size: 1rem;
+  line-height: 1.7;
+  min-height: 100vh;
+}
+a { color: var(--gold); text-decoration: none; }
+a:hover { color: var(--gold-l); }
+code {
+  font-family: 'Courier New', monospace;
+  background: rgba(212,168,83,.08);
+  border: 1px solid var(--border);
+  padding: 2px 7px;
+  border-radius: var(--radius);
+  font-size: .88em;
+  color: var(--gold-l);
+}
+strong { color: var(--parch); font-weight: 600; }
+
+/* ── Navigation ─────────────────────────────────────────────── */
+.sitenav {
+  position: sticky; top: 0; z-index: 100;
+  display: flex; align-items: center; gap: 4px;
+  padding: 0 28px;
+  background: rgba(10,6,6,.96);
+  border-bottom: 1px solid var(--border);
+  backdrop-filter: blur(8px);
+  height: 52px;
+}
+.sitenav a {
+  font-family: var(--fc);
+  font-size: .52rem;
+  font-weight: 700;
+  letter-spacing: .3em;
+  text-transform: uppercase;
+  color: var(--parch-d);
+  padding: 6px 14px;
+  transition: color .2s;
+}
+.sitenav a:hover,
+.sitenav a.active { color: var(--gold-l); }
+.sitenav a.active {
+  border-bottom: 2px solid var(--gold);
+}
+.nav-dl {
+  margin-left: auto;
+  color: var(--gold) !important;
+  border: 1px solid var(--border);
+  padding: 6px 16px !important;
+  transition: background .2s !important;
+}
+.nav-dl:hover { background: rgba(212,168,83,.08) !important; }
+
+/* ── Page wrapper ───────────────────────────────────────────── */
+.page {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 64px 36px 100px;
+}
+
+/* ── Reveal animation ───────────────────────────────────────── */
+.rv {
+  opacity: 0;
+  transform: translateY(22px);
+  transition: opacity .7s ease, transform .7s ease;
+}

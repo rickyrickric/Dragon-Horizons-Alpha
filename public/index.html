@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dragon Horizons</title>
+<link rel="stylesheet" href="style.css">
+<style>
+.hero {
+  min-height: 100vh;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  text-align: center; padding: 80px 36px;
+  position: relative; z-index: 1;
+}
+.hero::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+  background: repeating-linear-gradient(
+    -45deg,
+    rgba(212,168,83,.012) 0px, rgba(212,168,83,.012) 1px,
+    transparent 1px, transparent 60px
+  );
+  pointer-events: none;
+}
+.hero-glyph {
+  font-family: var(--fc); font-size: .6rem; letter-spacing: .6em; text-transform: uppercase;
+  color: var(--ember); margin-bottom: 24px;
+  display: flex; align-items: center; gap: 20px; justify-content: center;
+}
+.hero-glyph::before, .hero-glyph::after {
+  content: ''; width: 50px; height: 1px;
+}
+.hero-glyph::before { background: linear-gradient(90deg, transparent, var(--ember)); }
+.hero-glyph::after  { background: linear-gradient(90deg, var(--ember), transparent); }
+</style>
+</head>
+<body>
+<nav class="sitenav">
+  <a href="index.html" class="active">Home</a>
+  <a href="about.html">About</a>
+  <a href="mods.html">Mod List</a>
+  <a href="patchnotes.html">Patch Notes</a>
+  <a href="apply.html">Apply</a>
+  <a href="download.html" class="nav-dl">⬇ Download</a>
+</nav>
+<div class="hero">
+  <div class="hero-glyph">🔥 Welcome 🔥</div>
+  <div style="font-size: 7rem; margin-bottom: 24px;">🐉</div>
+  <h1 class="hero-title" style="font-size: clamp(3rem, 8vw, 7rem);">Dragon Horizons</h1>
+  <div style="font-size: 1.15rem; color: var(--parch-d); margin: 20px 0 40px;">A Soulslike Minecraft Modpack</div>
+  <div style="display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;">
+    <a href="about.html" class="btn" style="padding: 10px 20px;">Learn More</a>
+    <a href="apply.html" class="btn btn-primary" style="padding: 10px 20px;">Apply to Join</a>
+  </div>
+</div>
+<footer style="text-align: center; padding: 40px 20px; color: var(--parch-d); border-top: 1px solid var(--border); margin-top: 60px;">
+  <div style="font-size: .6rem; letter-spacing: .3em; text-transform: uppercase; margin-bottom: 10px;">⚜ Dragon Horizons ⚜</div>
+  <div style="font-size: .9rem;">Built by Ric Angelo Galo with the help of Claude</div>
+</footer>
+</body>
+</html>
