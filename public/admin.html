@@ -17,27 +17,346 @@
 </nav>
 
 <div class="page">
-  <h1>Admin Panel</h1>
-  <p>Restricted area. Admin authentication required.</p>
-  <div style="margin: 30px 0; max-width: 400px;">
-    <div style="margin-bottom: 15px;">
-      <label style="display: block; margin-bottom: 5px;">Admin Password</label>
-      <input type="password" id="adminPass" placeholder="Enter admin secret" style="width: 100%; padding: 10px; background: rgba(10,6,6,.8); border: 1px solid rgba(212,168,83,.2); color: var(--parch);">
+
+  <!-- ── Login Gate ─────────────────────────────────────────── -->
+  <div id="loginSection">
+    <div class="admin-login rv in">
+      <div class="ch-eyebrow" style="margin-bottom:12px;">Restricted Area</div>
+      <div class="ch-title" style="font-size:1.8rem;margin-bottom:4px;">Admin Panel</div>
+      <div style="width:80px;height:1px;background:linear-gradient(90deg,transparent,var(--gold-d),transparent);margin:12px auto 28px;"></div>
+      <div class="form-row" style="margin-bottom:18px;">
+        <label>Admin Password</label>
+        <input type="password" id="passwordInput" placeholder="Enter secret key" onkeydown="if(event.key==='Enter')login()">
+      </div>
+      <button class="btn btn-primary" style="width:100%;" onclick="login()">
+        <span class="btn-t" style="justify-content:center;">⚔️ Enter</span>
+      </button>
+      <div class="alert error" id="loginAlert" style="margin-top:14px;"></div>
     </div>
-    <button class="btn btn-primary" style="width: 100%;" onclick="login()">Enter Admin Panel</button>
+  </div>
+
+  <!-- ── Admin Panel (shown after login) ───────────────────── -->
+  <div id="adminPanel" class="admin-panel">
+
+    <div class="ch rv in" style="margin-bottom:36px;">
+      <div class="ch-eyebrow">Control Room</div>
+      <h1 class="ch-title">Admin Panel</h1>
+      <div class="ch-rule"></div>
+      <div style="margin-top:12px;">
+        <button class="btn btn-sm btn-danger" onclick="logout()">
+          <span class="btn-t">🚪 Log Out</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Stats -->
+    <div class="stats-bar" id="statsBar">
+      <div class="stat-box"><div class="spinner"></div></div>
+    </div>
+
+    <!-- Tabs -->
+    <div class="admin-tabs">
+      <button class="admin-tab active" onclick="switchTab('applications', this)">Applications</button>
+      <button class="admin-tab"        onclick="switchTab('config', this)">Site Config</button>
+    </div>
+
+    <!-- Tab: Applications -->
+    <div class="tab-panel active" id="tab-applications">
+
+      <div class="admin-filters">
+        <span>Filter:</span>
+        <button class="fbtn on" onclick="loadApplications('all',   this)">All</button>
+        <button class="fbtn"    onclick="loadApplications('pending',  this)">⏳ Pending</button>
+        <button class="fbtn"    onclick="loadApplications('accepted', this)">✅ Accepted</button>
+        <button class="fbtn"    onclick="loadApplications('rejected', this)">❌ Rejected</button>
+        <button class="btn btn-sm" style="margin-left:auto;" onclick="loadApplications(currentFilter, null)">↻ Refresh</button>
+      </div>
+
+      <div class="alert" id="appAlert"></div>
+      <div id="appList"><div class="spinner"></div></div>
+    </div>
+
+    <!-- Tab: Site Config -->
+    <div class="tab-panel" id="tab-config">
+
+      <div class="sh">Drive Link</div>
+      <h2 class="sec-title" style="margin-bottom:20px;">Update Download URL</h2>
+
+      <div class="scroll" style="margin-bottom:24px;">
+        <div class="scroll-e"><span class="sg">◆</span><span class="st">Update the Google Drive link here anytime you re-upload the mods folder. The change goes live immediately on the Download page.</span></div>
+        <div class="scroll-e"><span class="sg">◆</span><span class="st">Players with <strong>Accepted</strong> status will see the new link as soon as they verify on the download page.</span></div>
+      </div>
+
+      <div id="configLoader"><div class="spinner"></div></div>
+      <div id="configForm" style="display:none;">
+        <div class="config-grid">
+          <div class="config-item" style="grid-column:1/-1;">
+            <label class="config-label">Google Drive Link</label>
+            <input type="text" class="config-input" id="cfg-drive" placeholder="https://drive.google.com/...">
+          </div>
+          <div class="config-item">
+            <label class="config-label">Server Address</label>
+            <input type="text" class="config-input" id="cfg-addr" placeholder="yourserver.aternos.me">
+          </div>
+          <div class="config-item">
+            <label class="config-label">Server Port</label>
+            <input type="text" class="config-input" id="cfg-port" placeholder="25565">
+          </div>
+          <div class="config-item">
+            <label class="config-label">Pack Version</label>
+            <input type="text" class="config-input" id="cfg-ver" placeholder="v1.0.1 Alpha">
+          </div>
+        </div>
+        <div class="alert" id="configAlert"></div>
+        <button class="btn btn-primary" onclick="saveConfig()">
+          <span class="btn-t">💾 Save Changes</span>
+        </button>
+      </div>
+    </div>
+
   </div>
 </div>
 
-<footer style="text-align: center; padding: 40px 20px; color: var(--parch-d); border-top: 1px solid var(--border);">
-  <div style="font-size: .6rem; letter-spacing: .3em; text-transform: uppercase; margin-bottom: 10px;">⚜ Dragon Horizons ⚜</div>
-  <div style="font-size: .9rem;">Built by Ric Angelo Galo with the help of Claude</div>
+<footer>
+  <div class="ft-g">⚜</div>
+  <div class="ft-t">Reckt's Dragon Horizons — v1.0.1 Alpha</div>
+  <div class="ft-cr">Created by Ric Angelo Galo · With the help of Claude</div>
 </footer>
 
 <script>
-function login() {
-  // Placeholder for admin auth
-  alert('Admin panel coming soon!');
-}
+  const API = '/api';
+  let token = '';
+  let currentFilter = 'all';
+
+  // ── Auth ───────────────────────────────────────────────────────
+  function login() {
+    const pw = document.getElementById('passwordInput').value.trim();
+    if (!pw) return;
+    token = pw;
+    // Verify token by trying to fetch applications
+    fetch(`${API}/applications`, { headers: { Authorization: `Bearer ${token}` } })
+      .then(r => {
+        if (r.status === 401) {
+          token = '';
+          const al = document.getElementById('loginAlert');
+          al.textContent = 'Incorrect password.';
+          al.classList.add('visible');
+        } else {
+          document.getElementById('loginSection').style.display = 'none';
+          document.getElementById('adminPanel').classList.add('visible');
+          r.json().then(d => renderApplications(d.applications || []));
+          loadStats();
+          loadConfig();
+        }
+      })
+      .catch(() => {
+        const al = document.getElementById('loginAlert');
+        al.textContent = 'Connection failed. Check your network.';
+        al.classList.add('visible');
+      });
+  }
+
+  function logout() {
+    token = '';
+    document.getElementById('loginSection').style.display = '';
+    document.getElementById('adminPanel').classList.remove('visible');
+    document.getElementById('passwordInput').value = '';
+  }
+
+  // ── Stats ──────────────────────────────────────────────────────
+  async function loadStats() {
+    try {
+      const [all, acc, rej, pen] = await Promise.all([
+        fetch(`${API}/applications`,             { headers: authHeader() }).then(r=>r.json()),
+        fetch(`${API}/applications?status=accepted`, { headers: authHeader() }).then(r=>r.json()),
+        fetch(`${API}/applications?status=rejected`, { headers: authHeader() }).then(r=>r.json()),
+        fetch(`${API}/applications?status=pending`,  { headers: authHeader() }).then(r=>r.json()),
+      ]);
+      document.getElementById('statsBar').innerHTML = `
+        <div class="stat-box">
+          <div class="stat-n">${(all.applications||[]).length}</div>
+          <div class="stat-l">Total</div>
+        </div>
+        <div class="stat-box pending">
+          <div class="stat-n">${(pen.applications||[]).length}</div>
+          <div class="stat-l">Pending</div>
+        </div>
+        <div class="stat-box accepted">
+          <div class="stat-n">${(acc.applications||[]).length}</div>
+          <div class="stat-l">Accepted</div>
+        </div>
+        <div class="stat-box rejected">
+          <div class="stat-n">${(rej.applications||[]).length}</div>
+          <div class="stat-l">Rejected</div>
+        </div>`;
+    } catch { /* silent */ }
+  }
+
+  // ── Applications ───────────────────────────────────────────────
+  function authHeader() { return { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` }; }
+
+  async function loadApplications(filter, btn) {
+    currentFilter = filter;
+    if (btn) {
+      document.querySelectorAll('.admin-filters .fbtn').forEach(b => b.classList.remove('on'));
+      btn.classList.add('on');
+    }
+    document.getElementById('appList').innerHTML = '<div class="spinner"></div>';
+    try {
+      const url = filter === 'all' ? `${API}/applications` : `${API}/applications?status=${filter}`;
+      const res  = await fetch(url, { headers: authHeader() });
+      const data = await res.json();
+      renderApplications(data.applications || []);
+    } catch {
+      document.getElementById('appList').innerHTML = '<div class="empty-state"><div class="es-icon">⚠️</div><div class="es-msg">Failed to load</div></div>';
+    }
+  }
+
+  function renderApplications(apps) {
+    const list = document.getElementById('appList');
+    if (!apps.length) {
+      list.innerHTML = '<div class="empty-state"><div class="es-icon">📜</div><div class="es-msg">No applications found</div></div>';
+      return;
+    }
+    list.innerHTML = apps.map(app => `
+      <div class="app-card ${app.status}" id="card-${app.id}">
+        <div class="app-header" onclick="toggleCard('${app.id}')">
+          <div class="app-names">
+            <div class="app-nick">${esc(app.nickname)}</div>
+            <div class="app-user">@${esc(app.aternos_username)} · ${esc(app.discord)}</div>
+          </div>
+          <span class="app-status-pill">${app.status}</span>
+          <span class="app-date">${fmtDate(app.created_at)}</span>
+        </div>
+        <div class="app-body" id="body-${app.id}">
+          <div class="app-field">
+            <div class="app-field-label">Reason</div>
+            <div class="app-field-val">${esc(app.reason)}</div>
+          </div>
+          ${app.admin_note ? `
+          <div class="app-field">
+            <div class="app-field-label">Admin Note</div>
+            <div class="app-field-val" style="color:var(--parch-d);">${esc(app.admin_note)}</div>
+          </div>` : ''}
+          <div class="app-field">
+            <div class="app-field-label">Add / Update Note (optional)</div>
+            <textarea class="app-note-input" id="note-${app.id}" placeholder="Note shown to applicant on rejection/acceptance…">${app.admin_note ? esc(app.admin_note) : ''}</textarea>
+          </div>
+          <div class="app-actions">
+            ${app.status !== 'accepted' ? `<button class="btn btn-sm" style="border-color:#3a7a4a;color:#5aaa6a;" onclick="updateStatus('${app.id}','accepted')"><span class="btn-t">✅ Accept</span></button>` : ''}
+            ${app.status !== 'rejected' ? `<button class="btn btn-sm btn-danger" onclick="updateStatus('${app.id}','rejected')"><span class="btn-t">❌ Reject</span></button>` : ''}
+            ${app.status !== 'pending'  ? `<button class="btn btn-sm" onclick="updateStatus('${app.id}','pending')"><span class="btn-t">↩ Set Pending</span></button>` : ''}
+            <button class="btn btn-sm btn-danger" style="margin-left:auto;" onclick="deleteApp('${app.id}')"><span class="btn-t">🗑 Delete</span></button>
+          </div>
+        </div>
+      </div>`).join('');
+  }
+
+  function toggleCard(id) {
+    const body = document.getElementById(`body-${id}`);
+    body.classList.toggle('open');
+  }
+
+  async function updateStatus(id, status) {
+    const note = document.getElementById(`note-${id}`)?.value.trim() || '';
+    try {
+      const res  = await fetch(`${API}/applications/${id}`, {
+        method:  'PATCH',
+        headers: authHeader(),
+        body:    JSON.stringify({ status, admin_note: note || null }),
+      });
+      const data = await res.json();
+      if (!data.success) throw new Error(data.error);
+      // Update card class + pill without full reload
+      const card = document.getElementById(`card-${id}`);
+      card.className = `app-card ${status}`;
+      card.querySelector('.app-status-pill').textContent = status;
+      loadStats();
+    } catch (err) {
+      showAppAlert('error', `Failed: ${err.message}`);
+    }
+  }
+
+  async function deleteApp(id) {
+    if (!confirm('Delete this application permanently?')) return;
+    try {
+      const res = await fetch(`${API}/applications/${id}`, { method: 'DELETE', headers: authHeader() });
+      const d   = await res.json();
+      if (!d.success) throw new Error(d.error);
+      document.getElementById(`card-${id}`)?.remove();
+      loadStats();
+    } catch (err) {
+      showAppAlert('error', `Delete failed: ${err.message}`);
+    }
+  }
+
+  function showAppAlert(type, msg) {
+    const al = document.getElementById('appAlert');
+    al.className = `alert ${type} visible`;
+    al.textContent = msg;
+    setTimeout(() => al.classList.remove('visible'), 4000);
+  }
+
+  // ── Config ─────────────────────────────────────────────────────
+  async function loadConfig() {
+    try {
+      const res  = await fetch(`${API}/config`);
+      const data = await res.json();
+      const c = data.config || {};
+      document.getElementById('cfg-drive').value = c.drive_link     || '';
+      document.getElementById('cfg-addr').value  = c.server_address || '';
+      document.getElementById('cfg-port').value  = c.server_port    || '';
+      document.getElementById('cfg-ver').value   = c.pack_version   || '';
+      document.getElementById('configLoader').style.display = 'none';
+      document.getElementById('configForm').style.display   = 'block';
+    } catch {
+      document.getElementById('configLoader').innerHTML = '<div class="empty-state"><div class="es-icon">⚠️</div><div class="es-msg">Failed to load config</div></div>';
+    }
+  }
+
+  async function saveConfig() {
+    const body = {
+      drive_link:     document.getElementById('cfg-drive').value.trim(),
+      server_address: document.getElementById('cfg-addr').value.trim(),
+      server_port:    document.getElementById('cfg-port').value.trim(),
+      pack_version:   document.getElementById('cfg-ver').value.trim(),
+    };
+    const al = document.getElementById('configAlert');
+    try {
+      const res  = await fetch(`${API}/config`, {
+        method:  'PATCH',
+        headers: authHeader(),
+        body:    JSON.stringify(body),
+      });
+      const data = await res.json();
+      if (!data.success) throw new Error(data.error);
+      al.className = 'alert success visible';
+      al.textContent = '✅ Configuration saved. Changes are live immediately.';
+      setTimeout(() => al.classList.remove('visible'), 4000);
+    } catch (err) {
+      al.className = 'alert error visible';
+      al.textContent = `Failed to save: ${err.message}`;
+    }
+  }
+
+  // ── Tabs ───────────────────────────────────────────────────────
+  function switchTab(name, btn) {
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.admin-tab').forEach(b => b.classList.remove('active'));
+    document.getElementById(`tab-${name}`).classList.add('active');
+    btn.classList.add('active');
+  }
+
+  // ── Utils ──────────────────────────────────────────────────────
+  function esc(str) {
+    return String(str ?? '')
+      .replace(/&/g,'&amp;').replace(/</g,'&lt;')
+      .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+  function fmtDate(iso) {
+    if (!iso) return '';
+    return new Date(iso).toLocaleDateString('en-PH', { month:'short', day:'numeric', year:'numeric' });
+  }
 </script>
 </body>
 </html>
