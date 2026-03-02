@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dragon Horizons</title>
+<link rel="stylesheet" href="style.css">
+<style>
+.hero {
+  min-height: 100vh;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  text-align: center; padding: 80px 36px;
+  position: relative; z-index: 1;
+}
+.hero::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+  background: repeating-linear-gradient(
+    -45deg,
+    rgba(212,168,83,.012) 0px, rgba(212,168,83,.012) 1px,
+    transparent 1px, transparent 60px
+  );
+  pointer-events: none;
+}
+.hero-glyph {
+  font-family: var(--fc); font-size: .6rem; letter-spacing: .6em; text-transform: uppercase;
+  color: var(--ember); margin-bottom: 24px;
+  display: flex; align-items: center; gap: 20px; justify-content: center;
+}
+.hero-glyph::before, .hero-glyph::after {
+  content: ''; width: 50px; height: 1px;
+}
+.hero-glyph::before { background: linear-gradient(90deg, transparent, var(--ember)); }
+.hero-glyph::after  { background: linear-gradient(90deg, var(--ember), transparent); }
+.hero-dragon {
+  font-size: 7rem; line-height: 1; margin-bottom: 24px;
+  animation: breathe 4s ease-in-out infinite;
+}
+@keyframes breathe {
+  0%,100% { filter: drop-shadow(0 0 24px rgba(212,168,83,.8)) drop-shadow(0 0 48px rgba(168,32,32,.5)); }
+  50%      { filter: drop-shadow(0 0 40px rgba(212,168,83,1))  drop-shadow(0 0 80px rgba(200,88,26,.8)); }
+}
+.hero-eyebrow {
+  font-family: var(--fc); font-size: .6rem; letter-spacing: .5em; text-transform: uppercase;
+  color: var(--parch-d); margin-bottom: 10px;
+}
+.hero-title {
+  font-family: var(--fc); font-weight: 900;
+  font-size: clamp(3rem, 8vw, 7rem);
+  color: var(--gold-l); letter-spacing: .06em; line-height: .95;
+  text-shadow: 0 0 40px rgba(212,168,83,.5), 0 0 100px rgba(212,168,83,.2), 4px 4px 0 rgba(0,0,0,.8);
+  margin-bottom: 18px;
+}
+.hero-ver {
+  display: inline-block;
+  font-family: var(--fc); font-size: .58rem; font-weight: 700; letter-spacing: .35em;
+  padding: 5px 22px;
+  border: 1px solid var(--blood); color: var(--blood-b);
+  background: rgba(107,18,18,.15); text-transform: uppercase;
+  margin-bottom: 28px;
+}
+.hero-tag {
+  font-family: var(--fi); font-size: 1.15rem; font-style: italic;
+  color: var(--parch-d); max-width: 520px; margin: 0 auto 40px;
+  line-height: 1.75;
+}
+.hero-btns { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-bottom: 48px; }
+
+/* Server badge */
+.srv-wrap  { display: flex; flex-direction: column; align-items: center; gap: 10px; }
+.srv-eyebrow {
+  font-family: var(--fc); font-size: .52rem; letter-spacing: .45em; text-transform: uppercase;
+  color: var(--parch-d);
+}
+.srv-badge {
+  display: inline-flex; align-items: center; gap: 14px; flex-wrap: wrap; justify-content: center;
+  padding: 16px 26px;
+  background: rgba(10,6,6,.94); border: 1px solid rgba(212,168,83,.2);
+  position: relative;
+}
+.srv-badge::before, .srv-badge::after { content: ''; position: absolute; width: 10px; height: 10px; }
+.srv-badge::before { top: -1px;    left: -1px;   border-top: 1px solid var(--gold);    border-left: 1px solid var(--gold); }
+.srv-badge::after  { bottom: -1px; right: -1px;  border-bottom: 1px solid var(--gold); border-right: 1px solid var(--gold); }
+.srv-pip {
+  width: 9px; height: 9px; border-radius: 50%;
+  background: #5aaa6a; box-shadow: 0 0 10px #5aaa6a;
+  animation: pip 2s ease-in-out infinite; flex-shrink: 0;
+}
+@keyframes pip { 0%,100%{opacity:1;box-shadow:0 0 10px #5aaa6a}50%{opacity:.3;box-shadow:0 0 3px #5aaa6a} }
+.srv-info  { text-align: left; }
+.srv-lbl   { font-family: var(--fc); font-size: .5rem; letter-spacing: .3em; text-transform: uppercase; color: var(--parch-d); }
+.srv-addr  { font-family: var(--fi); font-size: 1.15rem; color: var(--gold-l); letter-spacing: .02em; }
+.srv-note  { font-family: var(--fc); font-size: .5rem; letter-spacing: .2em; text-transform: uppercase; color: var(--parch-d); }
+.hero-rule { width: min(500px,80%); height: 1px; background: linear-gradient(90deg,transparent,var(--gold-d),transparent); margin: 56px auto 0; }
+
+/* Features */
+.features  { position: relative; z-index: 1; max-width: 1040px; margin: 0 auto; padding: 16px 36px 100px; }
+.feat-eyebrow {
+  font-family: var(--fc); font-size: .58rem; letter-spacing: .45em; text-transform: uppercase;
+  color: var(--parch-d); text-align: center; margin-bottom: 36px;
+  display: flex; align-items: center; gap: 16px;
+}
+.feat-eyebrow::before, .feat-eyebrow::after { content: ''; flex: 1; height: 1px; background: rgba(212,168,83,.1); }
+.feat-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px,1fr)); gap: 12px; }
+</style>
+</head>
+<body>
+
+<nav class="sitenav">
+  <a href="index.html" class="active">Home</a>
+  <a href="about.html">About</a>
+  <a href="mods.html">Mod List</a>
+  <a href="patchnotes.html">Patch Notes</a>
+  <a href="apply.html">Apply</a>
+  <a href="download.html" class="nav-dl">⬇ Download</a>
+</nav>
+
+<section class="hero">
+  <div class="hero-glyph">Alpha v1.0.1</div>
+  <div class="hero-dragon">🐉</div>
+  <div class="hero-eyebrow">Reckt's</div>
+  <h1 class="hero-title">Dragon<br>Horizons</h1>
+  <div class="hero-ver">Forge 1.20.1 · Private Server Modpack</div>
+  <p class="hero-tag">A Soulslike survival experience where every horizon hides a dragon, every mob scales to your strength, and every death is a lesson carved in flame.</p>
+
+  <div class="hero-btns">
+    <a href="apply.html"     class="btn btn-primary"><span class="btn-t">⚔️ Apply to Join</span></a>
+    <a href="download.html"  class="btn"><span class="btn-t">⬇ Download Mods</span></a>
+    <a href="patchnotes.html"class="btn"><span class="btn-t">📜 Patch Notes</span></a>
+    <a href="about.html"     class="btn"><span class="btn-t">About</span></a>
+  </div>
+
+  <div class="srv-wrap">
+    <div class="srv-eyebrow">Connect to the Server</div>
+    <div class="srv-badge">
+      <div class="srv-pip"></div>
+      <div class="srv-info">
+        <div class="srv-lbl">Server Address</div>
+        <div class="srv-addr" id="saddr">recktsdragonhorizon.aternos.me:20126</div>
+      </div>
+      <button class="srv-cpbtn" id="cpbtn" onclick="cp()">Copy</button>
+    </div>
+    <div class="srv-note">Aternos · Ask Reckt to start before joining</div>
+  </div>
+
+  <div class="hero-rule"></div>
+</section>
+
+<section class="features">
+  <div class="feat-eyebrow">What Awaits You</div>
+  <div class="feat-grid rv">
+    <div class="panel bl"><div class="p-icon">⚔️</div><div class="p-title">Soulslike Combat</div><div class="p-desc">Posture, bleed buildup, and 9 hand-crafted bosses. Armor caps at 75% — no build is invincible.</div></div>
+    <div class="panel ru"><div class="p-icon">📈</div><div class="p-title">Dynamic Difficulty</div><div class="p-desc">AutoLeveling scales mobs by distance from spawn. A zombie at base is manageable. 3000 blocks out, it's a threat.</div></div>
+    <div class="panel"   ><div class="p-icon">🧠</div><div class="p-title">Skill Gating</div><div class="p-desc">8 disciplines gate all gear. Diamond armor isn't worn on day one — it's earned kill by kill.</div></div>
+    <div class="panel bl"><div class="p-icon">🐉</div><div class="p-title">Dragon World</div><div class="p-desc">Ice and Fire, Alex's Mobs, and Alex's Caves fill every biome with things that hunt you before you find them.</div></div>
+    <div class="panel gd"><div class="p-icon">💀</div><div class="p-title">Permanent Progression</div><div class="p-desc">The Player Skill Tree turns kills into permanent power. Every boss you fell makes you permanently stronger.</div></div>
+    <div class="panel ru"><div class="p-icon">🗡️</div><div class="p-title">Arsenal of Steel</div><div class="p-desc">Spartan Weaponry and Marius Soulslike provide a full arsenal. Legendaries wait in boss loot only.</div></div>
+  </div>
+</section>
+
+<footer>
+  <div class="ft-g">⚜</div>
+  <div class="ft-t">Reckt's Dragon Horizons — v1.0.1 Alpha</div>
+  <div class="ft-l">Built for those who seek the horizon beyond the flame.</div>
+  <div class="ft-cr">Created by Ric Angelo Galo · With the help of Claude</div>
+</footer>
+
+<script>
+  // Load live server address from config
+  async function loadConfig() {
+    try {
+      const res  = await fetch('/api/config');
+      const data = await res.json();
+      if (!data.success) return;
+      const c = data.config;
+      if (c.server_address && c.server_port) {
+        document.getElementById('saddr').textContent = `${c.server_address}:${c.server_port}`;
+      }
+      if (c.pack_version) {
+        document.querySelector('.hero-ver').textContent = `Forge 1.20.1 · ${c.pack_version}`;
+      }
+    } catch { /* use defaults */ }
+  }
+
+  function cp() {
+    const addr = document.getElementById('saddr').textContent;
+    navigator.clipboard.writeText(addr);
+    const b = document.getElementById('cpbtn');
+    b.textContent = 'Copied!'; b.classList.add('ok');
+    setTimeout(() => { b.textContent = 'Copy'; b.classList.remove('ok'); }, 2200);
+  }
+
+  document.querySelectorAll('.rv').forEach(el => {
+    new IntersectionObserver(entries => {
+      entries.forEach(x => { if (x.isIntersecting) x.target.classList.add('in'); });
+    }, { threshold: .08 }).observe(el);
+  });
+
+  loadConfig();
+</script>
+</body>
+</html>

@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dragon Horizons — Download</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<nav class="sitenav">
+  <a href="index.html">Home</a>
+  <a href="about.html">About</a>
+  <a href="mods.html">Mod List</a>
+  <a href="patchnotes.html">Patch Notes</a>
+  <a href="download.html" class="active nav-dl">⬇ Download</a>
+</nav>
+
+<div class="page">
+
+  <div class="ch rv">
+    <div class="ch-eyebrow">Client Download</div>
+    <h1 class="ch-title">Download</h1>
+    <div class="ch-rule"></div>
+  </div>
+
+  <div class="rv rv2">
+
+    <!-- Access Checker -->
+    <div class="scroll" style="margin-bottom:28px;">
+      <div class="scroll-e">
+        <span class="sg">🔒</span>
+        <span class="st">Dragon Horizons is a <strong>private server</strong>. You must have an accepted application to access the download. Enter your Aternos username below to unlock it. <a href="apply.html">Apply here →</a></span>
+      </div>
+    </div>
+
+    <!-- Unlock strip -->
+    <div style="display:flex;gap:10px;align-items:flex-end;margin-bottom:32px;flex-wrap:wrap;">
+      <div style="flex:1;min-width:200px;">
+        <label style="display:block;font-family:var(--fc);font-size:.5rem;letter-spacing:.3em;text-transform:uppercase;color:var(--parch-d);margin-bottom:7px;">Aternos Username</label>
+        <input type="text" id="unlockUser" placeholder="Enter your Aternos username" style="width:100%;background:rgba(10,6,6,.8);border:1px solid rgba(212,168,83,.2);color:var(--parch);font-family:var(--fi);font-size:.95rem;padding:12px 16px;outline:none;" onkeydown="if(event.key==='Enter')checkAccess()">
+      </div>
+      <button class="btn" id="unlockBtn" onclick="checkAccess()">
+        <span class="btn-t">🔍 Check Access</span>
+      </button>
+    </div>
+
+    <!-- DOWNLOAD ALTAR -->
+    <div class="dl-altar" style="margin-bottom:56px;" id="downloadAltar">
+      <div class="dl-c tl"></div><div class="dl-c tr"></div>
+      <div class="dl-c bl"></div><div class="dl-c br"></div>
+      <div class="dl-icon" id="altarIcon">🔒</div>
+      <div class="dl-title">Mods Folder</div>
+      <div class="dl-desc" id="altarDesc">Verify your access above to unlock the download.</div>
+      <div class="dl-ver" id="altarVer">Reckt's Dragon Horizons · v1.0.1 Alpha · Forge 1.20.1</div>
+      <a href="#" id="dlBtn" class="dl-btn locked" onclick="return false;">⬇ Verify Access First</a>
+      <div class="dl-note" id="altarNote">Enter your Aternos username above · Free · No account required</div>
+
+      <div id="accessBadgeWrap" style="margin:16px 0 0;display:none;">
+        <div class="access-badge" id="accessBadge">
+          <div class="access-dot"></div>
+          <span class="access-label" id="accessLabel"></span>
+        </div>
+      </div>
+
+      <div class="dl-reqs">
+        <div class="dl-req-i"><span class="dl-req-v" id="cfgMC">Java 1.20.1</span><span class="dl-req-l">Minecraft</span></div>
+        <div class="dl-req-i"><span class="dl-req-v" id="cfgForge">Forge 47.4.x</span><span class="dl-req-l">Mod Loader</span></div>
+        <div class="dl-req-i"><span class="dl-req-v">Java 17+</span><span class="dl-req-l">Java Version</span></div>
+        <div class="dl-req-i"><span class="dl-req-v">6–8 GB</span><span class="dl-req-l">RAM Allocated</span></div>
+        <div class="dl-req-i"><span class="dl-req-v">~4 GB</span><span class="dl-req-l">Disk Space</span></div>
+      </div>
+    </div>
+
+    <!-- SERVER -->
+    <div class="sh">Server Connection</div>
+    <h2 class="sec-title" style="margin-bottom:20px;">How to Join</h2>
+
+    <div class="panel gd" style="margin-bottom:28px;display:flex;align-items:center;gap:20px;flex-wrap:wrap;">
+      <div>
+        <div style="font-family:var(--fc);font-size:.55rem;letter-spacing:.35em;text-transform:uppercase;color:var(--parch-d);margin-bottom:4px;">Server Address</div>
+        <div style="font-family:var(--fi);font-size:1.2rem;color:var(--gold-l);" id="saddr2">recktsdragonhorizon.aternos.me:20126</div>
+      </div>
+      <button class="srv-cpbtn" id="cpbtn2" onclick="cp2()" style="margin-left:auto;">Copy Address</button>
+    </div>
+
+    <div class="scroll" style="margin-bottom:48px;">
+      <div class="scroll-e"><span class="sg">⚠</span><span class="st">This server runs on <strong>Aternos</strong> — it must be manually turned on before players can connect. Ask the server owner (Reckt) to start it up.</span></div>
+      <div class="scroll-e"><span class="sg">◆</span><span class="st">In Minecraft, go to <strong>Multiplayer → Add Server</strong>, paste the address above, and save.</span></div>
+      <div class="scroll-e"><span class="sg">◆</span><span class="st">Make sure all mods are installed <strong>before</strong> connecting. Joining without the correct mods will result in a crash.</span></div>
+    </div>
+
+    <!-- INSTALL STEPS -->
+    <div class="sh">Installation</div>
+    <h2 class="sec-title" style="margin-bottom:20px;">Step-by-Step Setup</h2>
+    <div style="margin-bottom:48px;">
+      <div class="step"><div class="step-n">01</div><div class="step-t">Download and install <strong>Minecraft Java Edition 1.20.1</strong> from the official Minecraft launcher.</div></div>
+      <div class="step"><div class="step-n">02</div><div class="step-t">Download and run the <strong>Forge 1.20.1 installer</strong> (build 47.4.x). Select "Install client" when prompted.</div></div>
+      <div class="step"><div class="step-n">03</div><div class="step-t">Verify your access above, then click the <strong>Download from Google Drive</strong> button.</div></div>
+      <div class="step"><div class="step-n">04</div><div class="step-t">Extract the ZIP and <strong>copy the mods folder</strong> into your <code>.minecraft</code> directory. On Windows: <code>%appdata%\.minecraft</code></div></div>
+      <div class="step"><div class="step-n">05</div><div class="step-t">Select the <strong>Forge 1.20.1 profile</strong>. In JVM arguments, allocate RAM: <code>-Xmx8G -Xms4G</code></div></div>
+      <div class="step"><div class="step-n">06</div><div class="step-t">Launch the game — first load takes 3–5 minutes. Go to <strong>Multiplayer</strong> and connect to the server address above.</div></div>
+    </div>
+
+    <!-- SPECS -->
+    <div class="sh">Requirements</div>
+    <h2 class="sec-title" style="margin-bottom:20px;">System Requirements</h2>
+    <div class="specs-2">
+      <div>
+        <div class="specs-hd">⚠ Minimum</div>
+        <div class="spec-row"><span class="spec-k">Minecraft</span><span class="spec-v req">Java 1.20.1</span></div>
+        <div class="spec-row"><span class="spec-k">Forge</span><span class="spec-v req">47.4.x</span></div>
+        <div class="spec-row"><span class="spec-k">Java</span><span class="spec-v req">Java 17</span></div>
+        <div class="spec-row"><span class="spec-k">RAM</span><span class="spec-v warn">6 GB</span></div>
+        <div class="spec-row"><span class="spec-k">Storage</span><span class="spec-v warn">4 GB Free</span></div>
+        <div class="spec-row"><span class="spec-k">GPU</span><span class="spec-v warn">GTX 970 / RX 480</span></div>
+      </div>
+      <div>
+        <div class="specs-hd">✦ Recommended</div>
+        <div class="spec-row"><span class="spec-k">Minecraft</span><span class="spec-v">Java 1.20.1</span></div>
+        <div class="spec-row"><span class="spec-k">Forge</span><span class="spec-v">47.4.x</span></div>
+        <div class="spec-row"><span class="spec-k">Java</span><span class="spec-v">Java 17 or 21</span></div>
+        <div class="spec-row"><span class="spec-k">RAM</span><span class="spec-v">8–10 GB</span></div>
+        <div class="spec-row"><span class="spec-k">Storage</span><span class="spec-v">8 GB Free (SSD)</span></div>
+        <div class="spec-row"><span class="spec-k">GPU</span><span class="spec-v">RTX 2060 / RX 6600</span></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<footer>
+  <div class="ft-g">⚜</div>
+  <div class="ft-t" id="footerVer">Reckt's Dragon Horizons — v1.0.1 Alpha</div>
+  <div class="ft-l">Built for those who seek the horizon beyond the flame.</div>
+  <div class="ft-cr">Created by Ric Angelo Galo · With the help of Claude</div>
+</footer>
+
+<script>
+  const API = '/api';
+  let driveLink = null;
+
+  // Load live config (drive link + server address + version)
+  async function loadConfig() {
+    try {
+      const res  = await fetch(`${API}/config`);
+      const data = await res.json();
+      if (!data.success) return;
+      const c = data.config;
+      driveLink = c.drive_link || null;
+      if (c.server_address && c.server_port) {
+        const addr = `${c.server_address}:${c.server_port}`;
+        document.getElementById('saddr2').textContent = addr;
+      }
+      if (c.pack_version) {
+        document.getElementById('altarVer').textContent =
+          `Reckt's Dragon Horizons · ${c.pack_version} · Forge 1.20.1`;
+        document.getElementById('footerVer').textContent =
+          `Reckt's Dragon Horizons — ${c.pack_version}`;
+      }
+    } catch { /* use defaults */ }
+  }
+
+  // Check access gate
+  async function checkAccess() {
+    const username = document.getElementById('unlockUser').value.trim();
+    if (!username) return;
+
+    const btn = document.getElementById('unlockBtn');
+    btn.disabled = true;
+    btn.querySelector('.btn-t').textContent = '🔍 Checking…';
+
+    try {
+      const res  = await fetch(`${API}/status?username=${encodeURIComponent(username)}`);
+      const data = await res.json();
+
+      const badge = document.getElementById('accessBadge');
+      const label = document.getElementById('accessLabel');
+      const wrap  = document.getElementById('accessBadgeWrap');
+      wrap.style.display = 'block';
+
+      if (data.found && data.status === 'accepted' && driveLink) {
+        // ✅ Unlock
+        badge.className = 'access-badge accepted';
+        label.textContent = '✅ Access Granted';
+        document.getElementById('altarIcon').textContent = '📦';
+        document.getElementById('altarDesc').textContent = 'Pre-configured client mods for Dragon Horizons server.';
+        const dlBtn = document.getElementById('dlBtn');
+        dlBtn.href = driveLink;
+        dlBtn.target = '_blank';
+        dlBtn.textContent = '⬇ Download from Google Drive';
+        dlBtn.classList.remove('locked');
+        dlBtn.onclick = null;
+        document.getElementById('altarNote').textContent = 'Hosted on Google Drive · Free · No account required';
+
+      } else if (data.found && data.status === 'pending') {
+        badge.className = 'access-badge pending';
+        label.textContent = '⏳ Application Pending';
+        document.getElementById('altarDesc').textContent = 'Your application is being reviewed. Check back soon.';
+
+      } else if (data.found && data.status === 'rejected') {
+        badge.className = 'access-badge rejected';
+        label.textContent = '❌ Application Rejected';
+        document.getElementById('altarDesc').textContent = 'Your application was not accepted. Contact the server owner.';
+
+      } else {
+        badge.className = 'access-badge pending';
+        label.textContent = '🔒 No Application Found';
+        document.getElementById('altarDesc').textContent = 'No accepted application for that username. Apply first to gain access.';
+      }
+    } catch {
+      document.getElementById('altarDesc').textContent = 'Could not verify status. Try again shortly.';
+    }
+
+    btn.disabled = false;
+    btn.querySelector('.btn-t').textContent = '🔍 Check Access';
+  }
+
+  function cp2(){
+    const addr = document.getElementById('saddr2').textContent;
+    navigator.clipboard.writeText(addr);
+    var b=document.getElementById('cpbtn2');
+    b.textContent='Copied!';b.classList.add('ok');
+    setTimeout(function(){b.textContent='Copy Address';b.classList.remove('ok');},2200);
+  }
+
+  document.getElementById('unlockUser').addEventListener('keydown', e => {
+    if (e.key === 'Enter') checkAccess();
+  });
+
+  document.querySelectorAll('.rv').forEach(el => {
+    new IntersectionObserver(entries => {
+      entries.forEach(x => { if (x.isIntersecting) x.target.classList.add('in'); });
+    }, { threshold: .08 }).observe(el);
+  });
+
+  loadConfig();
+</script>
+</body>
+</html>

@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dragon Horizons — Mod List</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<nav class="sitenav">
+  <a href="index.html">Home</a>
+  <a href="about.html">About</a>
+  <a href="mods.html" class="active">Mod List</a>
+  <a href="patchnotes.html">Patch Notes</a>
+  <a href="apply.html">Apply</a>
+  <a href="download.html" class="nav-dl">⬇ Download</a>
+</nav>
+
+<div class="page">
+
+  <div class="ch rv">
+    <div class="ch-eyebrow">Included Mods</div>
+    <h1 class="ch-title">Mod List</h1>
+    <div class="ch-rule"></div>
+  </div>
+
+  <div class="rv rv2">
+    <p class="lore" style="margin-bottom:32px;">Every mod included in Dragon Horizons v1.0.1 Alpha. <strong>New This Version</strong> marks additions for this release. All mods are pre-configured — drop the folder and connect.</p>
+
+    <div class="frow">
+      <button class="fbtn on" onclick="flt('all',this)">All</button>
+      <button class="fbtn"    onclick="flt('new',this)">New This Version</button>
+      <button class="fbtn"    onclick="flt('combat',this)">Combat</button>
+      <button class="fbtn"    onclick="flt('creatures',this)">Creatures</button>
+      <button class="fbtn"    onclick="flt('worldgen',this)">World Gen</button>
+      <button class="fbtn"    onclick="flt('progression',this)">Progression</button>
+      <button class="fbtn"    onclick="flt('utility',this)">Utility</button>
+      <button class="fbtn"    onclick="flt('performance',this)">Performance</button>
+    </div>
+
+    <div class="mod-grid" id="mg">
+      <div class="mrow" data-c="combat new">      <span class="mem">⚔️</span><div class="minfo"><div class="mnm">Marius Soulslike</div>     <div class="mcat">Combat &amp; Bosses</div></div>         <span class="mbdg mbn">New</span></div>
+      <div class="mrow" data-c="progression new"> <span class="mem">🧠</span><div class="minfo"><div class="mnm">Reskillable</div>           <div class="mcat">Skill System</div></div>              <span class="mbdg mbn">New</span></div>
+      <div class="mrow" data-c="combat new">      <span class="mem">📈</span><div class="minfo"><div class="mnm">AutoLeveling</div>          <div class="mcat">Difficulty Scaling</div></div>         <span class="mbdg mbn">New</span></div>
+      <div class="mrow" data-c="combat new">      <span class="mem">🛡️</span><div class="minfo"><div class="mnm">ArmorcCurve</div>           <div class="mcat">Combat Balance</div></div>            <span class="mbdg mbn">New</span></div>
+      <div class="mrow" data-c="combat new">      <span class="mem">🗡️</span><div class="minfo"><div class="mnm">Spartan Weaponry</div>      <div class="mcat">Weapons</div></div>                   <span class="mbdg mbn">New</span></div>
+      <div class="mrow" data-c="progression new"> <span class="mem">💀</span><div class="minfo"><div class="mnm">Player Skill Tree</div>     <div class="mcat">Progression</div></div>               <span class="mbdg mbn">New</span></div>
+      <div class="mrow" data-c="creatures">       <span class="mem">🐉</span><div class="minfo"><div class="mnm">Ice and Fire</div>          <div class="mcat">Dragons &amp; Creatures</div></div>  <span class="mbdg mbc">Core</span></div>
+      <div class="mrow" data-c="creatures">       <span class="mem">🦁</span><div class="minfo"><div class="mnm">Alex's Mobs</div>           <div class="mcat">Creatures</div></div>                  <span class="mbdg mbc">Core</span></div>
+      <div class="mrow" data-c="worldgen creatures"><span class="mem">🕳️</span><div class="minfo"><div class="mnm">Alex's Caves</div>         <div class="mcat">World Gen &amp; Creatures</div></div><span class="mbdg mbc">Core</span></div>
+      <div class="mrow" data-c="creatures">       <span class="mem">🏛️</span><div class="minfo"><div class="mnm">Mobs of Mythology</div>    <div class="mcat">Creatures</div></div>                  <span class="mbdg mbc">Core</span></div>
+      <div class="mrow" data-c="combat creatures"><span class="mem">⚔️</span><div class="minfo"><div class="mnm">Illager Invasion</div>      <div class="mcat">Events</div></div>                    <span class="mbdg mbc">Core</span></div>
+      <div class="mrow" data-c="combat creatures"><span class="mem">🏴‍☠️</span><div class="minfo"><div class="mnm">Savage &amp; Ravage</div>  <div class="mcat">Combat</div></div>                    <span class="mbdg mbc">Core</span></div>
+      <div class="mrow" data-c="creatures">       <span class="mem">💥</span><div class="minfo"><div class="mnm">Creeper Overhaul</div>      <div class="mcat">Creatures</div></div>                  <span class="mbdg mbc">Core</span></div>
+      <div class="mrow" data-c="creatures worldgen"><span class="mem">🧟</span><div class="minfo"><div class="mnm">The Graveyard</div>        <div class="mcat">Creatures &amp; Structures</div></div><span class="mbdg mbc">Core</span></div>
+      <div class="mrow" data-c="progression">     <span class="mem">💎</span><div class="minfo"><div class="mnm">Artifacts</div>             <div class="mcat">Loot</div></div>                       <span class="mbdg mbc">Core</span></div>
+      <div class="mrow" data-c="progression utility"><span class="mem">💍</span><div class="minfo"><div class="mnm">Curios API</div>           <div class="mcat">Equipment Slots</div></div>          <span class="mbdg mbc">Core</span></div>
+      <div class="mrow" data-c="combat">          <span class="mem">🗿</span><div class="minfo"><div class="mnm">Dreadsteel</div>            <div class="mcat">Materials &amp; Weapons</div></div>    <span class="mbdg mbc">Core</span></div>
+      <div class="mrow" data-c="worldgen">        <span class="mem">🪨</span><div class="minfo"><div class="mnm">Tectonic</div>              <div class="mcat">World Gen</div></div>                   <span class="mbdg mbc">Core</span></div>
+      <div class="mrow" data-c="worldgen">        <span class="mem">🏰</span><div class="minfo"><div class="mnm">Repurposed Structures</div><div class="mcat">World Gen</div></div>                   <span class="mbdg mbc">Core</span></div>
+      <div class="mrow" data-c="worldgen">        <span class="mem">🏚️</span><div class="minfo"><div class="mnm">YUNG's Better Dungeons</div><div class="mcat">World Gen</div></div>                 <span class="mbdg mbc">Core</span></div>
+      <div class="mrow" data-c="utility">         <span class="mem">🎒</span><div class="minfo"><div class="mnm">Sophisticated Backpacks</div><div class="mcat">Utility</div></div>                 <span class="mbdg mbc">Core</span></div>
+      <div class="mrow" data-c="utility">         <span class="mem">🍖</span><div class="minfo"><div class="mnm">Farmer's Delight</div>     <div class="mcat">Food</div></div>                       <span class="mbdg mbc">Core</span></div>
+      <div class="mrow" data-c="utility">         <span class="mem">🗺️</span><div class="minfo"><div class="mnm">Xaero's Minimap</div>      <div class="mcat">Utility</div></div>                    <span class="mbdg mbc">Core</span></div>
+      <div class="mrow" data-c="utility">         <span class="mem">🪨</span><div class="minfo"><div class="mnm">Waystones</div>             <div class="mcat">Travel</div></div>                     <span class="mbdg mbc">Core</span></div>
+      <div class="mrow" data-c="utility">         <span class="mem">🔨</span><div class="minfo"><div class="mnm">Tinkers Construct</div>    <div class="mcat">Tools &amp; Weapons</div></div>         <span class="mbdg mbc">Core</span></div>
+      <div class="mrow" data-c="performance">     <span class="mem">⚡</span><div class="minfo"><div class="mnm">ModernFix</div>             <div class="mcat">Performance</div></div>               <span class="mbdg mbp">Perf</span></div>
+      <div class="mrow" data-c="performance">     <span class="mem">🔧</span><div class="minfo"><div class="mnm">FerriteCore</div>           <div class="mcat">Performance</div></div>               <span class="mbdg mbp">Perf</span></div>
+      <div class="mrow" data-c="performance">     <span class="mem">📶</span><div class="minfo"><div class="mnm">Connectivity</div>          <div class="mcat">Network</div></div>                    <span class="mbdg mbp">Perf</span></div>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  <div class="ft-g">⚜</div>
+  <div class="ft-t">Reckt's Dragon Horizons — v1.0.1 Alpha</div>
+  <div class="ft-l">Built for those who seek the horizon beyond the flame.</div>
+  <div class="ft-cr">Created by Ric Angelo Galo · With the help of Claude</div>
+</footer>
+
+<script>
+  function flt(c, btn) {
+    document.querySelectorAll('.fbtn').forEach(b => b.classList.remove('on'));
+    btn.classList.add('on');
+    document.querySelectorAll('.mrow').forEach(m => {
+      m.style.display = (c === 'all' || m.dataset.c.includes(c)) ? 'flex' : 'none';
+    });
+  }
+  document.querySelectorAll('.rv').forEach(el => {
+    new IntersectionObserver(entries => {
+      entries.forEach(x => { if (x.isIntersecting) x.target.classList.add('in'); });
+    }, { threshold: .08 }).observe(el);
+  });
+</script>
+</body>
+</html>
