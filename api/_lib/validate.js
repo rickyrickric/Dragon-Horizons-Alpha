@@ -1,3 +1,4 @@
+// Application form validation
 export function validateApplication(body) {
   const { nickname, discord, aternos_username, reason } = body;
   const errors = [];

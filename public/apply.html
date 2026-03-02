@@ -17,223 +17,34 @@
 </nav>
 
 <div class="page">
-
-  <!-- Header -->
-  <div class="ch rv">
-    <div class="ch-eyebrow">Server Access</div>
-    <h1 class="ch-title">Apply to Join</h1>
-    <div class="ch-rule"></div>
-  </div>
-
-  <div class="rv rv2">
-
-    <!-- Info scroll -->
-    <div class="scroll" style="margin-bottom:36px;">
-      <div class="scroll-e"><span class="sg">⚜</span><span class="st">Dragon Horizons is a <strong>private server</strong>. Applications are reviewed by the server owner. You'll be able to check your status using your Aternos username.</span></div>
-      <div class="scroll-e"><span class="sg">◆</span><span class="st">Once accepted, visit the <a href="download.html">Download page</a> and enter your Aternos username to unlock the download link.</span></div>
-      <div class="scroll-e"><span class="sg">◆</span><span class="st">Review typically takes <strong>1–3 days</strong>. Check your status anytime below or on the <a href="download.html">Download page</a>.</span></div>
-    </div>
-
-    <!-- Success / error card shown after submission -->
-    <div class="status-card" id="successCard">
-      <div class="status-icon">🐉</div>
-      <div class="status-title">Application Received</div>
-      <div class="status-msg">Your application is under review. Check back using your Aternos username to see when it's been accepted.</div>
-      <div class="status-id" id="successId"></div>
-      <div style="margin-top:24px;">
-        <a href="download.html" class="btn btn-sm"><span class="btn-t">Check Status →</span></a>
+  <h1>Apply to Join Dragon Horizons</h1>
+  <p>Dragon Horizons is a private server. Submit an application below and we'll review it within 1-3 days.</p>
+  <div style="margin: 30px 0;">
+    <form style="max-width: 500px;">
+      <div style="margin-bottom: 15px;">
+        <label style="display: block; margin-bottom: 5px;">Nickname / Real Name *</label>
+        <input type="text" placeholder="What do we call you?" style="width: 100%; padding: 10px; background: rgba(10,6,6,.8); border: 1px solid rgba(212,168,83,.2); color: var(--parch);" required>
       </div>
-    </div>
-
-    <div class="alert" id="formAlert"></div>
-
-    <!-- Application Form -->
-    <div id="formWrap">
-      <div class="sh">Application Form</div>
-      <h2 class="sec-title">Your Details</h2>
-
-      <div class="apply-form">
-        <div class="form-row-2">
-          <div class="form-row">
-            <label>Nickname / Real Name <span class="req">*</span></label>
-            <input type="text" id="nickname" placeholder="What do we call you?" maxlength="64" autocomplete="off">
-          </div>
-          <div class="form-row">
-            <label>Discord Tag <span class="req">*</span></label>
-            <input type="text" id="discord" placeholder="yourname or user#0000" maxlength="64" autocomplete="off">
-          </div>
-        </div>
-
-        <div class="form-row">
-          <label>Aternos Username <span class="req">*</span></label>
-          <input type="text" id="aternos" placeholder="Your exact Aternos account username" maxlength="64" autocomplete="off">
-          <div class="form-hint">This is the username you use to log into Aternos — it's how we whitelist you.</div>
-        </div>
-
-        <div class="form-row">
-          <label>Why do you want to join? <span class="req">*</span></label>
-          <textarea id="reason" placeholder="Tell us a bit about yourself and why you want to play on Dragon Horizons…"></textarea>
-          <div class="form-hint" id="charCount">Minimum 20 characters. <span id="cc">0</span> written.</div>
-        </div>
-
-        <div style="text-align:right;">
-          <button class="btn btn-primary" id="submitBtn" onclick="submitApplication()">
-            <span class="btn-t">⚔️ Submit Application</span>
-          </button>
-        </div>
+      <div style="margin-bottom: 15px;">
+        <label style="display: block; margin-bottom: 5px;">Discord Tag *</label>
+        <input type="text" placeholder="yourname or user#0000" style="width: 100%; padding: 10px; background: rgba(10,6,6,.8); border: 1px solid rgba(212,168,83,.2); color: var(--parch);" required>
       </div>
-    </div>
-
-    <!-- Status Checker -->
-    <div class="sh" style="margin-top:16px;">Already Applied?</div>
-    <h2 class="sec-title">Check Your Status</h2>
-
-    <div class="apply-form" style="margin-bottom:0;">
-      <div class="form-row" style="margin-bottom:16px;">
-        <label>Aternos Username</label>
-        <input type="text" id="checkUsername" placeholder="Enter your Aternos username" maxlength="64" autocomplete="off">
+      <div style="margin-bottom: 15px;">
+        <label style="display: block; margin-bottom: 5px;">Aternos Username *</label>
+        <input type="text" placeholder="Your exact Aternos username" style="width: 100%; padding: 10px; background: rgba(10,6,6,.8); border: 1px solid rgba(212,168,83,.2); color: var(--parch);" required>
       </div>
-      <button class="btn" id="checkBtn" onclick="checkStatus()">
-        <span class="btn-t">🔍 Check Status</span>
-      </button>
-
-      <div id="statusResult" style="margin-top:20px;display:none;">
-        <div class="access-badge" id="statusBadge">
-          <div class="access-dot"></div>
-          <span class="access-label" id="statusLabel"></span>
-        </div>
-        <div id="statusNote" style="font-size:.88rem;color:var(--parch-d);margin-top:8px;"></div>
+      <div style="margin-bottom: 15px;">
+        <label style="display: block; margin-bottom: 5px;">Why do you want to join? *</label>
+        <textarea placeholder="Tell us about yourself..." style="width: 100%; padding: 10px; background: rgba(10,6,6,.8); border: 1px solid rgba(212,168,83,.2); color: var(--parch); min-height: 120px;" required></textarea>
       </div>
-    </div>
-
+      <button type="submit" class="btn btn-primary" style="width: 100%;">Submit Application</button>
+    </form>
   </div>
 </div>
 
-<footer>
-  <div class="ft-g">⚜</div>
-  <div class="ft-t">Reckt's Dragon Horizons — v1.0.1 Alpha</div>
-  <div class="ft-l">Built for those who seek the horizon beyond the flame.</div>
-  <div class="ft-cr">Created by Ric Angelo Galo · With the help of Claude</div>
+<footer style="text-align: center; padding: 40px 20px; color: var(--parch-d); border-top: 1px solid var(--border);">
+  <div style="font-size: .6rem; letter-spacing: .3em; text-transform: uppercase; margin-bottom: 10px;">⚜ Dragon Horizons ⚜</div>
+  <div style="font-size: .9rem;">Built by Ric Angelo Galo with the help of Claude</div>
 </footer>
-
-<script>
-  const API = '/api';  // change to your Vercel URL if testing locally e.g. 'https://your-project.vercel.app/api'
-
-  // ── Character counter ─────────────────────────────────────────
-  document.getElementById('reason').addEventListener('input', function() {
-    document.getElementById('cc').textContent = this.value.length;
-  });
-
-  // ── Show alert ────────────────────────────────────────────────
-  function showAlert(type, message) {
-    const el = document.getElementById('formAlert');
-    el.className = `alert ${type} visible`;
-    el.textContent = message;
-    el.scrollIntoView({ behavior: 'smooth', block: 'center' });
-  }
-
-  // ── Submit Application ────────────────────────────────────────
-  async function submitApplication() {
-    const btn = document.getElementById('submitBtn');
-    const nickname = document.getElementById('nickname').value.trim();
-    const discord  = document.getElementById('discord').value.trim();
-    const aternos  = document.getElementById('aternos').value.trim();
-    const reason   = document.getElementById('reason').value.trim();
-
-    // Client-side guard
-    if (!nickname || !discord || !aternos || !reason) {
-      return showAlert('error', 'Please fill in all fields before submitting.');
-    }
-    if (reason.length < 20) {
-      return showAlert('error', 'Please write at least 20 characters for your reason.');
-    }
-
-    btn.disabled = true;
-    btn.querySelector('.btn-t').textContent = '⏳ Submitting…';
-
-    try {
-      const res  = await fetch(`${API}/applications`, {
-        method:  'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body:    JSON.stringify({ nickname, discord, aternos_username: aternos, reason }),
-      });
-      const data = await res.json();
-
-      if (!res.ok || !data.success) {
-        showAlert('error', data.error || 'Submission failed. Please try again.');
-        btn.disabled = false;
-        btn.querySelector('.btn-t').textContent = '⚔️ Submit Application';
-        return;
-      }
-
-      // Success — hide form, show card
-      document.getElementById('formWrap').style.display = 'none';
-      document.getElementById('formAlert').classList.remove('visible');
-      const card = document.getElementById('successCard');
-      card.classList.add('visible');
-      document.getElementById('successId').textContent = `Reference ID: ${data.id}`;
-      card.scrollIntoView({ behavior: 'smooth' });
-
-    } catch (err) {
-      showAlert('error', 'Network error. Please check your connection and try again.');
-      btn.disabled = false;
-      btn.querySelector('.btn-t').textContent = '⚔️ Submit Application';
-    }
-  }
-
-  // ── Check Status ──────────────────────────────────────────────
-  async function checkStatus() {
-    const username = document.getElementById('checkUsername').value.trim();
-    if (!username) return;
-
-    const btn = document.getElementById('checkBtn');
-    btn.disabled = true;
-    btn.querySelector('.btn-t').textContent = '🔍 Checking…';
-
-    const result = document.getElementById('statusResult');
-    result.style.display = 'none';
-
-    try {
-      const res  = await fetch(`${API}/status?username=${encodeURIComponent(username)}`);
-      const data = await res.json();
-
-      result.style.display = 'block';
-
-      if (!data.found) {
-        document.getElementById('statusBadge').className = 'access-badge pending';
-        document.getElementById('statusLabel').textContent = 'No Application Found';
-        document.getElementById('statusNote').textContent  = 'No application found for that username. Double-check the spelling or submit one above.';
-      } else {
-        const icons = { accepted: '✅ Access Granted', rejected: '❌ Application Rejected', pending: '⏳ Pending Review' };
-        document.getElementById('statusBadge').className = `access-badge ${data.status}`;
-        document.getElementById('statusLabel').textContent = icons[data.status] || data.status;
-        document.getElementById('statusNote').textContent  = data.admin_note
-          ? `Admin note: ${data.admin_note}`
-          : data.status === 'accepted' ? 'You can now download the mod pack from the Download page.'
-          : data.status === 'rejected' ? 'Your application was not accepted at this time.'
-          : 'Your application is in the queue. Check back in 1–3 days.';
-      }
-    } catch {
-      document.getElementById('statusResult').style.display = 'block';
-      document.getElementById('statusLabel').textContent = 'Lookup failed';
-      document.getElementById('statusNote').textContent  = 'Could not reach the server. Try again shortly.';
-    }
-
-    btn.disabled = false;
-    btn.querySelector('.btn-t').textContent = '🔍 Check Status';
-  }
-
-  // Enter key on status check
-  document.getElementById('checkUsername').addEventListener('keydown', e => {
-    if (e.key === 'Enter') checkStatus();
-  });
-
-  // Reveal animations
-  document.querySelectorAll('.rv').forEach(el => {
-    new IntersectionObserver(entries => {
-      entries.forEach(x => { if (x.isIntersecting) x.target.classList.add('in'); });
-    }, { threshold: .08 }).observe(el);
-  });
-</script>
 </body>
 </html>
