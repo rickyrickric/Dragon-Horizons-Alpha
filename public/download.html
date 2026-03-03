@@ -17,24 +17,108 @@
 </nav>
 
 <div class="page">
-  <h1>Download the Modpack</h1>
-  <p>Dragon Horizons is a private server. You must have an accepted application to download.</p>
-  <div style="margin: 30px 0;">
-    <h3>System Requirements</h3>
-    <ul>
-      <li>Minecraft Java Edition 1.20.1</li>
-      <li>Forge 47.4.x</li>
-      <li>Java 17 or higher</li>
-      <li>6-8 GB RAM allocated</li>
-      <li>4 GB free disk space</li>
-    </ul>
+
+  <div class="ch rv">
+    <div class="ch-eyebrow">Client Download</div>
+    <h1 class="ch-title">Download</h1>
+    <div class="ch-rule"></div>
   </div>
-  <a href="apply.html" class="btn btn-primary">Apply to Join</a>
+
+  <div class="rv rv2">
+
+    <!-- DOWNLOAD ALTAR -->
+    <div class="dl-altar" style="margin-bottom:56px;">
+      <div class="dl-c tl"></div><div class="dl-c tr"></div>
+      <div class="dl-c bl"></div><div class="dl-c br"></div>
+      <div class="dl-icon">📦</div>
+      <div class="dl-title">Mods Folder</div>
+      <div class="dl-desc">Pre-configured client mods for Dragon Horizons server.</div>
+      <div class="dl-ver">Reckt's Dragon Horizons · v1.0.1 Alpha · Forge 1.20.1</div>
+      <a href="https://drive.google.com/drive/folders/1NTOkHghetyqPZpHnSKdQZaqhVz1f3b9N?usp=drive_link" target="_blank" class="dl-btn">⬇ Download from Google Drive</a>
+      <div class="dl-note">Hosted on Google Drive · Free · No account required</div>
+      <div class="dl-reqs">
+        <div class="dl-req-i"><span class="dl-req-v">Java 1.20.1</span><span class="dl-req-l">Minecraft</span></div>
+        <div class="dl-req-i"><span class="dl-req-v">Forge 47.4.x</span><span class="dl-req-l">Mod Loader</span></div>
+        <div class="dl-req-i"><span class="dl-req-v">Java 17+</span><span class="dl-req-l">Java Version</span></div>
+        <div class="dl-req-i"><span class="dl-req-v">6–8 GB</span><span class="dl-req-l">RAM Allocated</span></div>
+        <div class="dl-req-i"><span class="dl-req-v">~4 GB</span><span class="dl-req-l">Disk Space</span></div>
+      </div>
+    </div>
+
+    <!-- SERVER -->
+    <div class="sh">Server Connection</div>
+    <h2 class="sec-title" style="margin-bottom:20px;">How to Join</h2>
+
+    <div class="panel gd" style="margin-bottom:28px;display:flex;align-items:center;gap:20px;flex-wrap:wrap;">
+      <div>
+        <div style="font-family:var(--fc);font-size:.55rem;letter-spacing:.35em;text-transform:uppercase;color:var(--parch-d);margin-bottom:4px;">Server Address</div>
+        <div style="font-family:var(--fi);font-size:1.2rem;color:var(--gold-l);" id="saddr2">recktsdragonhorizon.aternos.me:20126</div>
+      </div>
+      <button class="srv-cpbtn" id="cpbtn2" onclick="cp2()" style="margin-left:auto;">Copy Address</button>
+    </div>
+
+    <div class="scroll" style="margin-bottom:48px;">
+      <div class="scroll-e"><span class="sg">⚠</span><span class="st">This server runs on <strong>Aternos</strong> — it must be manually turned on before players can connect. Ask the server owner (Reckt) to start it up.</span></div>
+      <div class="scroll-e"><span class="sg">◆</span><span class="st">In Minecraft, go to <strong>Multiplayer → Add Server</strong>, paste the address above, and save. It will appear in your server list ready to join whenever the server is online.</span></div>
+      <div class="scroll-e"><span class="sg">◆</span><span class="st">Make sure all mods are installed <strong>before</strong> connecting. Joining without the correct mods will result in a connection error or crash.</span></div>
+    </div>
+
+    <!-- INSTALL -->
+    <div class="sh">Installation</div>
+    <h2 class="sec-title" style="margin-bottom:20px;">Step-by-Step Setup</h2>
+
+    <div style="margin-bottom:48px;">
+      <div class="step"><div class="step-n">01</div><div class="step-t">Download and install <strong>Minecraft Java Edition 1.20.1</strong> from the official Minecraft launcher if you haven't already.</div></div>
+      <div class="step"><div class="step-n">02</div><div class="step-t">Download and run the <strong>Forge 1.20.1 installer</strong> (build 47.4.x) from the official Forge website. Select "Install client" when prompted.</div></div>
+      <div class="step"><div class="step-n">03</div><div class="step-t">Click the <strong>Download from Google Drive</strong> button above and download the mods folder ZIP.</div></div>
+      <div class="step"><div class="step-n">04</div><div class="step-t">Extract the ZIP and <strong>copy the mods folder</strong> into your <code>.minecraft</code> directory. On Windows this is usually at <code>%appdata%\.minecraft</code>.</div></div>
+      <div class="step"><div class="step-n">05</div><div class="step-t">Open your Minecraft launcher, select the <strong>Forge 1.20.1 profile</strong>. In settings, set JVM arguments to allocate RAM: <code>-Xmx8G -Xms4G</code></div></div>
+      <div class="step"><div class="step-n">06</div><div class="step-t">Launch the game — first load takes 3–5 minutes. Once at the main menu, go to <strong>Multiplayer</strong> and connect to the server address above.</div></div>
+    </div>
+
+    <!-- SPECS MINI -->
+    <div class="sh">Requirements</div>
+    <h2 class="sec-title" style="margin-bottom:20px;">System Requirements</h2>
+
+    <div class="specs-2">
+      <div>
+        <div class="specs-hd">⚠ Minimum</div>
+        <div class="spec-row"><span class="spec-k">Minecraft</span><span class="spec-v req">Java 1.20.1</span></div>
+        <div class="spec-row"><span class="spec-k">Forge</span><span class="spec-v req">47.4.x</span></div>
+        <div class="spec-row"><span class="spec-k">Java</span><span class="spec-v req">Java 17</span></div>
+        <div class="spec-row"><span class="spec-k">RAM</span><span class="spec-v warn">6 GB</span></div>
+        <div class="spec-row"><span class="spec-k">Storage</span><span class="spec-v warn">4 GB Free</span></div>
+        <div class="spec-row"><span class="spec-k">GPU</span><span class="spec-v warn">GTX 970 / RX 480</span></div>
+      </div>
+      <div>
+        <div class="specs-hd">✦ Recommended</div>
+        <div class="spec-row"><span class="spec-k">Minecraft</span><span class="spec-v">Java 1.20.1</span></div>
+        <div class="spec-row"><span class="spec-k">Forge</span><span class="spec-v">47.4.x</span></div>
+        <div class="spec-row"><span class="spec-k">Java</span><span class="spec-v">Java 17 or 21</span></div>
+        <div class="spec-row"><span class="spec-k">RAM</span><span class="spec-v">8–10 GB</span></div>
+        <div class="spec-row"><span class="spec-k">Storage</span><span class="spec-v">8 GB Free (SSD)</span></div>
+        <div class="spec-row"><span class="spec-k">GPU</span><span class="spec-v">RTX 2060 / RX 6600</span></div>
+      </div>
+    </div>
+
+  </div>
 </div>
 
-<footer style="text-align: center; padding: 40px 20px; color: var(--parch-d); border-top: 1px solid var(--border);">
-  <div style="font-size: .6rem; letter-spacing: .3em; text-transform: uppercase; margin-bottom: 10px;">⚜ Dragon Horizons ⚜</div>
-  <div style="font-size: .9rem;">Built by Ric Angelo Galo with the help of Claude</div>
+<footer>
+  <div class="ft-g">⚜</div>
+  <div class="ft-t">Reckt's Dragon Horizons — v1.0.1 Alpha</div>
+  <div class="ft-l">Built for those who seek the horizon beyond the flame.</div>
+  <div class="ft-cr">Created by Ric Angelo Galo · With the help of Claude</div>
 </footer>
+
+<script>
+function cp2(){
+  navigator.clipboard.writeText('recktsdragonhorizon.aternos.me:20126');
+  var b=document.getElementById('cpbtn2');
+  b.textContent='Copied!';b.classList.add('ok');
+  setTimeout(function(){b.textContent='Copy Address';b.classList.remove('ok');},2200);
+}
+document.querySelectorAll('.rv').forEach(function(el){new IntersectionObserver(function(e){e.forEach(function(x){if(x.isIntersecting)x.target.classList.add('in');});},{threshold:.08}).observe(el);});
+</script>
 </body>
 </html>
