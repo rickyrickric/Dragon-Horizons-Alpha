@@ -21,27 +21,76 @@
   <h1>Apply to Join Dragon Horizons</h1>
   <p>Dragon Horizons is a private server. Submit an application below and we'll review it within 1-3 days.</p>
   <div style="margin: 30px 0;">
-    <form style="max-width: 500px;">
+    <form id="applyForm" style="max-width: 500px;" onsubmit="submitApplication(event)">
+      <div id="formMessage" style="display: none; margin-bottom: 15px; padding: 12px; border-radius: 2px; font-size: 0.9rem;"></div>
       <div style="margin-bottom: 15px;">
         <label style="display: block; margin-bottom: 5px;">Nickname / Real Name *</label>
-        <input type="text" placeholder="What do we call you?" style="width: 100%; padding: 10px; background: rgba(10,6,6,.8); border: 1px solid rgba(212,168,83,.2); color: var(--parch);" required>
+        <input type="text" name="nickname" placeholder="What do we call you?" style="width: 100%; padding: 10px; background: rgba(10,6,6,.8); border: 1px solid rgba(212,168,83,.2); color: var(--parch);" required>
       </div>
       <div style="margin-bottom: 15px;">
         <label style="display: block; margin-bottom: 5px;">Discord Tag *</label>
-        <input type="text" placeholder="yourname or user#0000" style="width: 100%; padding: 10px; background: rgba(10,6,6,.8); border: 1px solid rgba(212,168,83,.2); color: var(--parch);" required>
+        <input type="text" name="discord" placeholder="yourname or user#0000" style="width: 100%; padding: 10px; background: rgba(10,6,6,.8); border: 1px solid rgba(212,168,83,.2); color: var(--parch);" required>
       </div>
       <div style="margin-bottom: 15px;">
         <label style="display: block; margin-bottom: 5px;">Aternos Username *</label>
-        <input type="text" placeholder="Your exact Aternos username" style="width: 100%; padding: 10px; background: rgba(10,6,6,.8); border: 1px solid rgba(212,168,83,.2); color: var(--parch);" required>
+        <input type="text" name="aternos_username" placeholder="Your exact Aternos username" style="width: 100%; padding: 10px; background: rgba(10,6,6,.8); border: 1px solid rgba(212,168,83,.2); color: var(--parch);" required>
       </div>
       <div style="margin-bottom: 15px;">
         <label style="display: block; margin-bottom: 5px;">Why do you want to join? *</label>
-        <textarea placeholder="Tell us about yourself..." style="width: 100%; padding: 10px; background: rgba(10,6,6,.8); border: 1px solid rgba(212,168,83,.2); color: var(--parch); min-height: 120px;" required></textarea>
+        <textarea name="reason" placeholder="Tell us about yourself..." style="width: 100%; padding: 10px; background: rgba(10,6,6,.8); border: 1px solid rgba(212,168,83,.2); color: var(--parch); min-height: 120px;" required></textarea>
       </div>
-      <button type="submit" class="btn btn-primary" style="width: 100%;">Submit Application</button>
+      <button type="submit" class="btn btn-primary" id="submitBtn" style="width: 100%;">Submit Application</button>
     </form>
   </div>
 </div>
+
+<script>
+async function submitApplication(event) {
+  event.preventDefault();
+  const form = document.getElementById('applyForm');
+  const msg = document.getElementById('formMessage');
+  const btn = document.getElementById('submitBtn');
+  const spinner = btn.textContent;
+
+  try {
+    btn.disabled = true;
+    btn.textContent = '⏳ Submitting…';
+    msg.style.display = 'none';
+
+    const formData = new FormData(form);
+    const body = Object.fromEntries(formData);
+
+    const response = await fetch('/api/applications', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body),
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.error || 'Submission failed.');
+    }
+
+    msg.style.backgroundColor = 'rgba(90,170,106,.12)';
+    msg.style.borderLeft = '3px solid #5aaa6a';
+    msg.style.color = '#5aaa6a';
+    msg.textContent = '✅ ' + (data.message || 'Application submitted! We'll review it within 1-3 days.');
+    msg.style.display = 'block';
+    form.reset();
+    btn.textContent = spinner;
+    btn.disabled = false;
+  } catch (err) {
+    msg.style.backgroundColor = 'rgba(138,26,26,.12)';
+    msg.style.borderLeft = '3px solid var(--blood)';
+    msg.style.color = '#e88';
+    msg.textContent = '❌ ' + err.message;
+    msg.style.display = 'block';
+    btn.textContent = spinner;
+    btn.disabled = false;
+  }
+}
+</script>
 
 <footer style="text-align: center; padding: 40px 20px; color: var(--parch-d); border-top: 1px solid var(--border);">
   <div style="font-size: .6rem; letter-spacing: .3em; text-transform: uppercase; margin-bottom: 10px;">⚜ Dragon Horizons ⚜</div>
