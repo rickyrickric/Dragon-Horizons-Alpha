@@ -13,9 +13,10 @@ export default async function handler(req, res) {
     const token = req.headers.authorization?.replace('Bearer ', '') || '';
     const isAdmin = token && token === process.env.ADMIN_SECRET;
 
-    const publicKeys = ['drive_link', 'pack_version'];
-    const adminKeys  = ['server_address', 'server_port'];
-    const keysToFetch = isAdmin ? publicKeys.concat(adminKeys) : publicKeys;
+    // Server address/port are public information (not secrets) and should
+    // be available to public pages. Include them in the public response.
+    const publicKeys = ['drive_link', 'pack_version', 'server_address', 'server_port'];
+    const keysToFetch = publicKeys;
 
     const { data, error } = await supabase
       .from('site_config')

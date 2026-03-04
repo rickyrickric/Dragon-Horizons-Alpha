@@ -116,13 +116,31 @@
 </footer>
 
 <script>
+let serverAddr = 'recktsdragonhorizon.aternos.me:20126';
+
 function cp2(){
-  navigator.clipboard.writeText('recktsdragonhorizon.aternos.me:20126');
+  navigator.clipboard.writeText(serverAddr);
   var b=document.getElementById('cpbtn2');
   b.textContent='Copied!';b.classList.add('ok');
   setTimeout(function(){b.textContent='Copy Address';b.classList.remove('ok');},2200);
 }
+
+async function loadPublicConfig(){
+  try{
+    const res = await fetch('/api/config');
+    const data = await res.json();
+    const c = data.config || {};
+    if (c.server_address) {
+      serverAddr = `${c.server_address}${c.server_port ? ':'+c.server_port : ''}`;
+      const el = document.getElementById('saddr2');
+      if (el) el.textContent = serverAddr;
+    }
+  }catch(e){ /* ignore */ }
+}
+
 document.querySelectorAll('.rv').forEach(function(el){new IntersectionObserver(function(e){e.forEach(function(x){if(x.isIntersecting)x.target.classList.add('in');});},{threshold:.08}).observe(el);});
+
+loadPublicConfig();
 </script>
 </body>
 </html>
