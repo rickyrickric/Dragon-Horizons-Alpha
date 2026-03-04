@@ -128,14 +128,22 @@ function cp2(){
 async function loadPublicConfig(){
   try{
     const res = await fetch('/api/config');
+    if (!res.ok) {
+      console.warn('Config fetch failed with status:', res.status);
+      return;
+    }
     const data = await res.json();
     const c = data.config || {};
     if (c.server_address) {
-      serverAddr = `${c.server_address}${c.server_port ? ':'+c.server_port : ''}`;
+      const addr = (c.server_address || '').trim();
+      const port = (c.server_port || '').trim();
+      serverAddr = `${addr}${port ? ':'+port : ''}`;
       const el = document.getElementById('saddr2');
       if (el) el.textContent = serverAddr;
     }
-  }catch(e){ /* ignore */ }
+  }catch(e){
+    console.warn('Failed to load public config:', e.message);
+  }
 }
 
 document.querySelectorAll('.rv').forEach(function(el){new IntersectionObserver(function(e){e.forEach(function(x){if(x.isIntersecting)x.target.classList.add('in');});},{threshold:.08}).observe(el);});
