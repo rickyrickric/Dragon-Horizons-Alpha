@@ -94,7 +94,7 @@ async function submitApplication(event) {
     msg.style.backgroundColor = 'rgba(90,170,106,.12)';
     msg.style.borderLeft = '3px solid #5aaa6a';
     msg.style.color = '#5aaa6a';
-    msg.textContent = '✅ ' + (data.message || 'Application submitted! We'll review it within 1-3 days.');
+    msg.textContent = '✅ ' + (data.message || "Application submitted! We'll review it within 1-3 days.");
     msg.style.display = 'block';
     form.reset();
     btn.textContent = spinner;
