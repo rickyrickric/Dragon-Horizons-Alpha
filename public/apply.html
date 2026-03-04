@@ -63,6 +63,13 @@ async function submitApplication(event) {
 
     const formData = new FormData(form);
     const body = Object.fromEntries(formData);
+    
+    // Trim all string values to prevent whitespace issues
+    for (const key in body) {
+      if (typeof body[key] === 'string') {
+        body[key] = body[key].trim();
+      }
+    }
 
     const response = await fetch('/api/applications', {
       method: 'POST',
@@ -73,7 +80,8 @@ async function submitApplication(event) {
     const data = await response.json();
 
     if (!response.ok) {
-      throw new Error(data.error || 'Submission failed.');
+      const errorMsg = data.error || data.message || 'Submission failed.';
+      throw new Error(errorMsg);
     }
 
     msg.style.backgroundColor = 'rgba(90,170,106,.12)';
@@ -85,10 +93,11 @@ async function submitApplication(event) {
     btn.textContent = spinner;
     btn.disabled = false;
   } catch (err) {
+    console.error('Application submission failed:', err);
     msg.style.backgroundColor = 'rgba(138,26,26,.12)';
     msg.style.borderLeft = '3px solid var(--blood)';
     msg.style.color = '#e88';
-    msg.textContent = '❌ ' + err.message;
+    msg.textContent = '❌ ' + (err.message || 'Submission failed. Please try again.');
     msg.style.display = 'block';
     btn.textContent = spinner;
     btn.disabled = false;
