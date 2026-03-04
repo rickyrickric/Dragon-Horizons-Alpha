@@ -1,6 +1,6 @@
-import supabase        from './_lib/supabase.js';
 import { requireAdmin, cors } from './_lib/auth.js';
 import { ok, fail, denied }  from './_lib/respond.js';
+import db from './_lib/db.js';
 
 export default async function handler(req, res) {
   cors(res);
@@ -18,14 +18,9 @@ export default async function handler(req, res) {
     const publicKeys = ['drive_link', 'pack_version', 'server_address', 'server_port'];
     const keysToFetch = publicKeys;
 
-    const { data, error } = await supabase
-      .from('site_config')
-      .select('key, value')
-      .in('key', keysToFetch);
-
+    const { data, error } = await db.getConfig();
     if (error) return fail(res, 'Failed to load config.', 500);
-
-    const config = Object.fromEntries(data.map(r => [r.key, r.value]));
+    const config = Object.fromEntries((data||[]).map(r => [r.key, r.value]));
     return ok(res, { config, admin: !!isAdmin });
   }
 
@@ -39,9 +34,7 @@ export default async function handler(req, res) {
 
     for (const [key, value] of Object.entries(updates)) {
       if (!allowed.includes(key)) continue;
-      await supabase
-        .from('site_config')
-        .upsert({ key, value }, { onConflict: 'key' });
+      await db.upsertConfig(key, value);
     }
 
     return ok(res, { message: 'Config updated.' });

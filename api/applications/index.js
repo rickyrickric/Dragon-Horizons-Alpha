@@ -1,7 +1,7 @@
-import supabase        from '../_lib/supabase.js';
 import { requireAdmin, cors } from '../_lib/auth.js';
 import { ok, fail, denied }  from '../_lib/respond.js';
 import { validateApplication } from '../_lib/validate.js';
+import db from '../_lib/db.js';
 
 export default async function handler(req, res) {
   cors(res);
@@ -15,32 +15,22 @@ export default async function handler(req, res) {
     const { nickname, discord, aternos_username, reason } = req.body;
 
     // Block duplicate pending/accepted aternos usernames
-    const { data: existing } = await supabase
-      .from('applications')
-      .select('id, status')
-      .eq('aternos_username', aternos_username.trim().toLowerCase())
-      .in('status', ['pending', 'accepted'])
-      .maybeSingle();
-
+    const existing = await db.findExistingApplication(aternos_username.trim().toLowerCase());
     if (existing) {
       const msg = existing.status === 'accepted'
         ? 'This Aternos username already has access.'
         : 'An application for this Aternos username is already pending review.';
       return fail(res, msg, 409);
     }
+    const payload = {
+      nickname:        nickname.trim(),
+      discord:         discord.trim(),
+      aternos_username: aternos_username.trim().toLowerCase(),
+      reason:          reason.trim(),
+      status:          'pending',
+    };
 
-    const { data, error } = await supabase
-      .from('applications')
-      .insert({
-        nickname:        nickname.trim(),
-        discord:         discord.trim(),
-        aternos_username: aternos_username.trim().toLowerCase(),
-        reason:          reason.trim(),
-        status:          'pending',
-      })
-      .select()
-      .single();
-
+    const { data, error } = await db.insertApplication(payload);
     if (error) return fail(res, 'Failed to submit application. Please try again.', 500);
     return ok(res, { message: 'Application submitted!', id: data.id }, 201);
   }
@@ -51,16 +41,7 @@ export default async function handler(req, res) {
     if (!auth.ok) return denied(res);
 
     const status = req.query.status; // optional filter
-    let query = supabase
-      .from('applications')
-      .select('*')
-      .order('created_at', { ascending: false });
-
-    if (status && ['pending','accepted','rejected'].includes(status)) {
-      query = query.eq('status', status);
-    }
-
-    const { data, error } = await query;
+    const { data, error } = await db.getApplications(status);
     if (error) return fail(res, 'Failed to fetch applications.', 500);
     return ok(res, { applications: data });
   }

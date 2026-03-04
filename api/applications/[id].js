@@ -1,6 +1,6 @@
-import supabase        from '../_lib/supabase.js';
 import { requireAdmin, cors } from '../_lib/auth.js';
 import { ok, fail, denied, notFound } from '../_lib/respond.js';
+import db from '../_lib/db.js';
 
 export default async function handler(req, res) {
   cors(res);
@@ -13,12 +13,7 @@ export default async function handler(req, res) {
 
   // GET /api/applications/:id
   if (req.method === 'GET') {
-    const { data, error } = await supabase
-      .from('applications')
-      .select('*')
-      .eq('id', id)
-      .maybeSingle();
-
+    const { data, error } = await db.getApplicationById(id);
     if (error || !data) return notFound(res);
     return ok(res, { application: data });
   }
@@ -30,24 +25,14 @@ export default async function handler(req, res) {
       return fail(res, 'Invalid status. Must be pending, accepted, or rejected.');
     }
 
-    const { data, error } = await supabase
-      .from('applications')
-      .update({ status, admin_note: admin_note ?? null, reviewed_at: new Date().toISOString() })
-      .eq('id', id)
-      .select()
-      .single();
-
+    const { data, error } = await db.updateApplication(id, { status, admin_note: admin_note ?? null, reviewed_at: new Date().toISOString() });
     if (error || !data) return notFound(res);
     return ok(res, { application: data });
   }
 
   // DELETE /api/applications/:id
   if (req.method === 'DELETE') {
-    const { error } = await supabase
-      .from('applications')
-      .delete()
-      .eq('id', id);
-
+    const { error } = await db.deleteApplication(id);
     if (error) return fail(res, 'Failed to delete application.', 500);
     return ok(res, { message: 'Application deleted.' });
   }
