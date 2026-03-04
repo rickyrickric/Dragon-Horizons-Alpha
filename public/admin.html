@@ -721,6 +721,11 @@
         logout();
         return;
       }
+      if (!res.ok) {
+        const errorText = await res.text();
+        console.error('Config load failed:', res.status, errorText);
+        throw new Error(`API returned ${res.status}: ${errorText}`);
+      }
       const data = await res.json();
       const c = data.config || {};
       const isAdmin = !!data.admin;
@@ -748,11 +753,13 @@
       if (loader) loader.style.display = 'none';
       if (fields) fields.style.display = 'block';
     } catch (err) {
+      console.error('loadConfig error:', err);
       const loader = document.getElementById('configLoader');
       if (loader) loader.innerHTML = `
         <div class="state-box">
           <div class="state-icon">⚠️</div>
           <div class="state-msg">Failed to load config</div>
+          <div style="font-size: 0.9em; margin-top: 8px; color: #999;">${err.message}</div>
         </div>`;
     }
   }
