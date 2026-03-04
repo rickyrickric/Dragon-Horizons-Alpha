@@ -1,6 +1,7 @@
 import { requireAdmin, cors } from '../_lib/auth.js';
 import { ok, fail, denied } from '../_lib/respond.js';
-import db from '../_lib/db.js';
+import { databaseFactory } from '../_lib/factory/DatabaseFactory.js';
+import { ApplicationService } from '../_lib/services/ApplicationService.js';
 
 export default async function handler(req, res) {
   cors(res);
@@ -17,14 +18,18 @@ export default async function handler(req, res) {
         supabase_url: process.env.SUPABASE_URL ? '✓ set' : '✗ missing',
         supabase_key: process.env.SUPABASE_SERVICE_KEY ? '✓ set' : '✗ missing',
         firebase_account: process.env.FIREBASE_SERVICE_ACCOUNT ? '✓ set' : '✗ missing',
+        backend: databaseFactory.getBackendName(),
         use_firebase: process.env.USE_FIREBASE || 'false',
       };
 
-      // Try to fetch one application to test connection
+      // Try to fetch applications to test connection
       try {
-        const { data, error } = await db.getApplications();
-        status.db_query = error ? `✗ ${error.message}` : '✓ success';
-        status.app_count = data ? data.length : 0;
+        const appRepo = databaseFactory.getApplicationRepository();
+        const appService = new ApplicationService(appRepo);
+        const result = await appService.getApplications();
+        
+        status.db_query = result.success ? '✓ success' : `✗ ${result.error}`;
+        status.app_count = result.data ? result.data.length : 0;
       } catch (err) {
         status.db_query = `✗ ${err.message}`;
       }

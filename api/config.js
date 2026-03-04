@@ -1,27 +1,28 @@
 import { requireAdmin, cors, parseBody } from './_lib/auth.js';
-import { ok, fail, denied }  from './_lib/respond.js';
-import db from './_lib/db.js';
+import { ok, fail, denied } from './_lib/respond.js';
+import { databaseFactory } from './_lib/factory/DatabaseFactory.js';
+import { ConfigService } from './_lib/services/ConfigService.js';
 
 export default async function handler(req, res) {
   cors(res);
   if (req.method === 'OPTIONS') return res.status(204).end();
 
+  const configRepo = databaseFactory.getConfigRepository();
+  const configService = new ConfigService(configRepo);
+
   // GET /api/config
   // - If caller provides the admin secret, return the full config.
-  // - Otherwise return a safe public subset (no server address/port).
+  // - Otherwise return public configuration only.
   if (req.method === 'GET') {
     const token = req.headers.authorization?.replace('Bearer ', '') || '';
     const isAdmin = token && token === process.env.ADMIN_SECRET;
 
-    // Server address/port are public information (not secrets) and should
-    // be available to public pages. Include them in the public response.
-    const publicKeys = ['drive_link', 'pack_version', 'server_address', 'server_port'];
-    const keysToFetch = publicKeys;
+    const result = isAdmin
+      ? await configService.getAllConfig()
+      : await configService.getPublicConfig();
 
-    const { data, error } = await db.getConfig();
-    if (error) return fail(res, 'Failed to load config.', 500);
-    const config = Object.fromEntries((data||[]).map(r => [r.key, r.value]));
-    return ok(res, { config, admin: !!isAdmin });
+    if (!result.success) return fail(res, result.error, 500);
+    return ok(res, { config: result.data, admin: isAdmin });
   }
 
   // PATCH /api/config — admin only, update any config key
@@ -30,15 +31,10 @@ export default async function handler(req, res) {
     if (!auth.ok) return denied(res);
 
     const body = parseBody(req);
-    const updates = body; // { drive_link: '...', server_address: '...' }
-    const allowed = ['drive_link', 'server_address', 'server_port', 'pack_version'];
+    const result = await configService.updateConfig(body);
 
-    for (const [key, value] of Object.entries(updates)) {
-      if (!allowed.includes(key)) continue;
-      await db.upsertConfig(key, value);
-    }
-
-    return ok(res, { message: 'Config updated.' });
+    if (!result.success) return fail(res, result.error, 500);
+    return ok(res, { message: 'Config updated.', data: result.data });
   }
 
   return fail(res, 'Method not allowed.', 405);

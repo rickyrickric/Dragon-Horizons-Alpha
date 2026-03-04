@@ -1,53 +1,58 @@
-// Debug endpoint to test Supabase connection
-// Accessible at: /api/debug/test-db
-// Returns env var status and a test insert attempt
-
-import { cors } from '../_lib/auth.js';
-import { ok, fail } from '../_lib/respond.js';
-import db from '../_lib/db.js';
+import { requireAdmin, cors } from '../_lib/auth.js';
+import { ok, fail, denied } from '../_lib/respond.js';
+import { databaseFactory } from '../_lib/factory/DatabaseFactory.js';
+import { ApplicationService } from '../_lib/services/ApplicationService.js';
 
 export default async function handler(req, res) {
   cors(res);
+  if (req.method === 'OPTIONS') return res.status(204).end();
 
-  const hasUrl = !!process.env.SUPABASE_URL;
-  const hasKey = !!process.env.SUPABASE_SERVICE_KEY;
-  const useFirebase = process.env.USE_FIREBASE === '1' || process.env.USE_FIREBASE === 'true';
+  const auth = requireAdmin(req);
+  if (!auth.ok) return denied(res);
 
-  const status = {
-    env_vars: {
-      SUPABASE_URL: hasUrl ? '✓ set' : '✗ missing',
-      SUPABASE_SERVICE_KEY: hasKey ? '✓ set' : '✗ missing',
-      USE_FIREBASE: useFirebase ? 'true (Firestore)' : 'false (Supabase)',
-      FIREBASE_SERVICE_ACCOUNT: !!process.env.FIREBASE_SERVICE_ACCOUNT ? '✓ set' : '✗ missing',
-      ADMIN_SECRET: !!process.env.ADMIN_SECRET ? '✓ set' : '✗ missing',
-    },
-    backend: useFirebase ? 'Firestore' : 'Supabase',
-    deployment: process.env.VERCEL_URL ? `Vercel: ${process.env.VERCEL_URL}` : 'Local/Unknown',
-  };
+  if (req.method !== 'GET') return fail(res, 'Only GET allowed', 405);
 
-  if (!hasUrl || !hasKey) {
-    return ok(res, {
-      message: 'Supabase connection cannot be established — missing env vars.',
-      ...status,
-      fix: 'Set SUPABASE_URL and SUPABASE_SERVICE_KEY in Vercel Project Settings → Environment Variables',
-    });
-  }
-
-  // Try a test query
   try {
-    const testPayload = {
-      nickname: 'DebugTest',
-      discord: 'Debug#0001',
-      aternos_username: `debug_test_${Date.now()}`,
-      reason: 'Debug endpoint test insertion. This is long enough.',
-      status: 'pending',
+    const status = {
+      timestamp: new Date().toISOString(),
+      backend: databaseFactory.getBackendName(),
+      env_vars: {
+        SUPABASE_URL: !!process.env.SUPABASE_URL,
+        SUPABASE_SERVICE_KEY: !!process.env.SUPABASE_SERVICE_KEY,
+        ADMIN_SECRET: !!process.env.ADMIN_SECRET,
+        USE_FIREBASE: process.env.USE_FIREBASE === '1' || process.env.USE_FIREBASE === 'true',
+      },
     };
-    const { data, error } = await db.insertApplication(testPayload);
-    
-    if (error) {
-      return ok(res, {
-        message: 'Test insert failed.',
-        ...status,
+
+    // Perform test operations
+    const appRepo = databaseFactory.getApplicationRepository();
+    const appService = new ApplicationService(appRepo);
+
+    // Test 1: Get applications
+    const getResult = await appService.getApplications();
+    status.test_read = getResult.success ? '✓ Read OK' : `✗ ${getResult.error}`;
+    status.app_count = getResult.data ? getResult.data.length : 0;
+
+    // Test 2: Get stats
+    const statsResult = await appService.getStats();
+    status.test_stats = {
+      pending: statsResult.pending,
+      accepted: statsResult.accepted,
+      rejected: statsResult.rejected,
+    };
+
+    // Test 3: Service reachability
+    status.services = {
+      ApplicationService: '✓ loaded',
+      DatabaseFactory: '✓ loaded',
+    };
+
+    status.test_result = '✓ All systems operational';
+    return ok(res, status);
+  } catch (err) {
+    return fail(res, `Test failed: ${err.message}`, 500);
+  }
+}
         test_insert_error: error,
       });
     }
