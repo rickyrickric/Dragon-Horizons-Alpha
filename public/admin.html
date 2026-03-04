@@ -368,7 +368,9 @@
 </head>
 <body>
 
-<nav class="sitenav">
+  <a class="skip-link" href="#main">Skip to main content</a>
+
+<nav class="sitenav" role="navigation" aria-label="Main navigation">
   <a href="index.html">Home</a>
   <a href="about.html">About</a>
   <a href="mods.html">Mod List</a>
@@ -378,8 +380,9 @@
 </nav>
 
 <!-- ══════════════════════════════════════════
-     LOGIN SCREEN
+  LOGIN SCREEN
 ══════════════════════════════════════════ -->
+<main id="main">
 <div id="loginScreen">
   <div class="login-screen">
     <div class="login-box">
@@ -397,7 +400,7 @@
 </div>
 
 <!-- ══════════════════════════════════════════
-     ADMIN PANEL
+  ADMIN PANEL
 ══════════════════════════════════════════ -->
 <div class="admin-wrap" id="adminWrap">
   <div class="page" style="padding-top:36px;">
@@ -460,9 +463,9 @@
                 placeholder="https://drive.google.com/drive/folders/...">
               <div class="config-hint">Paste the updated link here whenever you re-upload the mods folder.</div>
             </div>
-            <div>
-              <label class="config-label">🌐 &nbsp;Server Address</label>
-              <input type="text" class="config-input" id="cfg-addr"
+            </div>
+
+          </main>
                 placeholder="yourserver.aternos.me">
             </div>
             <div>

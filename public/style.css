@@ -10,6 +10,7 @@
   --fc:'Cinzel',serif;
   --fg:'Cormorant Garamond',serif;
   --fi:'IM Fell English',serif;
+  --bg2:#161010; --border:rgba(212,168,83,.13);
 }
 
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
@@ -24,6 +25,12 @@ body{
   overflow-x:hidden;
   min-height:100vh;
 }
+
+/* Skip link for keyboard users */
+.skip-link{
+  position:absolute;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden;
+}
+.skip-link:focus{position:static;left:auto;top:8px;width:auto;height:auto;padding:8px 12px;background:var(--gold-l);color:#000;z-index:10000;border-radius:4px;text-decoration:none;font-weight:700;}
 
 body::before{
   content:'';position:fixed;inset:0;z-index:0;
@@ -51,7 +58,7 @@ body::after{
 .sitenav a{
   font-family:var(--fc);font-size:.6rem;font-weight:600;
   letter-spacing:.28em;text-transform:uppercase;
-  color:var(--parch-d);text-decoration:none;
+  color:var(--parch);text-decoration:none;
   padding:18px 22px;position:relative;
   transition:color .3s;
 }
