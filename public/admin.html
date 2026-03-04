@@ -607,14 +607,26 @@
     document.getElementById('appList').innerHTML = '<div class="state-box"><div class="spinner"></div></div>';
     try {
       const url  = filter === 'all' ? `${API}/applications` : `${API}/applications?status=${filter}`;
+      console.log('Fetching:', url);
       const res  = await fetch(url, { headers: authHeader() });
+      console.log('Response status:', res.status);
+      
+      if (!res.ok) {
+        const errorText = await res.text();
+        console.error('API returned error:', res.status, errorText);
+        throw new Error(`API error ${res.status}: ${errorText}`);
+      }
+      
       const data = await res.json();
+      console.log('Applications loaded:', data);
       renderApps(data.applications || []);
-    } catch {
+    } catch (err) {
+      console.error('loadApps error:', err);
       document.getElementById('appList').innerHTML = `
         <div class="state-box">
           <div class="state-icon">⚠️</div>
           <div class="state-msg">Failed to load applications</div>
+          <div style="font-size: 0.9em; margin-top: 8px; color: #999;">${err.message}</div>
         </div>`;
     }
   }

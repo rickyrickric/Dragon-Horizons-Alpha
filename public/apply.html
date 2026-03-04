@@ -71,16 +71,23 @@ async function submitApplication(event) {
       }
     }
 
+    console.log('Submitting application:', body);
+
     const response = await fetch('/api/applications', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(body),
     });
 
+    console.log('Response status:', response.status);
+    console.log('Response ok:', response.ok);
+
     const data = await response.json();
+    console.log('Response data:', data);
 
     if (!response.ok) {
       const errorMsg = data.error || data.message || 'Submission failed.';
+      console.error('API error:', errorMsg);
       throw new Error(errorMsg);
     }
 
