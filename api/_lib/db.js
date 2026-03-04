@@ -1,7 +1,8 @@
 import supabase from './supabase.js';
-import getFirestore, { initFirebase } from './firebase.js';
 
-const USE_FIREBASE = !!process.env.FIREBASE_SERVICE_ACCOUNT;
+// Only enable Firestore when explicitly requested via USE_FIREBASE env var.
+// This prevents accidental usage when FIREBASE_SERVICE_ACCOUNT is present locally.
+const USE_FIREBASE = (process.env.USE_FIREBASE === '1' || process.env.USE_FIREBASE === 'true');
 
 async function insertApplicationSupabase(payload) {
   const { data, error } = await supabase.from('applications').insert(payload).select().single();
@@ -55,6 +56,7 @@ function colApps(db) { return db.collection('applications'); }
 function colConfig(db) { return db.collection('site_config'); }
 
 async function findExistingFirestore(aternos_username) {
+  const { default: getFirestore } = await import('./firebase.js');
   const db = getFirestore();
   const q = await colApps(db)
     .where('aternos_username', '==', aternos_username)
@@ -67,6 +69,7 @@ async function findExistingFirestore(aternos_username) {
 }
 
 async function insertApplicationFirestore(payload) {
+  const { default: getFirestore } = await import('./firebase.js');
   const db = getFirestore();
   payload.created_at = new Date().toISOString();
   const ref = await colApps(db).add(payload);
@@ -75,6 +78,7 @@ async function insertApplicationFirestore(payload) {
 }
 
 async function getApplicationsFirestore(status) {
+  const { default: getFirestore } = await import('./firebase.js');
   const db = getFirestore();
   let q = colApps(db).orderBy('created_at', 'desc');
   if (status) q = q.where('status', '==', status);
@@ -84,6 +88,7 @@ async function getApplicationsFirestore(status) {
 }
 
 async function getApplicationByIdFirestore(id) {
+  const { default: getFirestore } = await import('./firebase.js');
   const db = getFirestore();
   const doc = await colApps(db).doc(id).get();
   if (!doc.exists) return { data: null, error: { message: 'Not found' } };
@@ -91,6 +96,7 @@ async function getApplicationByIdFirestore(id) {
 }
 
 async function updateApplicationFirestore(id, updates) {
+  const { default: getFirestore } = await import('./firebase.js');
   const db = getFirestore();
   updates.reviewed_at = updates.reviewed_at || new Date().toISOString();
   await colApps(db).doc(id).set(updates, { merge: true });
@@ -99,12 +105,14 @@ async function updateApplicationFirestore(id, updates) {
 }
 
 async function deleteApplicationFirestore(id) {
+  const { default: getFirestore } = await import('./firebase.js');
   const db = getFirestore();
   await colApps(db).doc(id).delete();
   return { error: null };
 }
 
 async function getConfigFirestore() {
+  const { default: getFirestore } = await import('./firebase.js');
   const db = getFirestore();
   const snap = await colConfig(db).get();
   const data = snap.docs.map(d => ({ key: d.id, value: d.data().value }));
@@ -112,6 +120,7 @@ async function getConfigFirestore() {
 }
 
 async function upsertConfigFirestore(key, value) {
+  const { default: getFirestore } = await import('./firebase.js');
   const db = getFirestore();
   await colConfig(db).doc(key).set({ value }, { merge: true });
   return { data: [{ key, value }], error: null };
