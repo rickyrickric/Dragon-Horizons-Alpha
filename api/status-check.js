@@ -29,7 +29,7 @@ export default async function handler(req, res) {
       const result = await appService.checkApplicationStatus(aternos_username);
 
       if (!result.success) {
-        return ok(res, { success: false, error: result.error });
+        return fail(res, result.error, 404); // Application not found
       }
 
       const app = result.data;
@@ -40,7 +40,6 @@ export default async function handler(req, res) {
       };
 
       return ok(res, {
-        success: true,
         status: app.status,
         message: statusMessages[app.status] || 'Unknown status',
         nickname: app.nickname,
@@ -50,7 +49,8 @@ export default async function handler(req, res) {
         adminNote: app.status === 'rejected' ? app.admin_note : null
       });
     } catch (err) {
-      return fail(res, err.message, 500);
+      console.error('Status check error:', err);
+      return fail(res, 'Failed to check application status. Please try again later.', 500);
     }
   }
 
