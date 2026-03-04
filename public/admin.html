@@ -712,17 +712,41 @@
   // ── Config ─────────────────────────────────────────────────────
   async function loadConfig() {
     try {
-      const res  = await fetch(`${API}/config`);
+      const res  = await fetch(`${API}/config`, { headers: authHeader() });
+      if (res.status === 401) {
+        toast('error', 'Unauthorized — please login');
+        logout();
+        return;
+      }
       const data = await res.json();
       const c = data.config || {};
-      document.getElementById('cfg-drive').value = c.drive_link     || '';
-      document.getElementById('cfg-addr').value  = c.server_address || '';
-      document.getElementById('cfg-port').value  = c.server_port    || '';
-      document.getElementById('cfg-ver').value   = c.pack_version   || '';
-      document.getElementById('configLoader').style.display = 'none';
-      document.getElementById('configFields').style.display = 'block';
-    } catch {
-      document.getElementById('configLoader').innerHTML = `
+      const isAdmin = !!data.admin;
+
+      const elDrive = document.getElementById('cfg-drive');
+      const elAddr  = document.getElementById('cfg-addr');
+      const elPort  = document.getElementById('cfg-port');
+      const elVer   = document.getElementById('cfg-ver');
+
+      if (elDrive) elDrive.value = c.drive_link || '';
+      if (elVer)   elVer.value   = c.pack_version || '';
+
+      if (isAdmin) {
+        if (elAddr) elAddr.value = c.server_address || '';
+        if (elPort) elPort.value = c.server_port || '';
+        if (elAddr) elAddr.disabled = false;
+        if (elPort) elPort.disabled = false;
+      } else {
+        if (elAddr) { elAddr.value = 'Hidden — admin only'; elAddr.disabled = true; }
+        if (elPort) { elPort.value = 'Hidden — admin only'; elPort.disabled = true; }
+      }
+
+      const loader = document.getElementById('configLoader');
+      const fields = document.getElementById('configFields');
+      if (loader) loader.style.display = 'none';
+      if (fields) fields.style.display = 'block';
+    } catch (err) {
+      const loader = document.getElementById('configLoader');
+      if (loader) loader.innerHTML = `
         <div class="state-box">
           <div class="state-icon">⚠️</div>
           <div class="state-msg">Failed to load config</div>
