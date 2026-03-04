@@ -23,7 +23,23 @@
 <div class="page">
   <h1>Apply to Join Dragon Horizons</h1>
   <p>Dragon Horizons is a private server. Submit an application below and we'll review it within 1-3 days.</p>
+
+  <!-- Status Checker Section -->
+  <div style="margin: 30px 0; padding: 20px; background: rgba(212,168,83,.05); border: 1px solid rgba(212,168,83,.2); border-radius: 4px;">
+    <h2 style="font-size: 1.2rem; margin-top: 0;">Check Your Application Status</h2>
+    <p style="font-size: 0.9rem; color: #aaa;">Already submitted an application? Enter your Aternos username to check the status.</p>
+    <div style="max-width: 400px;">
+      <div style="display: flex; gap: 10px; margin-bottom: 15px;">
+        <input type="text" id="statusUsername" placeholder="Your Aternos username" style="flex: 1; padding: 10px; background: rgba(10,6,6,.8); border: 1px solid rgba(212,168,83,.2); color: var(--parch);">
+        <button onclick="checkApplicationStatus()" class="btn btn-primary" style="white-space: nowrap;">Check Status</button>
+      </div>
+      <div id="statusResult" style="display: none; padding: 12px; border-radius: 2px; font-size: 0.9rem;"></div>
+    </div>
+  </div>
+
+  <!-- Application Form Section -->
   <div style="margin: 30px 0;">
+    <h2 style="font-size: 1.2rem;">Submit Your Application</h2>
     <form id="applyForm" style="max-width: 500px;" onsubmit="submitApplication(event)">
       <div id="formMessage" style="display: none; margin-bottom: 15px; padding: 12px; border-radius: 2px; font-size: 0.9rem;"></div>
       <div style="margin-bottom: 15px;">
@@ -49,6 +65,72 @@
 </main>
 
 <script>
+async function checkApplicationStatus() {
+  const username = document.getElementById('statusUsername').value.trim();
+  const result = document.getElementById('statusResult');
+
+  if (!username) {
+    result.style.display = 'block';
+    result.style.backgroundColor = 'rgba(138,26,26,.12)';
+    result.style.borderLeft = '3px solid var(--blood)';
+    result.style.color = '#e88';
+    result.textContent = '❌ Please enter your Aternos username.';
+    return;
+  }
+
+  try {
+    console.log('Checking status for:', username);
+    const response = await fetch(`/api/status-check?aternos_username=${encodeURIComponent(username)}`);
+    const data = await response.json();
+
+    console.log('Status check result:', data);
+
+    result.style.display = 'block';
+
+    if (!data.success) {
+      result.style.backgroundColor = 'rgba(138,26,26,.12)';
+      result.style.borderLeft = '3px solid var(--blood)';
+      result.style.color = '#e88';
+      result.textContent = '❌ ' + (data.error || 'Status check failed.');
+      return;
+    }
+
+    // Color code based on status
+    const statusColors = {
+      pending: { bg: 'rgba(212,168,83,.12)', border: '3px solid var(--gold)', color: '#d4a853', icon: '⏳' },
+      accepted: { bg: 'rgba(90,170,106,.12)', border: '3px solid #5aaa6a', color: '#5aaa6a', icon: '✅' },
+      rejected: { bg: 'rgba(138,26,26,.12)', border: '3px solid var(--blood)', color: '#e88', icon: '❌' }
+    };
+
+    const colors = statusColors[data.status] || statusColors.pending;
+    result.style.backgroundColor = colors.bg;
+    result.style.borderLeft = colors.border;
+    result.style.color = colors.color;
+    
+    let statusText = `${colors.icon} <strong>${data.status.toUpperCase()}</strong><br>`;
+    statusText += `${data.message}`;
+    
+    if (data.submittedAt) {
+      const submitted = new Date(data.submittedAt);
+      statusText += `<br><small>Submitted: ${submitted.toLocaleDateString()}</small>`;
+    }
+    
+    if (data.reviewedAt) {
+      const reviewed = new Date(data.reviewedAt);
+      statusText += `<br><small>Reviewed: ${reviewed.toLocaleDateString()}</small>`;
+    }
+
+    result.innerHTML = statusText;
+  } catch (err) {
+    console.error('Status check error:', err);
+    result.style.display = 'block';
+    result.style.backgroundColor = 'rgba(138,26,26,.12)';
+    result.style.borderLeft = '3px solid var(--blood)';
+    result.style.color = '#e88';
+    result.textContent = '❌ Failed to check status. Please try again later.';
+  }
+}
+
 async function submitApplication(event) {
   event.preventDefault();
   const form = document.getElementById('applyForm');

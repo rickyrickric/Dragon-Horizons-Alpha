@@ -153,6 +153,44 @@ export class ApplicationService {
   }
 
   /**
+   * Get application status by aternos username (public check)
+   * 
+   * @param {string} aternos_username
+   * @returns {Promise<{success: boolean, data?: {status, nickname, discord, created_at, reviewed_at, admin_note}, error?: string}>}
+   */
+  async checkApplicationStatus(aternos_username) {
+    try {
+      const normalized = aternos_username.trim().toLowerCase();
+      const { data, error } = await this.repo.getAll();
+      
+      if (error) {
+        return { success: false, error: 'Failed to check application status.' };
+      }
+
+      // Find application with matching aternos_username
+      const app = (data || []).find(a => a.aternos_username === normalized);
+      
+      if (!app) {
+        return { success: false, error: 'No application found for this username.' };
+      }
+
+      return {
+        success: true,
+        data: {
+          status: app.status,
+          nickname: app.nickname,
+          discord: app.discord,
+          created_at: app.created_at,
+          reviewed_at: app.reviewed_at,
+          admin_note: app.admin_note
+        }
+      };
+    } catch (err) {
+      return { success: false, error: err.message };
+    }
+  }
+
+  /**
    * Get application stats (counts by status)
    * 
    * @returns {Promise<{pending: number, accepted: number, rejected: number}>}
