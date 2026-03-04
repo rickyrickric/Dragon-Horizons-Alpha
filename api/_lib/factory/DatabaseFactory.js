@@ -7,14 +7,14 @@
  * Centralizes all repository instantiation and manages backend selection.
  */
 
-import { SupabaseApplicationRepository } from './repositories/SupabaseApplicationRepository.js';
-import { SupabaseConfigRepository } from './repositories/SupabaseConfigRepository.js';
-import { SupabaseAdminKeyRepository } from './repositories/SupabaseAdminKeyRepository.js';
+import { SupabaseApplicationRepository } from '../repositories/SupabaseApplicationRepository.js';
+import { SupabaseConfigRepository } from '../repositories/SupabaseConfigRepository.js';
+import { SupabaseAdminKeyRepository } from '../repositories/SupabaseAdminKeyRepository.js';
 
 // TODO: When Firestore implementations are ready, import them:
-// import { FirestoreApplicationRepository } from './repositories/FirestoreApplicationRepository.js';
-// import { FirestoreConfigRepository } from './repositories/FirestoreConfigRepository.js';
-// import { FirestoreAdminKeyRepository } from './repositories/FirestoreAdminKeyRepository.js';
+// import { FirestoreApplicationRepository } from '../repositories/FirestoreApplicationRepository.js';
+// import { FirestoreConfigRepository } from '../repositories/FirestoreConfigRepository.js';
+// import { FirestoreAdminKeyRepository } from '../repositories/FirestoreAdminKeyRepository.js';
 
 class DatabaseFactory {
   constructor() {

@@ -1,6 +1,7 @@
 {
   "name": "dragon-horizons",
   "version": "1.0.1",
+  "type": "module",
   "dependencies": {
     "@supabase/supabase-js": "^2.39.0",
     "firebase-admin": "^11.10.1"
