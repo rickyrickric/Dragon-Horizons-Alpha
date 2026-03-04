@@ -5,10 +5,10 @@
  * GET /api/status-check?aternos_username=username
  */
 
-import { cors } from '../_lib/auth.js';
-import { ok, fail } from '../_lib/respond.js';
-import { databaseFactory } from '../_lib/factory/DatabaseFactory.js';
-import { ApplicationService } from '../_lib/services/ApplicationService.js';
+import { cors } from './_lib/auth.js';
+import { ok, fail } from './_lib/respond.js';
+import { databaseFactory } from './_lib/factory/DatabaseFactory.js';
+import { ApplicationService } from './_lib/services/ApplicationService.js';
 
 export default async function handler(req, res) {
   cors(res);
@@ -23,10 +23,16 @@ export default async function handler(req, res) {
     }
 
     try {
+      console.log('[status-check] Checking status for:', aternos_username);
+      
       const appRepo = databaseFactory.getApplicationRepository();
+      console.log('[status-check] Repository created:', appRepo ? 'yes' : 'no');
+      
       const appService = new ApplicationService(appRepo);
+      console.log('[status-check] Service created:', appService ? 'yes' : 'no');
 
       const result = await appService.checkApplicationStatus(aternos_username);
+      console.log('[status-check] Result:', result);
 
       if (!result.success) {
         return fail(res, result.error, 404); // Application not found
@@ -39,7 +45,7 @@ export default async function handler(req, res) {
         rejected: 'Unfortunately, your application was not accepted at this time. Please try again later.'
       };
 
-      return ok(res, {
+      const response = {
         status: app.status,
         message: statusMessages[app.status] || 'Unknown status',
         nickname: app.nickname,
@@ -47,10 +53,14 @@ export default async function handler(req, res) {
         submittedAt: app.created_at,
         reviewedAt: app.reviewed_at,
         adminNote: app.status === 'rejected' ? app.admin_note : null
-      });
+      };
+      
+      console.log('[status-check] Sending response:', response);
+      return ok(res, response);
     } catch (err) {
-      console.error('Status check error:', err);
-      return fail(res, 'Failed to check application status. Please try again later.', 500);
+      console.error('[status-check] Error:', err.message || err);
+      console.error('[status-check] Stack:', err.stack);
+      return fail(res, 'Failed to check application status: ' + (err.message || 'Unknown error'), 500);
     }
   }
 
