@@ -1,4 +1,4 @@
-import { requireAdmin, cors } from './_lib/auth.js';
+import { requireAdmin, cors, parseBody } from './_lib/auth.js';
 import { ok, fail, denied }  from './_lib/respond.js';
 import db from './_lib/db.js';
 
@@ -29,7 +29,8 @@ export default async function handler(req, res) {
     const auth = requireAdmin(req);
     if (!auth.ok) return denied(res);
 
-    const updates = req.body; // { drive_link: '...', server_address: '...' }
+    const body = parseBody(req);
+    const updates = body; // { drive_link: '...', server_address: '...' }
     const allowed = ['drive_link', 'server_address', 'server_port', 'pack_version'];
 
     for (const [key, value] of Object.entries(updates)) {

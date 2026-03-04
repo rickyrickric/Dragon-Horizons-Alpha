@@ -1,4 +1,4 @@
-import { requireAdmin, cors } from '../_lib/auth.js';
+import { requireAdmin, cors, parseBody } from '../_lib/auth.js';
 import { ok, fail, denied, notFound } from '../_lib/respond.js';
 import db from '../_lib/db.js';
 
@@ -20,7 +20,8 @@ export default async function handler(req, res) {
 
   // PATCH /api/applications/:id — update status + optional admin note
   if (req.method === 'PATCH') {
-    const { status, admin_note } = req.body;
+    const body = parseBody(req);
+    const { status, admin_note } = body;
     if (!['pending','accepted','rejected'].includes(status)) {
       return fail(res, 'Invalid status. Must be pending, accepted, or rejected.');
     }

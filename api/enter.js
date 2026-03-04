@@ -1,6 +1,6 @@
 import { recordServerEntry } from './_lib/supabase.js';
 import { ok, fail } from './_lib/respond.js';
-import { cors } from './_lib/auth.js';
+import { cors, parseBody } from './_lib/auth.js';
 
 function validateEntry(body) {
   const errors = [];
@@ -24,7 +24,7 @@ export default async function handler(req, res) {
   if (req.method === 'OPTIONS') return res.status(204).end();
   if (req.method !== 'POST') return fail(res, 'Method not allowed.', 405);
 
-  const body = req.body || {};
+  const body = parseBody(req) || {};
   const { errors, sanitized } = validateEntry(body);
   if (errors.length) return fail(res, errors.join(' '), 422);
 

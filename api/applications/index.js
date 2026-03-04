@@ -1,4 +1,4 @@
-import { requireAdmin, cors } from '../_lib/auth.js';
+import { requireAdmin, cors, parseBody } from '../_lib/auth.js';
 import { ok, fail, denied }  from '../_lib/respond.js';
 import { validateApplication } from '../_lib/validate.js';
 import db from '../_lib/db.js';
@@ -9,10 +9,11 @@ export default async function handler(req, res) {
 
   // POST /api/applications — submit new application (public)
   if (req.method === 'POST') {
-    const errors = validateApplication(req.body);
+    const body = parseBody(req);
+    const errors = validateApplication(body);
     if (errors.length) return fail(res, errors.join(' '));
 
-    const { nickname, discord, aternos_username, reason } = req.body;
+    const { nickname, discord, aternos_username, reason } = body;
 
     // Block duplicate pending/accepted aternos usernames
     const existing = await db.findExistingApplication(aternos_username.trim().toLowerCase());
