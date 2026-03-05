@@ -9,7 +9,19 @@ import supabase from '../supabase.js';
 import { ApplicationRepository } from './ApplicationRepository.js';
 
 export class SupabaseApplicationRepository extends ApplicationRepository {
+  _checkSupabase() {
+    if (!supabase) {
+      return {
+        error: new Error('Database not configured. Please set SUPABASE_URL and SUPABASE_SERVICE_KEY environment variables.')
+      };
+    }
+    return null;
+  }
+
   async insert(payload) {
+    const checkError = this._checkSupabase();
+    if (checkError) return checkError;
+
     const { data, error } = await supabase
       .from('applications')
       .insert(payload)
@@ -19,6 +31,9 @@ export class SupabaseApplicationRepository extends ApplicationRepository {
   }
 
   async findExisting(aternos_username) {
+    const checkError = this._checkSupabase();
+    if (checkError) return null;
+
     const { data } = await supabase
       .from('applications')
       .select('id, status')
@@ -29,6 +44,9 @@ export class SupabaseApplicationRepository extends ApplicationRepository {
   }
 
   async getAll(status) {
+    const checkError = this._checkSupabase();
+    if (checkError) return checkError;
+
     let query = supabase
       .from('applications')
       .select('*')
@@ -43,6 +61,9 @@ export class SupabaseApplicationRepository extends ApplicationRepository {
   }
 
   async getById(id) {
+    const checkError = this._checkSupabase();
+    if (checkError) return checkError;
+
     const { data, error } = await supabase
       .from('applications')
       .select('*')

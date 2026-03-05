@@ -9,7 +9,19 @@ import supabase from '../supabase.js';
 import { ConfigRepository } from './ConfigRepository.js';
 
 export class SupabaseConfigRepository extends ConfigRepository {
+  _checkSupabase() {
+    if (!supabase) {
+      return {
+        error: new Error('Database not configured. Please set SUPABASE_URL and SUPABASE_SERVICE_KEY environment variables.')
+      };
+    }
+    return null;
+  }
+
   async getAll() {
+    const checkError = this._checkSupabase();
+    if (checkError) return checkError;
+
     const { data, error } = await supabase
       .from('site_config')
       .select('key, value');
@@ -17,6 +29,9 @@ export class SupabaseConfigRepository extends ConfigRepository {
   }
 
   async get(key) {
+    const checkError = this._checkSupabase();
+    if (checkError) return null;
+
     const { data, error } = await supabase
       .from('site_config')
       .select('value')
@@ -28,6 +43,9 @@ export class SupabaseConfigRepository extends ConfigRepository {
   }
 
   async upsert(key, value) {
+    const checkError = this._checkSupabase();
+    if (checkError) return checkError;
+
     const { data, error } = await supabase
       .from('site_config')
       .upsert({ key, value }, { onConflict: 'key' });

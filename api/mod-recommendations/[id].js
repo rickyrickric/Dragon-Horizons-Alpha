@@ -16,12 +16,13 @@ export default async function handler(req, res) {
   cors(res);
   if (req.method === 'OPTIONS') return res.status(204).end();
 
-  const { id } = req.query;
-  if (!id) return fail(res, 'Recommendation ID is required.', 400);
+  try {
+    const { id } = req.query;
+    if (!id) return fail(res, 'Recommendation ID is required.', 400);
 
-  // Create service
-  const modRecRepo = databaseFactory.getModRecommendationRepository();
-  const modRecService = new ModRecommendationService(modRecRepo);
+    // Create service
+    const modRecRepo = databaseFactory.getModRecommendationRepository();
+    const modRecService = new ModRecommendationService(modRecRepo);
 
   // GET /api/mod-recommendations/[id] — get single recommendation (admin only)
   if (req.method === 'GET') {
@@ -75,4 +76,13 @@ export default async function handler(req, res) {
   }
 
   return fail(res, 'Method not allowed.', 405);
+  } catch (err) {
+    console.error('❌ [/api/mod-recommendations/[id]] Unhandled error:', {
+      id: req.query.id,
+      method: req.method,
+      error: err.message,
+      stack: err.stack
+    });
+    return fail(res, 'Internal server error. Please check server logs.', 500);
+  }
 }

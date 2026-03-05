@@ -88,11 +88,18 @@ export class ModRecommendationService {
 
       const { data, error } = await this.repo.getAll(status);
       if (error) {
-        return { success: false, error: 'Failed to fetch recommendations.' };
+        console.error('ModRecommendationService.getRecommendations error:', {
+          status,
+          error: error.message || error,
+          code: error.code,
+          details: error.details
+        });
+        return { success: false, error: `Failed to fetch recommendations: ${error.message || JSON.stringify(error)}` };
       }
 
       return { success: true, data };
     } catch (err) {
+      console.error('ModRecommendationService.getRecommendations exception:', err);
       return { success: false, error: err.message };
     }
   }

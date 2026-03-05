@@ -1,9 +1,20 @@
 import { createClient } from '@supabase/supabase-js';
 
-const supabase = createClient(
-  process.env.SUPABASE_URL,
-  process.env.SUPABASE_SERVICE_KEY // service role key — server only, never exposed
-);
+// Validate required environment variables
+const supabaseUrl = process.env.SUPABASE_URL;
+const supabaseServiceKey = process.env.SUPABASE_SERVICE_KEY;
+
+if (!supabaseUrl || !supabaseServiceKey) {
+  console.error('❌ CRITICAL: Missing required environment variables');
+  console.error('   SUPABASE_URL:', supabaseUrl ? '✓ Set' : '✗ Missing');
+  console.error('   SUPABASE_SERVICE_KEY:', supabaseServiceKey ? '✓ Set' : '✗ Missing');
+  console.error('\n   Please set these environment variables in your .env file');
+  console.error('   See .env.example for the required format\n');
+}
+
+const supabase = supabaseUrl && supabaseServiceKey
+  ? createClient(supabaseUrl, supabaseServiceKey)
+  : null;
 
 async function recordServerEntry(entry) {
   // entry should be an object matching your DB columns, e.g.

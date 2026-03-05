@@ -11,11 +11,26 @@ import { ModRecommendationRepository } from './ModRecommendationRepository.js';
 
 export class SupabaseModRecommendationRepository extends ModRecommendationRepository {
   /**
+   * Check if Supabase is properly initialized
+   */
+  _checkSupabase() {
+    if (!supabase) {
+      return {
+        error: new Error('Database not configured. Please set SUPABASE_URL and SUPABASE_SERVICE_KEY environment variables.')
+      };
+    }
+    return null;
+  }
+
+  /**
    * Insert a new mod recommendation
    * @param {Object} payload
    * @returns {Promise<{data: ModRecommendation, error: ?Object}>}
    */
   async insert(payload) {
+    const checkError = this._checkSupabase();
+    if (checkError) return checkError;
+
     const { data, error } = await supabase
       .from('mod_recommendations')
       .insert({
@@ -39,6 +54,9 @@ export class SupabaseModRecommendationRepository extends ModRecommendationReposi
    * @returns {Promise<{data: ModRecommendation[], error: ?Object}>}
    */
   async getAll(status = null) {
+    const checkError = this._checkSupabase();
+    if (checkError) return checkError;
+
     let query = supabase
       .from('mod_recommendations')
       .select('*')
@@ -58,6 +76,9 @@ export class SupabaseModRecommendationRepository extends ModRecommendationReposi
    * @returns {Promise<{data: ModRecommendation?, error: ?Object}>}
    */
   async getById(id) {
+    const checkError = this._checkSupabase();
+    if (checkError) return checkError;
+
     const { data, error } = await supabase
       .from('mod_recommendations')
       .select('*')
@@ -75,6 +96,9 @@ export class SupabaseModRecommendationRepository extends ModRecommendationReposi
    * @returns {Promise<{data: ModRecommendation, error: ?Object}>}
    */
   async updateStatus(id, status, admin_comment = null) {
+    const checkError = this._checkSupabase();
+    if (checkError) return checkError;
+
     const updates = {
       status,
       reviewed_at: new Date().toISOString()
@@ -100,6 +124,9 @@ export class SupabaseModRecommendationRepository extends ModRecommendationReposi
    * @returns {Promise<{error: ?Object}>}
    */
   async delete(id) {
+    const checkError = this._checkSupabase();
+    if (checkError) return checkError;
+
     const { error } = await supabase
       .from('mod_recommendations')
       .delete()
@@ -114,6 +141,9 @@ export class SupabaseModRecommendationRepository extends ModRecommendationReposi
    * @returns {Promise<{data: number, error: ?Object}>}
    */
   async count(status = null) {
+    const checkError = this._checkSupabase();
+    if (checkError) return checkError;
+
     let query = supabase
       .from('mod_recommendations')
       .select('id', { count: 'exact', head: true });

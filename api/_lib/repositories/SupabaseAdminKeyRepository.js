@@ -11,7 +11,19 @@ import { AdminKeyRepository } from './AdminKeyRepository.js';
 const ALLOWED_KEYS = ['event', 'maintenance', 'status'];
 
 export class SupabaseAdminKeyRepository extends AdminKeyRepository {
+  _checkSupabase() {
+    if (!supabase) {
+      return {
+        error: new Error('Database not configured. Please set SUPABASE_URL and SUPABASE_SERVICE_KEY environment variables.')
+      };
+    }
+    return null;
+  }
+
   async getAll() {
+    const checkError = this._checkSupabase();
+    if (checkError) return checkError;
+
     const { data, error } = await supabase
       .from('admin_keys')
       .select('key_name, description, created_at, updated_at');
@@ -33,6 +45,9 @@ export class SupabaseAdminKeyRepository extends AdminKeyRepository {
       return { data: null, error: { message: 'Invalid key name' } };
     }
 
+    const checkError = this._checkSupabase();
+    if (checkError) return checkError;
+
     const { data, error } = await supabase
       .from('admin_keys')
       .select('key_name, description, created_at, updated_at')
@@ -47,6 +62,9 @@ export class SupabaseAdminKeyRepository extends AdminKeyRepository {
   }
 
   async verify(key_name, provided_value) {
+    const checkError = this._checkSupabase();
+    if (checkError) return { valid: false, error: checkError.error };
+
     if (!ALLOWED_KEYS.includes(key_name)) {
       return false;
     }

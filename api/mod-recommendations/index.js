@@ -17,12 +17,13 @@ export default async function handler(req, res) {
   cors(res);
   if (req.method === 'OPTIONS') return res.status(204).end();
 
-  // Create service
-  const modRecRepo = databaseFactory.getModRecommendationRepository();
-  const modRecService = new ModRecommendationService(modRecRepo);
+  try {
+    // Create service
+    const modRecRepo = databaseFactory.getModRecommendationRepository();
+    const modRecService = new ModRecommendationService(modRecRepo);
 
-  // POST /api/mod-recommendations — submit new recommendation (public)
-  if (req.method === 'POST') {
+    // POST /api/mod-recommendations — submit new recommendation (public)
+    if (req.method === 'POST') {
     const body = parseBody(req);
     
     // Validate required fields
@@ -70,4 +71,12 @@ export default async function handler(req, res) {
   }
 
   return fail(res, 'Method not allowed.', 405);
+  } catch (err) {
+    console.error('❌ [/api/mod-recommendations] Unhandled error:', {
+      method: req.method,
+      error: err.message,
+      stack: err.stack
+    });
+    return fail(res, 'Internal server error. Please check server logs.', 500);
+  }
 }
