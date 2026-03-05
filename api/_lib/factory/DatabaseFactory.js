@@ -11,6 +11,7 @@ import { SupabaseApplicationRepository } from '../repositories/SupabaseApplicati
 import { SupabaseConfigRepository } from '../repositories/SupabaseConfigRepository.js';
 import { SupabaseAdminKeyRepository } from '../repositories/SupabaseAdminKeyRepository.js';
 import { SupabaseModRecommendationRepository } from '../repositories/SupabaseModRecommendationRepository.js';
+import { SupabaseEventRepository } from '../repositories/SupabaseEventRepository.js';
 
 // TODO: When Firestore implementations are ready, import them:
 // import { FirestoreApplicationRepository } from '../repositories/FirestoreApplicationRepository.js';
@@ -28,6 +29,7 @@ class DatabaseFactory {
     this._configRepository = null;
     this._adminKeyRepository = null;
     this._modRecRepository = null;
+    this._eventRepository = null;
   }
 
   /**
@@ -92,6 +94,22 @@ class DatabaseFactory {
       }
     }
     return this._modRecRepository;
+  }
+
+  /**
+   * Get or create EventRepository instance
+   * @returns {EventRepository}
+   */
+  getEventRepository() {
+    if (!this._eventRepository) {
+      if (this.useFirebase) {
+        // TODO: return new FirestoreEventRepository();
+        throw new Error('Firestore backend not yet implemented');
+      } else {
+        this._eventRepository = new SupabaseEventRepository();
+      }
+    }
+    return this._eventRepository;
   }
 
   /**

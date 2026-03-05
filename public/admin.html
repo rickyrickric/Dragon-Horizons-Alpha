@@ -599,6 +599,118 @@
   }
 }
 
+/* ═══════════════════════════════════════════
+   EVENTS COUNTDOWN TIMERS
+═══════════════════════════════════════════ */
+.events-panel {
+  background:var(--bg2); border:1px solid var(--border);
+  padding:32px 28px;
+}
+.events-panel .sh { margin-bottom:6px; }
+.events-panel .sec-title { margin-bottom:24px; }
+
+.event-form-section,
+.events-list-section {
+  background:rgba(10,6,6,.4); border:1px solid var(--border);
+  padding:20px; border-radius:2px;
+}
+
+.event-form {
+  display:flex; flex-direction:column; gap:16px;
+}
+.form-row {
+  display:grid; grid-template-columns:repeat(2,1fr); gap:12px;
+}
+@media(max-width:640px) {
+  .form-row {
+    grid-template-columns:1fr;
+  }
+}
+.form-row > div {
+  display:flex; flex-direction:column;
+}
+.form-label {
+  font-family:var(--fc); font-size:.46rem; letter-spacing:.3em;
+  text-transform:uppercase; color:var(--parch-d); margin-bottom:7px;
+}
+.form-input {
+  width:100%; background:rgba(10,6,6,.8);
+  border:1px solid rgba(212,168,83,.18);
+  color:var(--parch); font-family:var(--fi); font-size:.95rem;
+  padding:12px 16px; outline:none; transition:border-color .2s;
+}
+.form-input:focus { border-color:var(--gold-d); }
+
+.events-list {
+  display:grid; gap:16px;
+}
+.event-card {
+  background:var(--bg2); border:1px solid var(--border);
+  padding:20px; border-radius:2px;
+  transition:border-color .2s;
+}
+@media(max-width:640px) {
+  .event-card {
+    padding:16px;
+  }
+}
+.event-card:hover { border-color:var(--gold-d); }
+.event-card.patch { border-left:4px solid #d4a853; }
+.event-card.world_reset { border-left:4px solid #5aaa6a; }
+.event-card.mystery { border-left:4px solid #a76e9b; }
+
+.event-head {
+  display:flex; justify-content:space-between; align-items:flex-start; gap:12px; margin-bottom:12px;
+}
+@media(max-width:660px){ .event-head { flex-direction:column; gap:8px; } }
+
+.event-info {
+  flex:1; min-width:0;
+}
+.event-type {
+  font-family:var(--fc); font-size:.54rem; letter-spacing:.16em;
+  text-transform:uppercase; color:var(--gold-l); margin-bottom:4px;
+}
+.event-time {
+  font-family:var(--fi); font-size:.9rem; color:var(--parch); margin-bottom:4px;
+}
+.event-countdown {
+  font-family:var(--fi); font-size:1.1rem; font-weight:bold;
+  color:var(--gold-l);
+}
+.event-description {
+  color:var(--parch); font-size:.9rem; line-height:1.5; margin-top:8px;
+}
+
+.event-pill {
+  display:inline-block; padding:6px 12px;
+  font-family:var(--fc); font-size:.42rem; letter-spacing:.15em;
+  text-transform:uppercase; border-radius:2px;
+}
+.event-pill.patch { background:rgba(212,168,83,.2); color:var(--gold-l); }
+.event-pill.world_reset { background:rgba(90,170,106,.2); color:#5aaa6a; }
+.event-pill.mystery { background:rgba(167,110,155,.2); color:#a76e9b; }
+
+.event-controls {
+  display:flex; gap:8px; margin-top:12px; flex-wrap:wrap;
+}
+.event-btn {
+  font-family:var(--fc); font-size:.42rem; letter-spacing:.15em;
+  text-transform:uppercase; padding:8px 16px;
+  background:rgba(212,168,83,.1); border:1px solid var(--gold-d);
+  color:var(--gold-d); cursor:pointer; transition:all .2s;
+}
+.event-btn:hover { background:rgba(212,168,83,.2); }
+.event-btn.delete {
+  background:rgba(138,26,26,.08); border-color:var(--blood);
+  color:var(--blood-b);
+}
+.event-btn.delete:hover { background:rgba(138,26,26,.15); }
+
+.event-edit-form {
+  margin-top:12px; padding-top:12px; border-top:1px solid var(--border);
+}
+
 
 </style>
 </head>
@@ -659,6 +771,7 @@
     <div class="tab-bar">
       <button class="tab-btn active" onclick="switchTab('applications', this)">📋 &nbsp;Applications</button>
       <button class="tab-btn"        onclick="switchTab('feedback', this)">💬 &nbsp;Mod Feedback</button>
+      <button class="tab-btn"        onclick="switchTab('events', this)">⏱️ &nbsp;Events</button>
       <button class="tab-btn"        onclick="switchTab('config', this)">⚙️ &nbsp;Site Config</button>
     </div>
 
@@ -696,6 +809,61 @@
         <div class="state-box"><div class="spinner"></div></div>
       </div>
 
+    </div>
+
+    <!-- ── Tab: Events ── -->
+    <div class="tab-pane" id="tab-events">
+      <div class="events-panel">
+        <div class="sh">Countdown Timer Events</div>
+        <h2 class="sec-title">Manage Upcoming Events (Patches, World Resets, etc.)</h2>
+
+        <div class="scroll" style="margin-bottom:28px;">
+          <div class="scroll-e"><span class="sg">◆</span><span class="st">Create countdown timers that players can see on the home page. Choose event type: Patch and Fixes, World Reset, or Mystery event.</span></div>
+          <div class="scroll-e"><span class="sg">◆</span><span class="st">Set the date and time when the event happens — the countdown will automatically display on all pages.</span></div>
+        </div>
+
+        <!-- Create New Event Form -->
+        <div class="event-form-section">
+          <h3 style="margin:0 0 16px 0; color:#fff; font-size:1.1em;">➕ Create New Event</h3>
+          <div class="event-form">
+            <div class="form-row">
+              <div>
+                <label class="form-label">Event Type</label>
+                <select id="eventType" class="form-input">
+                  <option value="">-- Select Type --</option>
+                  <option value="patch">🔧 Patch and Fixes</option>
+                  <option value="world_reset">🌍 World Reset</option>
+                  <option value="mystery">🎁 Mystery Event</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div style="flex:1;">
+                <label class="form-label">Event Date & Time</label>
+                <input type="datetime-local" id="eventTime" class="form-input">
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div style="flex:1;">
+                <label class="form-label">Description</label>
+                <textarea id="eventDescription" class="form-input" rows="3" placeholder="Describe what this event is about..."></textarea>
+              </div>
+            </div>
+
+            <button class="save-btn" onclick="createEvent()">➕ Create Event</button>
+          </div>
+        </div>
+
+        <!-- Events List -->
+        <div class="events-list-section" style="margin-top:32px;">
+          <h3 style="margin:0 0 16px 0; color:#fff; font-size:1.1em;">📅 Active Events</h3>
+          <div class="events-list" id="eventsList">
+            <div class="state-box"><div class="spinner"></div></div>
+          </div>
+        </div>
+      </div>
     </div>
 
     <!-- ── Tab: Site Config ── -->
@@ -1265,6 +1433,216 @@
     }
   }
 
+  // ── Events ────────────────────────────────────────────────────
+  let currentEventFilter = 'all';
+
+  async function loadEvents() {
+    const list = document.getElementById('eventsList');
+    list.innerHTML = '<div class="state-box"><div class="spinner"></div></div>';
+
+    try {
+      const res = await fetch(`${API}/events`, { headers: authHeader() });
+      
+      if (!res.ok) {
+        throw new Error(`API returned ${res.status}`);
+      }
+
+      const data = await res.json();
+      const events = data.events || [];
+
+      if (events.length === 0) {
+        list.innerHTML = `
+          <div class="state-box">
+            <div class="state-icon">📭</div>
+            <div class="state-msg">No Active Events</div>
+          </div>`;
+        return;
+      }
+
+      list.innerHTML = events.map(event => {
+        const eventEmoji = {
+          'patch': '🔧',
+          'world_reset': '🌍',
+          'mystery': '🎁'
+        }[event.event_type] || '⏱️';
+
+        const eventName = {
+          'patch': 'Patch and Fixes',
+          'world_reset': 'World Reset',
+          'mystery': 'Mystery Event'
+        }[event.event_type];
+
+        const countdown = formatCountdownDiff(event.event_time);
+
+        return `
+          <div class="event-card ${event.event_type}" data-id="${event.id}">
+            <div class="event-head">
+              <div class="event-info">
+                <div class="event-type">${eventEmoji} &nbsp;${eventName}</div>
+                <div class="event-time">${formatDate(event.event_time)}</div>
+                <div class="event-countdown">⏰ ${countdown}</div>
+              </div>
+              <span class="event-pill ${event.event_type}">${eventName}</span>
+            </div>
+            
+            <div class="event-description">${esc(event.description)}</div>
+
+            <div class="event-controls">
+              <button class="event-btn" onclick="editEventShow('${event.id}', this)">✏️ Edit</button>
+              <button class="event-btn delete" onclick="deleteEvent('${event.id}', this)">🗑️ Delete</button>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+    } catch (err) {
+      console.error('loadEvents error:', err);
+      list.innerHTML = `
+        <div class="state-box">
+          <div class="state-icon">⚠️</div>
+          <div class="state-msg">Failed to Load Events</div>
+        </div>`;
+    }
+  }
+
+  async function createEvent() {
+    const type = document.getElementById('eventType').value;
+    const time = document.getElementById('eventTime').value;
+    const description = document.getElementById('eventDescription').value;
+
+    if (!type || !time || !description) {
+      toast('error', '❌ Please fill in all fields');
+      return;
+    }
+
+    try {
+      const res = await fetch(`${API}/events`, {
+        method: 'POST',
+        headers: authHeader(),
+        body: JSON.stringify({
+          event_type: type,
+          event_time: new Date(time).toISOString(),
+          description: description.trim()
+        })
+      });
+
+      const data = await res.json();
+      if (!data.success) throw new Error(data.error);
+
+      // Clear form
+      document.getElementById('eventType').value = '';
+      document.getElementById('eventTime').value = '';
+      document.getElementById('eventDescription').value = '';
+
+      toast('success', '✅ Event created successfully!');
+      loadEvents();
+    } catch (err) {
+      toast('error', `Failed: ${err.message}`);
+    }
+  }
+
+  async function deleteEvent(id, btn) {
+    if (!confirm('Delete this event? This cannot be undone.')) return;
+    
+    try {
+      const res = await fetch(`${API}/events/${id}`, {
+        method: 'DELETE',
+        headers: authHeader()
+      });
+      
+      const data = await res.json();
+      if (!data.success) throw new Error(data.error);
+      
+      document.querySelector(`[data-id="${id}"]`).remove();
+      toast('success', '✅ Event deleted.');
+    } catch (err) {
+      toast('error', `Delete failed: ${err.message}`);
+    }
+  }
+
+  function editEventShow(id, btn) {
+    const card = document.querySelector(`[data-id="${id}"]`);
+    if (card.querySelector('.event-edit-form')) {
+      card.querySelector('.event-edit-form').remove();
+    } else {
+      const editForm = `
+        <div class="event-edit-form">
+          <div class="form-row">
+            <div>
+              <label class="form-label">Event Type</label>
+              <select id="edit-type-${id}" class="form-input">
+                <option value="patch">🔧 Patch and Fixes</option>
+                <option value="world_reset">🌍 World Reset</option>
+                <option value="mystery">🎁 Mystery Event</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-row">
+            <div>
+              <label class="form-label">Event Date & Time</label>
+              <input type="datetime-local" id="edit-time-${id}" class="form-input">
+            </div>
+          </div>
+          <div class="form-row">
+            <div style="grid-column:1/-1;">
+              <label class="form-label">Description</label>
+              <textarea id="edit-desc-${id}" class="form-input" rows="2"></textarea>
+            </div>
+          </div>
+          <button class="save-btn" onclick="saveEventEdit('${id}')">💾 Save Changes</button>
+        </div>
+      `;
+      card.insertAdjacentHTML('beforeend', editForm);
+    }
+  }
+
+  async function saveEventEdit(id) {
+    const newType = document.getElementById(`edit-type-${id}`).value;
+    const newTime = document.getElementById(`edit-time-${id}`).value;
+    const newDesc = document.getElementById(`edit-desc-${id}`).value;
+
+    if (!newTime || !newDesc) {
+      toast('error', '❌ Please fill in all fields');
+      return;
+    }
+
+    try {
+      const res = await fetch(`${API}/events/${id}`, {
+        method: 'PATCH',
+        headers: authHeader(),
+        body: JSON.stringify({
+          event_type: newType,
+          event_time: new Date(newTime).toISOString(),
+          description: newDesc.trim()
+        })
+      });
+
+      const data = await res.json();
+      if (!data.success) throw new Error(data.error);
+
+      toast('success', '✅ Event updated!');
+      loadEvents();
+    } catch (err) {
+      toast('error', `Update failed: ${err.message}`);
+    }
+  }
+
+  function formatCountdownDiff(isoTime) {
+    const now = new Date();
+    const event = new Date(isoTime);
+    const diff = event - now;
+
+    if (diff < 0) return '⏸️ Past Event';
+
+    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const mins = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+
+    if (days > 0) return `${days}d ${hours}h ${mins}m`;
+    if (hours > 0) return `${hours}h ${mins}m`;
+    return `${mins}m`;
+  }
+
   // ── Tabs ───────────────────────────────────────────────────────
   function switchTab(name, btn) {
     document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
@@ -1272,9 +1650,12 @@
     document.getElementById(`tab-${name}`).classList.add('active');
     btn.classList.add('active');
     
-    // Load feedback data when switching to feedback tab
+    // Load data when switching to different tabs
     if (name === 'feedback') {
       loadFeedback('all');
+    }
+    if (name === 'events') {
+      loadEvents();
     }
   }
 

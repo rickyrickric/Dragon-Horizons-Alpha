@@ -124,6 +124,161 @@
 }
 .feat-eyebrow::before,.feat-eyebrow::after{content:'';flex:1;height:1px;background:rgba(212,168,83,.1);}
 .feat-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:12px;}
+
+/* ═══════════════════════════════════════════════════
+   COUNTDOWN TIMER SECTION
+═══════════════════════════════════════════════════ */
+.countdown-section {
+  position: relative;
+  background: linear-gradient(135deg, rgba(212,168,83,0.08) 0%, rgba(200,88,26,0.06) 100%);
+  border-top: 2px solid rgba(212,168,83,0.2);
+  border-bottom: 2px solid rgba(212,168,83,0.2);
+  padding: 60px 36px;
+  overflow: hidden;
+}
+
+.countdown-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background:
+    repeating-linear-gradient(
+      -45deg,
+      rgba(212,168,83,.01) 0px,
+      rgba(212,168,83,.01) 1px,
+      transparent 1px,
+      transparent 60px
+    );
+  pointer-events: none;
+}
+
+.countdown-wrapper {
+  position: relative;
+  z-index: 1;
+  max-width: 900px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.countdown-label {
+  font-family:var(--fc);
+  font-size: 0.58rem;
+  letter-spacing: 0.45em;
+  text-transform: uppercase;
+  color: var(--parch-d);
+  margin-bottom: 24px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  justify-content: center;
+}
+
+.countdown-container {
+  display: flex;
+  justify-content: center;
+}
+
+.countdown-card {
+  background: rgba(10, 6, 6, 0.7);
+  border: 1px solid rgba(212, 168, 83, 0.3);
+  padding: 32px 40px;
+  max-width: 500px;
+  position: relative;
+}
+
+.countdown-card::before,
+.countdown-card::after {
+  content: '';
+  position: absolute;
+  width: 12px;
+  height: 12px;
+}
+
+.countdown-card::before {
+  top: -1px;
+  left: -1px;
+  border-top: 1px solid var(--gold);
+  border-left: 1px solid var(--gold);
+}
+
+.countdown-card::after {
+  bottom: -1px;
+  right: -1px;
+  border-bottom: 1px solid var(--gold);
+  border-right: 1px solid var(--gold);
+}
+
+.event-type-badge {
+  display: inline-block;
+  padding: 8px 16px;
+  font-family: var(--fc);
+  font-size: 0.48rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  border-radius: 2px;
+  margin-bottom: 16px;
+  font-weight: bold;
+}
+
+.event-type-badge.patch {
+  background: rgba(212, 168, 83, 0.2);
+  color: var(--gold-l);
+  border: 1px solid var(--gold-d);
+}
+
+.event-type-badge.world_reset {
+  background: rgba(90, 170, 106, 0.2);
+  color: #5aaa6a;
+  border: 1px solid #5aaa6a;
+}
+
+.event-type-badge.mystery {
+  background: rgba(167, 110, 155, 0.2);
+  color: #a76e9b;
+  border: 1px solid #a76e9b;
+}
+
+.countdown-timer {
+  font-family: var(--fc);
+  font-size: clamp(2rem, 6vw, 3.5rem);
+  font-weight: bold;
+  color: var(--gold-l);
+  text-shadow: 0 0 20px rgba(212, 168, 83, 0.4);
+  letter-spacing: 0.05em;
+  margin: 20px 0;
+  min-height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.event-desc {
+  font-family: var(--fi);
+  font-size: 1rem;
+  color: var(--parch);
+  line-height: 1.6;
+  margin-top: 16px;
+}
+
+@media (max-width: 640px) {
+  .countdown-section {
+    padding: 40px 24px;
+  }
+  
+  .countdown-card {
+    padding: 24px 20px;
+  }
+  
+  .countdown-timer {
+    font-size: 2rem;
+  }
+  
+  .event-desc {
+    font-size: 0.95rem;
+  }
+}
 </style>
 </head>
 <body>
@@ -168,6 +323,23 @@
   </div>
 
   <div class="hero-rule"></div>
+</section>
+
+<!-- ═════════════════════════════════════════════════════
+     UPCOMING EVENTS COUNTDOWN TIMER
+═════════════════════════════════════════════════════ -->
+<section class="countdown-section" id="countdownSection" style="display:none;">
+  <div class="countdown-bg"></div>
+  <div class="countdown-wrapper">
+    <div class="countdown-label">⏱️ Upcoming Event</div>
+    <div class="countdown-container">
+      <div class="countdown-card">
+        <div class="event-type-badge" id="eventTypeBadge"></div>
+        <div class="countdown-timer" id="countdownTimer">Loading...</div>
+        <div class="event-desc" id="eventDesc"></div>
+      </div>
+    </div>
+  </div>
 </section>
 
 <section class="features">
@@ -222,6 +394,86 @@ document.querySelectorAll('.rv').forEach(function(el){
 });
 
 loadPublicConfig();
+
+// ── Countdown Timer ─────────────────────────────────────
+async function loadCountdownEvent() {
+  try {
+    const res = await fetch('/api/events');
+    if (!res.ok) throw new Error('Events load failed');
+    const data = await res.json();
+    const events = data.events || [];
+    
+    if (events.length === 0) {
+      document.getElementById('countdownSection').style.display = 'none';
+      return;
+    }
+    
+    // Find the next upcoming event
+    const now = new Date();
+    const nextEvent = events.find(e => new Date(e.event_time) > now);
+    
+    if (nextEvent) {
+      displayCountdownEvent(nextEvent);
+    } else {
+      document.getElementById('countdownSection').style.display = 'none';
+    }
+  } catch (e) {
+    console.warn('Failed to load countdown event:', e.message);
+  }
+}
+
+function displayCountdownEvent(event) {
+  const section = document.getElementById('countdownSection');
+  const badge = document.getElementById('eventTypeBadge');
+  const timer = document.getElementById('countdownTimer');
+  const desc = document.getElementById('eventDesc');
+  
+  // Set event type badge
+  const typeNames = {
+    'patch': '🔧 Patch and Fixes',
+    'world_reset': '🌍 World Reset',
+    'mystery': '🎁 Mystery Event'
+  };
+  
+  badge.className = `event-type-badge ${event.event_type}`;
+  badge.textContent = typeNames[event.event_type] || 'Upcoming Event';
+  
+  // Set description
+  desc.textContent = event.description;
+  
+  // Show section
+  section.style.display = 'block';
+  
+  // Update countdown every second
+  updateCountdown(event.event_time, timer);
+  setInterval(() => updateCountdown(event.event_time, timer), 1000);
+}
+
+function updateCountdown(eventIsoTime, timerEl) {
+  const now = new Date();
+  const event = new Date(eventIsoTime);
+  const diff = event - now;
+  
+  if (diff < 0) {
+    timerEl.textContent = '⏸️ Event Over';
+    return;
+  }
+  
+  const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+  const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+  const mins = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+  const secs = Math.floor((diff % (1000 * 60)) / 1000);
+  
+  if (days > 0) {
+    timerEl.textContent = `${days}d ${hours}h ${mins}m ${secs}s`;
+  } else if (hours > 0) {
+    timerEl.textContent = `${hours}h ${mins}m ${secs}s`;
+  } else {
+    timerEl.textContent = `${mins}m ${secs}s`;
+  }
+}
+
+loadCountdownEvent();
 </script>
 </body>
 </html>
