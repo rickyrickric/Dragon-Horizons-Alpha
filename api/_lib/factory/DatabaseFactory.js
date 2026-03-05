@@ -10,11 +10,13 @@
 import { SupabaseApplicationRepository } from '../repositories/SupabaseApplicationRepository.js';
 import { SupabaseConfigRepository } from '../repositories/SupabaseConfigRepository.js';
 import { SupabaseAdminKeyRepository } from '../repositories/SupabaseAdminKeyRepository.js';
+import { SupabaseModRecommendationRepository } from '../repositories/SupabaseModRecommendationRepository.js';
 
 // TODO: When Firestore implementations are ready, import them:
 // import { FirestoreApplicationRepository } from '../repositories/FirestoreApplicationRepository.js';
 // import { FirestoreConfigRepository } from '../repositories/FirestoreConfigRepository.js';
 // import { FirestoreAdminKeyRepository } from '../repositories/FirestoreAdminKeyRepository.js';
+// import { FirestoreModRecommendationRepository } from '../repositories/FirestoreModRecommendationRepository.js';
 
 class DatabaseFactory {
   constructor() {
@@ -25,6 +27,7 @@ class DatabaseFactory {
     this._appRepository = null;
     this._configRepository = null;
     this._adminKeyRepository = null;
+    this._modRecRepository = null;
   }
 
   /**
@@ -73,6 +76,22 @@ class DatabaseFactory {
       }
     }
     return this._adminKeyRepository;
+  }
+
+  /**
+   * Get or create ModRecommendationRepository instance
+   * @returns {ModRecommendationRepository}
+   */
+  getModRecommendationRepository() {
+    if (!this._modRecRepository) {
+      if (this.useFirebase) {
+        // TODO: return new FirestoreModRecommendationRepository();
+        throw new Error('Firestore backend not yet implemented');
+      } else {
+        this._modRecRepository = new SupabaseModRecommendationRepository();
+      }
+    }
+    return this._modRecRepository;
   }
 
   /**

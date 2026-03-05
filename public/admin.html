@@ -136,6 +136,14 @@
 .tab-bar {
   display:flex; border-bottom:1px solid var(--border);
   margin-bottom:24px; gap:0;
+  overflow-x:auto;
+  -webkit-overflow-scrolling:touch;
+}
+@media(max-width:640px) {
+  .tab-bar {
+    margin-bottom:16px;
+    -webkit-overflow-scrolling:touch;
+  }
 }
 .tab-btn {
   font-family:var(--fc); font-size:.52rem; letter-spacing:.25em;
@@ -144,6 +152,14 @@
   border:none; border-bottom:2px solid transparent;
   margin-bottom:-1px; cursor:pointer;
   transition:color .2s, border-color .2s;
+  white-space:nowrap;
+}
+@media(max-width:640px) {
+  .tab-btn {
+    font-size:.46rem;
+    padding:10px 16px;
+    letter-spacing:.2em;
+  }
 }
 .tab-btn:hover  { color:var(--parch); }
 .tab-btn.active { color:var(--gold-l); border-bottom-color:var(--gold); }
@@ -158,15 +174,36 @@
   padding:14px 16px;
   background:var(--bg2); border:1px solid var(--border);
 }
+@media(max-width:640px) {
+  .filter-row {
+    padding:12px;
+    gap:6px;
+    margin-bottom:16px;
+  }
+}
 .filter-label {
   font-family:var(--fc); font-size:.46rem; letter-spacing:.3em;
   text-transform:uppercase; color:var(--parch-d); margin-right:4px;
+}
+@media(max-width:640px) {
+  .filter-label {
+    font-size:.42rem;
+    margin-right:2px;
+  }
 }
 .filter-btn {
   font-family:var(--fc); font-size:.48rem; letter-spacing:.18em;
   text-transform:uppercase; padding:6px 14px;
   border:1px solid var(--border); background:transparent;
   color:var(--parch-d); cursor:pointer; transition:all .2s;
+  white-space:nowrap;
+}
+@media(max-width:640px) {
+  .filter-btn {
+    font-size:.42rem;
+    padding:5px 10px;
+    letter-spacing:.12em;
+  }
 }
 .filter-btn:hover { border-color:var(--gold-d); color:var(--gold); }
 .filter-btn.on    { background:rgba(212,168,83,.1); border-color:var(--gold-d); color:var(--gold-l); }
@@ -176,6 +213,15 @@
   text-transform:uppercase; padding:6px 14px;
   border:1px solid rgba(212,168,83,.15); background:transparent;
   color:var(--parch-d); cursor:pointer; transition:all .2s;
+  white-space:nowrap;
+}
+@media(max-width:640px) {
+  .refresh-btn {
+    font-size:.42rem;
+    padding:5px 10px;
+    letter-spacing:.12em;
+    margin-left:0;
+  }
 }
 .refresh-btn:hover { color:var(--gold); border-color:var(--gold-d); }
 
@@ -364,6 +410,196 @@
   margin:40px auto;
 }
 @keyframes spin { to { transform:rotate(360deg); } }
+
+/* ═══════════════════════════════════════════
+   MOD FEEDBACK CARDS
+═══════════════════════════════════════════ */
+.feedback-list {
+  display:grid; gap:16px;
+}
+.feedback-card {
+  background:var(--bg2); border:1px solid var(--border);
+  padding:20px; border-radius:2px;
+  transition:border-color .2s;
+}
+@media(max-width:640px) {
+  .feedback-card {
+    padding:16px;
+  }
+}
+.feedback-card:hover { border-color:var(--gold-d); }
+.feedback-card.pending { border-left:4px solid #d4a853; }
+.feedback-card.approved { border-left:4px solid #5aaa6a; }
+.feedback-card.denied { border-left:4px solid var(--blood); }
+
+.feedback-head {
+  display:flex; justify-content:space-between; align-items:flex-start; gap:12px; margin-bottom:12px;
+}
+@media(max-width:660px){ .feedback-head { flex-direction:column; gap:8px; } }
+
+.feedback-info {
+  flex:1;
+  min-width:0;
+}
+.feedback-submitter {
+  font-family:var(--fc); font-size:.54rem; letter-spacing:.16em;
+  text-transform:uppercase; color:var(--gold-l); margin-bottom:4px;
+  overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
+}
+@media(max-width:640px) {
+  .feedback-submitter {
+    font-size:.48rem;
+  }
+}
+.feedback-discord {
+  font-size:.8rem; color:var(--parch-d); margin-bottom:8px;
+  overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
+}
+@media(max-width:640px) {
+  .feedback-discord {
+    font-size:.75rem;
+  }
+}
+.feedback-date {
+  font-size:.75rem; color:var(--parch-d); opacity:.6;
+}
+
+.feedback-pill {
+  display:inline-block; padding:5px 12px; border-radius:3px;
+  font-family:var(--fc); font-size:.45rem; letter-spacing:.15em;
+  text-transform:uppercase; font-weight:600;
+  white-space:nowrap;
+}
+@media(max-width:640px) {
+  .feedback-pill {
+    font-size:.4rem;
+    padding:4px 10px;
+  }
+}
+.feedback-pill.pending { background:rgba(212,168,83,.15); color:#d4a853; }
+.feedback-pill.approved { background:rgba(90,170,106,.15); color:#5aaa6a; }
+.feedback-pill.denied { background:rgba(138,26,26,.15); color:var(--blood-b); }
+
+.feedback-mod {
+  background:rgba(10,6,6,.4); padding:12px 16px; border-left:2px solid var(--gold-d);
+  margin:12px 0;
+}
+@media(max-width:640px) {
+  .feedback-mod {
+    padding:10px 12px;
+    margin:10px 0;
+  }
+}
+.feedback-mod-name {
+  font-weight:600; color:var(--gold-l); margin-bottom:4px;
+  overflow:hidden; text-overflow:ellipsis;
+}
+@media(max-width:640px) {
+  .feedback-mod-name {
+    font-size:.95rem;
+  }
+}
+.feedback-mod-link {
+  color:var(--parch); font-size:.85rem; word-break:break-word;
+  line-height:1.4;
+}
+@media(max-width:640px) {
+  .feedback-mod-link {
+    font-size:.8rem;
+  }
+}
+.feedback-mod-link a {
+  color:var(--gold-l); text-decoration:none; border-bottom:1px solid var(--gold-d);
+}
+.feedback-mod-link a:hover { color:var(--parch); }
+
+.feedback-reason {
+  color:var(--parch); font-size:.9rem; line-height:1.5; margin:12px 0;
+}
+@media(max-width:640px) {
+  .feedback-reason {
+    font-size:.85rem;
+    margin:10px 0;
+  }
+}
+
+.feedback-controls {
+  display:flex; gap:8px; flex-wrap:wrap; margin-top:12px;
+  padding-top:12px; border-top:1px solid var(--border);
+}
+@media(max-width:640px) {
+  .feedback-controls {
+    gap:6px;
+    margin-top:10px;
+    padding-top:10px;
+  }
+}
+.feedback-btn {
+  padding:7px 14px; border:1px solid var(--border);
+  background:rgba(212,168,83,.08); color:var(--parch);
+  font-family:var(--fi); font-size:.82rem; cursor:pointer;
+  transition:background .2s, border-color .2s;
+  white-space:nowrap;
+}
+@media(max-width:640px) {
+  .feedback-btn {
+    padding:6px 10px;
+    font-size:.75rem;
+  }
+}
+.feedback-btn:hover { background:rgba(212,168,83,.15); border-color:var(--gold-d); }
+.feedback-btn.approve { color:#5aaa6a; border-color:#5aaa6a; background:rgba(90,170,106,.08); }
+.feedback-btn.approve:hover { background:rgba(90,170,106,.15); }
+.feedback-btn.deny { color:var(--blood-b); border-color:var(--blood); background:rgba(138,26,26,.08); }
+.feedback-btn.deny:hover { background:rgba(138,26,26,.15); }
+.feedback-btn.delete { color:var(--parch-d); border-color:var(--blood); background:rgba(138,26,26,.05); }
+.feedback-btn.delete:hover { background:rgba(138,26,26,.12); }
+
+.feedback-comment {
+  width:100%; max-width:100%; min-height:60px; margin-top:8px;
+  padding:10px 12px; border:1px solid var(--border);
+  background:rgba(10,6,6,.6); color:var(--parch);
+  font-family:var(--fi); font-size:.85rem;
+  resize:vertical;
+}
+@media(max-width:640px) {
+  .feedback-comment {
+    min-height:50px;
+    font-size:.8rem;
+    padding:8px 10px;
+  }
+}
+.feedback-comment:focus { border-color:var(--gold-d); outline:none; }
+.feedback-comment::placeholder { color:var(--parch-d); opacity:.4; }
+
+.feedback-admin-comment {
+  background:rgba(212,168,83,.06); padding:10px 12px; margin-top:8px;
+  border-left:2px solid var(--gold-d);
+}
+@media(max-width:640px) {
+  .feedback-admin-comment {
+    padding:8px 10px;
+  }
+}
+.feedback-admin-comment-label {
+  font-family:var(--fc); font-size:.46rem; letter-spacing:.15em;
+  text-transform:uppercase; color:var(--gold-d); margin-bottom:4px;
+}
+@media(max-width:640px) {
+  .feedback-admin-comment-label {
+    font-size:.42rem;
+  }
+}
+.feedback-admin-comment-text {
+  color:var(--parch); font-size:.9rem; line-height:1.5;
+}
+@media(max-width:640px) {
+  .feedback-admin-comment-text {
+    font-size:.85rem;
+  }
+}
+
+
 </style>
 </head>
 <body>
@@ -422,6 +658,7 @@
     <!-- Tabs -->
     <div class="tab-bar">
       <button class="tab-btn active" onclick="switchTab('applications', this)">📋 &nbsp;Applications</button>
+      <button class="tab-btn"        onclick="switchTab('feedback', this)">💬 &nbsp;Mod Feedback</button>
       <button class="tab-btn"        onclick="switchTab('config', this)">⚙️ &nbsp;Site Config</button>
     </div>
 
@@ -438,6 +675,24 @@
       </div>
 
       <div class="app-list" id="appList">
+        <div class="state-box"><div class="spinner"></div></div>
+      </div>
+
+    </div>
+
+    <!-- ── Tab: Mod Feedback ── -->
+    <div class="tab-pane" id="tab-feedback">
+      
+      <div class="filter-row">
+        <span class="filter-label">Filter</span>
+        <button class="filter-btn on" onclick="loadFeedback('all', this)">All Feedback</button>
+        <button class="filter-btn"    onclick="loadFeedback('pending', this)">⏳ Pending</button>
+        <button class="filter-btn"    onclick="loadFeedback('approved', this)">✅ Approved</button>
+        <button class="filter-btn"    onclick="loadFeedback('denied', this)">❌ Denied</button>
+        <button class="refresh-btn"   onclick="loadFeedback(currentFeedbackFilter, null)">↻ Refresh</button>
+      </div>
+
+      <div class="feedback-list" id="feedbackList">
         <div class="state-box"><div class="spinner"></div></div>
       </div>
 
@@ -567,11 +822,15 @@
   // ── Stats ──────────────────────────────────────────────────────
   async function loadStats() {
     try {
-      const [all, pen, acc, rej] = await Promise.all([
+      const [all, pen, acc, rej, allFb, penFb, appFb, denFb] = await Promise.all([
         fetch(`${API}/applications`,                 { headers: authHeader() }).then(r => r.json()),
         fetch(`${API}/applications?status=pending`,  { headers: authHeader() }).then(r => r.json()),
         fetch(`${API}/applications?status=accepted`, { headers: authHeader() }).then(r => r.json()),
         fetch(`${API}/applications?status=rejected`, { headers: authHeader() }).then(r => r.json()),
+        fetch(`${API}/mod-recommendations`,          { headers: authHeader() }).then(r => r.json()),
+        fetch(`${API}/mod-recommendations?status=pending`,  { headers: authHeader() }).then(r => r.json()),
+        fetch(`${API}/mod-recommendations?status=approved`, { headers: authHeader() }).then(r => r.json()),
+        fetch(`${API}/mod-recommendations?status=denied`,   { headers: authHeader() }).then(r => r.json()),
       ]);
       document.getElementById('statsRow').innerHTML = `
         <div class="stat-card all">
@@ -589,6 +848,14 @@
         <div class="stat-card rejected">
           <div class="stat-num">${(rej.applications||[]).length}</div>
           <div class="stat-lbl">Rejected</div>
+        </div>
+        <div class="stat-card all">
+          <div class="stat-num">${(allFb.recommendations||[]).length}</div>
+          <div class="stat-lbl">Total Feedback</div>
+        </div>
+        <div class="stat-card pending">
+          <div class="stat-num">${(penFb.recommendations||[]).length}</div>
+          <div class="stat-lbl">Pending Feedback</div>
         </div>`;
     } catch { /* silent */ }
   }
@@ -805,13 +1072,212 @@
     }
   }
 
+  // ── Feedback ───────────────────────────────────────────────────
+  let currentFeedbackFilter = 'all';
+
+  async function loadFeedback(filter, btn) {
+    if (btn) currentFeedbackFilter = filter;
+    const list = document.getElementById('feedbackList');
+    list.innerHTML = '<div class="state-box"><div class="spinner"></div></div>';
+
+    try {
+      const url = filter === 'all' 
+        ? `${API}/mod-recommendations`
+        : `${API}/mod-recommendations?status=${filter}`;
+      
+      const res = await fetch(url, { headers: authHeader() });
+      
+      if (res.status === 401) {
+        toast('error', 'Unauthorized — please log in again');
+        logout();
+        return;
+      }
+
+      if (!res.ok) {
+        const errorText = await res.text();
+        throw new Error(`API returned ${res.status}: ${errorText}`);
+      }
+
+      const data = await res.json();
+      const feedback = data.recommendations || [];
+
+      if (feedback.length === 0) {
+        list.innerHTML = `
+          <div class="state-box">
+            <div class="state-icon">📭</div>
+            <div class="state-msg">No Feedback Found</div>
+          </div>`;
+        return;
+      }
+
+      list.innerHTML = feedback.map(item => `
+        <div class="feedback-card ${item.status}" data-id="${item.id}">
+          <div class="feedback-head">
+            <div class="feedback-info">
+              <div class="feedback-submitter">🎮 ${esc(item.submitter_name)}</div>
+              <div class="feedback-discord">Discord: ${esc(item.submitter_discord)}</div>
+              <div class="feedback-date">${fmtDate(item.created_at)}</div>
+            </div>
+            <span class="feedback-pill ${item.status}">${formatStatus(item.status)}</span>
+          </div>
+          
+          <div class="feedback-mod">
+            <div class="feedback-mod-name">📦 ${esc(item.mod_name)}</div>
+            <div class="feedback-mod-link">
+              <a href="${esc(item.mod_link)}" target="_blank" rel="noopener noreferrer">
+                ${esc(item.mod_link.length > 60 ? item.mod_link.substring(0, 60) + '...' : item.mod_link)}
+              </a>
+            </div>
+          </div>
+
+          ${item.mod_category ? `<div class="feedback-reason"><strong>Category:</strong> ${esc(item.mod_category)}</div>` : ''}
+          ${item.reason ? `<div class="feedback-reason"><strong>Why:</strong> ${esc(item.reason)}</div>` : ''}
+          
+          ${item.admin_comment ? `
+            <div class="feedback-admin-comment">
+              <div class="feedback-admin-comment-label">📝 Admin Comment</div>
+              <div class="feedback-admin-comment-text">${esc(item.admin_comment)}</div>
+            </div>
+          ` : ''}
+
+          <div class="feedback-controls">
+            ${item.status !== 'approved' ? `<button class="feedback-btn approve" onclick="approveFeedback('${item.id}', this)">✅ Approve</button>` : ''}
+            ${item.status !== 'denied' ? `<button class="feedback-btn deny" onclick="showDenyComment('${item.id}', this)">❌ Deny</button>` : ''}
+            <button class="feedback-btn delete" onclick="deleteFeedback('${item.id}', this)">🗑️ Delete</button>
+          </div>
+        </div>
+      `).join('');
+
+    } catch (err) {
+      console.error('loadFeedback error:', err);
+      list.innerHTML = `
+        <div class="state-box">
+          <div class="state-icon">⚠️</div>
+          <div class="state-msg">Failed to Load Feedback</div>
+          <div style="font-size: 0.9em; margin-top: 8px; color: #999;">${err.message}</div>
+        </div>`;
+    }
+  }
+
+  function showDenyComment(id, btn) {
+    const card = btn.closest('.feedback-card');
+    const controls = card.querySelector('.feedback-controls');
+    
+    // Check if input already exists
+    if (card.querySelector('.feedback-comment')) return;
+    
+    const textarea = document.createElement('textarea');
+    textarea.className = 'feedback-comment';
+    textarea.placeholder = 'Enter reason for denial (optional)...';
+    
+    const submitBtn = document.createElement('button');
+    submitBtn.className = 'feedback-btn deny';
+    submitBtn.textContent = '✓ Confirm Denial';
+    submitBtn.onclick = () => {
+      const reason = textarea.value.trim();
+      denyFeedback(id, reason || null);
+    };
+    
+    const cancelBtn = document.createElement('button');
+    cancelBtn.className = 'feedback-btn';
+    cancelBtn.textContent = 'Cancel';
+    cancelBtn.onclick = () => {
+      textarea.remove();
+      submitBtn.remove();
+      cancelBtn.remove();
+    };
+    
+    controls.appendChild(textarea);
+    controls.appendChild(submitBtn);
+    controls.appendChild(cancelBtn);
+    textarea.focus();
+  }
+
+  async function approveFeedback(id, btn) {
+    try {
+      const res = await fetch(`${API}/mod-recommendations/${id}`, {
+        method: 'PATCH',
+        headers: authHeader(),
+        body: JSON.stringify({ status: 'approved' })
+      });
+      
+      const data = await res.json();
+      if (!data.success) throw new Error(data.error);
+      
+      const card = document.querySelector(`[data-id="${id}"]`);
+      card.className = `feedback-card approved`;
+      card.querySelector('.feedback-pill').textContent = 'Approved';
+      card.querySelector('.feedback-pill').className = 'feedback-pill approved';
+      
+      // Update button state
+      const approveBtn = btn.closest('.feedback-card').querySelector('.feedback-btn.approve');
+      if (approveBtn) approveBtn.remove();
+      
+      toast('success', '✅ Feedback approved!');
+    } catch (err) {
+      toast('error', `Failed: ${err.message}`);
+    }
+  }
+
+  async function denyFeedback(id, reason) {
+    try {
+      const res = await fetch(`${API}/mod-recommendations/${id}`, {
+        method: 'PATCH',
+        headers: authHeader(),
+        body: JSON.stringify({ status: 'denied', admin_comment: reason })
+      });
+      
+      const data = await res.json();
+      if (!data.success) throw new Error(data.error);
+      
+      const card = document.querySelector(`[data-id="${id}"]`);
+      card.className = `feedback-card denied`;
+      card.querySelector('.feedback-pill').textContent = 'Denied';
+      card.querySelector('.feedback-pill').className = 'feedback-pill denied';
+      
+      // Update controls
+      const controls = card.querySelector('.feedback-controls');
+      controls.innerHTML = '<span style="color: var(--parch-d); font-size: 0.85rem;">❌ This feedback has been denied.</span>';
+      
+      toast('success', '✅ Feedback denied!');
+    } catch (err) {
+      toast('error', `Failed: ${err.message}`);
+    }
+  }
+
+  async function deleteFeedback(id, btn) {
+    if (!confirm('Permanently delete this feedback? This cannot be undone.')) return;
+    
+    try {
+      const res = await fetch(`${API}/mod-recommendations/${id}`, {
+        method: 'DELETE',
+        headers: authHeader()
+      });
+      
+      const data = await res.json();
+      if (!data.success) throw new Error(data.error);
+      
+      document.querySelector(`[data-id="${id}"]`).remove();
+      loadStats();
+      toast('success', '✅ Feedback deleted permanently.');
+    } catch (err) {
+      toast('error', `Delete failed: ${err.message}`);
+    }
+  }
+
   // ── Tabs ───────────────────────────────────────────────────────
   function switchTab(name, btn) {
     document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
     document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
     document.getElementById(`tab-${name}`).classList.add('active');
     btn.classList.add('active');
+    
+    // Load feedback data when switching to feedback tab
+    if (name === 'feedback') {
+      loadFeedback('all');
+    }
   }
+
 
   // ── Utils ──────────────────────────────────────────────────────
   function esc(str) {
