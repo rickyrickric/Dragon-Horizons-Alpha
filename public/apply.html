@@ -65,6 +65,12 @@
 </main>
 
 <script>
+// Helper function to convert status to Title Case (e.g., "pending" → "Pending")
+function capitalizeStatus(status) {
+  if (!status) return '';
+  return String(status).charAt(0).toUpperCase() + String(status).slice(1).toLowerCase();
+}
+
 async function checkApplicationStatus() {
   const username = document.getElementById('statusUsername').value.trim();
   const result = document.getElementById('statusResult');
@@ -107,7 +113,7 @@ async function checkApplicationStatus() {
     result.style.borderLeft = colors.border;
     result.style.color = colors.color;
     
-    let statusText = `${colors.icon} <strong>${data.status.toUpperCase()}</strong><br>`;
+    let statusText = `${colors.icon} <strong>${capitalizeStatus(data.status)}</strong><br>`;
     statusText += `${data.message}`;
     
     if (data.submittedAt) {

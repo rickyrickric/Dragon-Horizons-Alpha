@@ -215,7 +215,7 @@
 }
 .app-pill {
   font-family:var(--fc); font-size:.44rem; letter-spacing:.2em;
-  text-transform:uppercase; padding:4px 12px; border:1px solid; flex-shrink:0;
+  padding:4px 12px; border:1px solid; flex-shrink:0;
 }
 .pending  .app-pill { color:var(--gold);    border-color:var(--gold-d); }
 .accepted .app-pill { color:#5aaa6a; border-color:#3a7a4a; }
@@ -391,9 +391,9 @@
       <div class="login-sub">Dragon Horizons · Restricted Area</div>
       <div class="login-rule"></div>
       <input type="password" class="login-input" id="passwordInput"
-        placeholder="Enter secret key"
+        placeholder="Enter admin secret key"
         onkeydown="if(event.key==='Enter') login()">
-      <button class="login-btn" id="loginBtn" onclick="login()">⚔️ &nbsp; Enter</button>
+      <button class="login-btn" id="loginBtn" onclick="login()">⚔️ &nbsp; Sign In</button>
       <div class="login-error" id="loginError"></div>
     </div>
   </div>
@@ -430,8 +430,8 @@
 
       <div class="filter-row">
         <span class="filter-label">Filter</span>
-        <button class="filter-btn on" onclick="loadApps('all', this)">All</button>
-        <button class="filter-btn"    onclick="loadApps('pending', this)">⏳ Pending</button>
+        <button class="filter-btn on" onclick="loadApps('all', this)">All Applications</button>
+        <button class="filter-btn"    onclick="loadApps('pending', this)">⏳ Pending Review</button>
         <button class="filter-btn"    onclick="loadApps('accepted', this)">✅ Accepted</button>
         <button class="filter-btn"    onclick="loadApps('rejected', this)">❌ Rejected</button>
         <button class="refresh-btn"   onclick="loadApps(currentFilter, null)">↻ Refresh</button>
@@ -451,7 +451,7 @@
 
         <div class="scroll" style="margin-bottom:28px;">
           <div class="scroll-e"><span class="sg">◆</span><span class="st">Changes go <strong>live immediately</strong> — no redeploy needed. The download page and home page will reflect updates instantly.</span></div>
-          <div class="scroll-e"><span class="sg">◆</span><span class="st">Paste a new Google Drive link anytime you re-upload the mods folder. Only accepted players will see it.</span></div>
+          <div class="scroll-e"><span class="sg">◆</span><span class="st">Paste a new Google Drive link anytime you upload mods. Only accepted players will see it.</span></div>
         </div>
 
         <div id="configLoader"><div class="spinner"></div></div>
@@ -460,14 +460,14 @@
             <div class="config-full">
               <label class="config-label">📦 &nbsp;Google Drive Download Link</label>
               <input type="text" class="config-input" id="cfg-drive"
-                placeholder="https://drive.google.com/drive/folders/...">
-              <div class="config-hint">Paste the updated link here whenever you re-upload the mods folder.</div>
+                placeholder="https://drive.google.com/drive/folders/1ABC2DEF3GHI4JKL5MNO6PQR7STU…">
+              <div class="config-hint">Paste the updated link whenever you upload a new mods folder.</div>
             </div>
 
             <div>
               <label class="config-label">🌐 &nbsp;Server Address</label>
               <input type="text" class="config-input" id="cfg-addr"
-                placeholder="yourserver.aternos.me">
+                placeholder="example.aternos.me">
             </div>
 
             <div>
@@ -537,7 +537,7 @@
           err.textContent = 'Incorrect password. Try again.';
           err.classList.add('show');
           btn.disabled = false;
-          btn.textContent = '⚔️  Enter';
+          btn.textContent = '⚔️  Sign In';
         } else {
           document.getElementById('loginScreen').style.display = 'none';
           document.getElementById('adminWrap').classList.add('visible');
@@ -551,7 +551,7 @@
         err.textContent = 'Connection failed. Check your network.';
         err.classList.add('show');
         btn.disabled = false;
-        btn.textContent = '⚔️  Enter';
+        btn.textContent = '⚔️  Sign In';
       });
   }
 
@@ -561,7 +561,7 @@
     document.getElementById('adminWrap').classList.remove('visible');
     document.getElementById('passwordInput').value = '';
     document.getElementById('loginError').classList.remove('show');
-    document.getElementById('loginBtn').textContent = '⚔️  Enter';
+    document.getElementById('loginBtn').textContent = '⚔️  Sign In';
   }
 
   // ── Stats ──────────────────────────────────────────────────────
@@ -576,11 +576,11 @@
       document.getElementById('statsRow').innerHTML = `
         <div class="stat-card all">
           <div class="stat-num">${(all.applications||[]).length}</div>
-          <div class="stat-lbl">Total</div>
+          <div class="stat-lbl">Total Applications</div>
         </div>
         <div class="stat-card pending">
           <div class="stat-num">${(pen.applications||[]).length}</div>
-          <div class="stat-lbl">Pending</div>
+          <div class="stat-lbl">Pending Review</div>
         </div>
         <div class="stat-card accepted">
           <div class="stat-num">${(acc.applications||[]).length}</div>
@@ -637,7 +637,7 @@
       list.innerHTML = `
         <div class="state-box">
           <div class="state-icon">📜</div>
-          <div class="state-msg">No applications found</div>
+          <div class="state-msg">No Applications Found</div>
         </div>`;
       return;
     }
@@ -649,37 +649,41 @@
             <div class="app-nickname">${esc(app.nickname)}</div>
             <div class="app-meta">@${esc(app.aternos_username)} &nbsp;·&nbsp; ${esc(app.discord)}</div>
           </div>
-          <span class="app-pill">${app.status}</span>
+          <span class="app-pill">${formatStatus(app.status)}</span>
           <span class="app-timestamp">${fmtDate(app.created_at)}</span>
           <span class="app-chevron">▾</span>
         </div>
         <div class="app-body" id="body-${app.id}">
           <div class="app-fields">
             <div>
-              <div class="field-label">Aternos Username</div>
+              <div class="field-label">Player Name</div>
+              <div class="field-val">${esc(app.nickname)}</div>
+            </div>
+            <div>
+              <div class="field-label">Aternos Account</div>
               <div class="field-val">@${esc(app.aternos_username)}</div>
             </div>
             <div>
-              <div class="field-label">Discord</div>
+              <div class="field-label">Discord Contact</div>
               <div class="field-val">${esc(app.discord)}</div>
             </div>
             <div class="app-field-full">
-              <div class="field-label">Reason to Join</div>
+              <div class="field-label">Application Message</div>
               <div class="field-val">${esc(app.reason)}</div>
             </div>
             ${app.admin_note ? `
             <div class="app-field-full">
-              <div class="field-label">Previous Note</div>
+              <div class="field-label">Admin Review Notes</div>
               <div class="field-val" style="color:var(--parch-d);">${esc(app.admin_note)}</div>
             </div>` : ''}
           </div>
-          <div class="note-label">Admin Note (optional — shown to applicant)</div>
+          <div class="note-label">Admin Notes (optional — sent to applicant)</div>
           <textarea class="note-input" id="note-${app.id}"
-            placeholder="Add a note for acceptance or rejection reason…">${app.admin_note ? esc(app.admin_note) : ''}</textarea>
+            placeholder="Add decision reason (e.g., &quot;Great application!&quot; or &quot;Playstyle doesn't match server.&quot)…">${app.admin_note ? esc(app.admin_note) : ''}</textarea>
           <div class="app-actions">
             ${app.status !== 'accepted' ? `<button class="action-btn accept"  onclick="updateStatus('${app.id}','accepted')">✅ Accept</button>` : ''}
             ${app.status !== 'rejected' ? `<button class="action-btn reject"  onclick="updateStatus('${app.id}','rejected')">❌ Reject</button>` : ''}
-            ${app.status !== 'pending'  ? `<button class="action-btn pending" onclick="updateStatus('${app.id}','pending')">↩ Set Pending</button>` : ''}
+            ${app.status !== 'pending'  ? `<button class="action-btn pending" onclick="updateStatus('${app.id}','pending')">↩ Reset to Pending</button>` : ''}
             <button class="action-btn delete" onclick="deleteApp('${app.id}')">🗑 Delete</button>
           </div>
         </div>
@@ -702,9 +706,9 @@
       if (!data.success) throw new Error(data.error);
       const card = document.getElementById(`card-${id}`);
       card.className = `app-card ${status}`;
-      card.querySelector('.app-pill').textContent = status;
+      card.querySelector('.app-pill').textContent = formatStatus(status);
       loadStats();
-      toast('success', `✅ Application ${status}.`);
+      toast('success', `✅ Application marked "${formatStatus(status)}".`);
     } catch (err) {
       toast('error', `Failed: ${err.message}`);
     }
@@ -718,7 +722,7 @@
       if (!d.success) throw new Error(d.error);
       document.getElementById(`card-${id}`)?.remove();
       loadStats();
-      toast('success', '🗑 Application deleted.');
+      toast('success', '✅ Application deleted permanently.');
     } catch (err) {
       toast('error', `Delete failed: ${err.message}`);
     }
@@ -729,7 +733,7 @@
     try {
       const res  = await fetch(`${API}/config`, { headers: authHeader() });
       if (res.status === 401) {
-        toast('error', 'Unauthorized — please login');
+        toast('error', 'Unauthorized — please log in again');
         logout();
         return;
       }
@@ -756,8 +760,8 @@
         if (elAddr) elAddr.disabled = false;
         if (elPort) elPort.disabled = false;
       } else {
-        if (elAddr) { elAddr.value = 'Hidden — admin only'; elAddr.disabled = true; }
-        if (elPort) { elPort.value = 'Hidden — admin only'; elPort.disabled = true; }
+        if (elAddr) { elAddr.value = '(Admin Only)'; elAddr.disabled = true; }
+        if (elPort) { elPort.value = '(Admin Only)'; elPort.disabled = true; }
       }
 
       const loader = document.getElementById('configLoader');
@@ -770,7 +774,7 @@
       if (loader) loader.innerHTML = `
         <div class="state-box">
           <div class="state-icon">⚠️</div>
-          <div class="state-msg">Failed to load config</div>
+          <div class="state-msg">Failed to Load Config</div>
           <div style="font-size: 0.9em; margin-top: 8px; color: #999;">${err.message}</div>
         </div>`;
     }
@@ -790,9 +794,9 @@
       });
       const data = await res.json();
       if (!data.success) throw new Error(data.error);
-      fb.textContent = '✅ Saved — changes are live.';
+      fb.textContent = '✅ Saved — changes are live!';
       fb.className = 'save-feedback ok';
-      toast('success', '✅ Config saved. Changes are live.');
+      toast('success', '✅ Configuration updated. Changes are live.');
       setTimeout(() => fb.className = 'save-feedback', 4000);
     } catch (err) {
       fb.textContent = `❌ Failed: ${err.message}`;
@@ -818,6 +822,11 @@
   function fmtDate(iso) {
     if (!iso) return '';
     return new Date(iso).toLocaleDateString('en-PH', { month:'short', day:'numeric', year:'numeric' });
+  }
+  function formatStatus(status) {
+    // Convert "pending" → "Pending", "accepted" → "Accepted", etc.
+    if (!status) return '';
+    return String(status).charAt(0).toUpperCase() + String(status).slice(1).toLowerCase();
   }
 </script>
 </body>
