@@ -1,6 +1,6 @@
 export default async function handler(req, res) {
   const baseUrl = new URL(import.meta.url);
-  const libUrl = new URL('../lib/', baseUrl).href;
+  const libUrl = new URL('../../lib/', baseUrl).href;
   
   const supabaseModule = await import(new URL('supabase.js', libUrl).href);
   const supabase = supabaseModule.default;

@@ -1,6 +1,6 @@
 export default async function handler(req, res) {
   const baseUrl = new URL(import.meta.url);
-  const libUrl = new URL('../lib/', baseUrl).href;
+  const libUrl = new URL('../../lib/', baseUrl).href;
   
   const { getServerEntries, getServerEntryById } = await import(new URL('supabase.js', libUrl).href);
   const { requireAdmin, cors } = await import(new URL('auth.js', libUrl).href);

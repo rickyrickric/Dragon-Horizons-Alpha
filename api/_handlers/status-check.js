@@ -1,6 +1,6 @@
 export default async function handler(req, res) {
   const baseUrl = new URL(import.meta.url);
-  const libUrl = new URL('../lib/', baseUrl).href;
+  const libUrl = new URL('../../lib/', baseUrl).href;
   
   const { cors } = await import(new URL('auth.js', libUrl).href);
   const { ok, fail } = await import(new URL('respond.js', libUrl).href);

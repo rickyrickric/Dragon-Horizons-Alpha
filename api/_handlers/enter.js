@@ -17,7 +17,7 @@ function validateEntry(body) {
 
 export default async function handler(req, res) {
   const baseUrl = new URL(import.meta.url);
-  const libUrl = new URL('../lib/', baseUrl).href;
+  const libUrl = new URL('../../lib/', baseUrl).href;
   
   const { recordServerEntry } = await import(new URL('supabase.js', libUrl).href);
   const { ok, fail } = await import(new URL('respond.js', libUrl).href);
