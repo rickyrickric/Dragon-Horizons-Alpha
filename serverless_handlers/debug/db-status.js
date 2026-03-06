@@ -1,6 +1,9 @@
 export default async function handler(req, res) {
-  const { requireAdmin, cors } = await import('../../lib/auth.js');
-  const { ok, fail, denied } = await import('../../lib/respond.js');
+  const baseUrl = new URL(import.meta.url);
+  const libUrl = new URL('../../lib/', baseUrl).href;
+  
+  const { requireAdmin, cors } = await import(new URL('auth.js', libUrl).href);
+  const { ok, fail, denied } = await import(new URL('respond.js', libUrl).href);
 
 export default async function handler(req, res) {
   cors(res);

@@ -16,9 +16,12 @@ function validateEntry(body) {
 }
 
 export default async function handler(req, res) {
-  const { recordServerEntry } = await import('../lib/supabase.js');
-  const { ok, fail } = await import('../lib/respond.js');
-  const { cors, parseBody } = await import('../lib/auth.js');
+  const baseUrl = new URL(import.meta.url);
+  const libUrl = new URL('../lib/', baseUrl).href;
+  
+  const { recordServerEntry } = await import(new URL('supabase.js', libUrl).href);
+  const { ok, fail } = await import(new URL('respond.js', libUrl).href);
+  const { cors, parseBody } = await import(new URL('auth.js', libUrl).href);
 
   cors(res);
   if (req.method === 'OPTIONS') return res.status(204).end();

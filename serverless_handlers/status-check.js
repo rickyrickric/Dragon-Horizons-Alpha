@@ -1,8 +1,11 @@
 export default async function handler(req, res) {
-  const { cors } = await import('../lib/auth.js');
-  const { ok, fail } = await import('../lib/respond.js');
-  const { databaseFactory } = await import('../lib/factory/DatabaseFactory.js');
-  const { ApplicationService } = await import('../lib/services/ApplicationService.js');
+  const baseUrl = new URL(import.meta.url);
+  const libUrl = new URL('../lib/', baseUrl).href;
+  
+  const { cors } = await import(new URL('auth.js', libUrl).href);
+  const { ok, fail } = await import(new URL('respond.js', libUrl).href);
+  const { databaseFactory } = await import(new URL('factory/DatabaseFactory.js', libUrl).href);
+  const { ApplicationService } = await import(new URL('services/ApplicationService.js', libUrl).href);
   cors(res);
   if (req.method === 'OPTIONS') return res.status(204).end();
 

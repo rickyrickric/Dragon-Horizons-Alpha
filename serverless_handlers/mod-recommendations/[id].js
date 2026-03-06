@@ -1,8 +1,11 @@
 export default async function handler(req, res) {
-  const { requireAdmin, cors, parseBody } = await import('../../lib/auth.js');
-  const { ok, fail, denied } = await import('../../lib/respond.js');
-  const { databaseFactory } = await import('../../lib/factory/DatabaseFactory.js');
-  const { ModRecommendationService } = await import('../../lib/services/ModRecommendationService.js');
+  const baseUrl = new URL(import.meta.url);
+  const libUrl = new URL('../../lib/', baseUrl).href;
+  
+  const { requireAdmin, cors, parseBody } = await import(new URL('auth.js', libUrl).href);
+  const { ok, fail, denied } = await import(new URL('respond.js', libUrl).href);
+  const { databaseFactory } = await import(new URL('factory/DatabaseFactory.js', libUrl).href);
+  const { ModRecommendationService } = await import(new URL('services/ModRecommendationService.js', libUrl).href);
   cors(res);
   if (req.method === 'OPTIONS') return res.status(204).end();
 

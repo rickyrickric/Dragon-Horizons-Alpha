@@ -1,7 +1,10 @@
 export default async function handler(req, res) {
-  const { getServerEntries, getServerEntryById } = await import('../lib/supabase.js');
-  const { requireAdmin, cors } = await import('../lib/auth.js');
-  const { ok, fail, denied, notFound } = await import('../lib/respond.js');
+  const baseUrl = new URL(import.meta.url);
+  const libUrl = new URL('../lib/', baseUrl).href;
+  
+  const { getServerEntries, getServerEntryById } = await import(new URL('supabase.js', libUrl).href);
+  const { requireAdmin, cors } = await import(new URL('auth.js', libUrl).href);
+  const { ok, fail, denied, notFound } = await import(new URL('respond.js', libUrl).href);
   cors(res);
   if (req.method === 'OPTIONS') return res.status(204).end();
 

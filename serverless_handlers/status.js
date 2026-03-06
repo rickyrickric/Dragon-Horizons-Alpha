@@ -1,8 +1,11 @@
 export default async function handler(req, res) {
-  const supabaseModule = await import('../lib/supabase.js');
+  const baseUrl = new URL(import.meta.url);
+  const libUrl = new URL('../lib/', baseUrl).href;
+  
+  const supabaseModule = await import(new URL('supabase.js', libUrl).href);
   const supabase = supabaseModule.default;
-  const { ok, fail } = await import('../lib/respond.js');
-  const { cors } = await import('../lib/auth.js');
+  const { ok, fail } = await import(new URL('respond.js', libUrl).href);
+  const { cors } = await import(new URL('auth.js', libUrl).href);
   cors(res);
   if (req.method === 'OPTIONS') return res.status(204).end();
   if (req.method !== 'GET') return fail(res, 'Method not allowed.', 405);
