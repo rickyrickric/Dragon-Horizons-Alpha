@@ -15,9 +15,14 @@ export default async function handler(req, res) {
 
     // helper to dynamically import a handler and call it
     async function delegate(pathToModule) {
-      const mod = await import(pathToModule);
-      if (!mod || !mod.default) return res.status(500).end('Handler not found');
-      return mod.default(req, res);
+      try {
+        const mod = await import(pathToModule);
+        if (!mod || !mod.default) return res.status(500).end('Handler not found');
+        return await mod.default(req, res);
+      } catch (importErr) {
+        console.error('Delegate import error:', { path: pathToModule, error: importErr.message, stack: importErr.stack });
+        return res.status(500).end(`Handler import failed: ${importErr.message}`);
+      }
     }
 
     // Route mapping
