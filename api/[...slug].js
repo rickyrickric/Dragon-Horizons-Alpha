@@ -1,7 +1,7 @@
 export default async function handler(req, res) {
   try {
     const baseUrl = new URL(import.meta.url);
-    const handlersUrl = new URL('../serverless_handlers/', baseUrl).href;
+    const handlersUrl = new URL('./_handlers/', baseUrl).href;
 
     const host = req.headers.host || 'localhost';
     const url = new URL(req.url, `http://${host}`);
