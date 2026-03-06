@@ -41,6 +41,6 @@ export default async function handler(req, res) {
       error: err.message,
       stack: err.stack
     });
-    return fail(res, 'Internal server error. Please check server logs.', 500);
+    return fail(res, `Internal server error: ${err.message}`, 500);
   }
 }
