@@ -15,14 +15,11 @@ function validateEntry(body) {
   return { errors, sanitized: { nickname, discord, aternos_username: aternosNorm } };
 }
 
-export default async function handler(req, res) {
-  const baseUrl = new URL(import.meta.url);
-  const libUrl = new URL('../../lib/', baseUrl).href;
-  
-  const { recordServerEntry } = await import(new URL('supabase.js', libUrl).href);
-  const { ok, fail } = await import(new URL('respond.js', libUrl).href);
-  const { cors, parseBody } = await import(new URL('auth.js', libUrl).href);
+import { recordServerEntry } from '../../lib/supabase.js';
+import { ok, fail } from '../../lib/respond.js';
+import { cors, parseBody } from '../../lib/auth.js';
 
+export default async function handler(req, res) {
   cors(res);
   if (req.method === 'OPTIONS') return res.status(204).end();
   if (req.method !== 'POST') return fail(res, 'Method not allowed.', 405);

@@ -1,11 +1,9 @@
+import { requireAdmin, cors, parseBody } from '../../../lib/auth.js';
+import { ok, fail, denied, notFound } from '../../../lib/respond.js';
+import { databaseFactory } from '../../../lib/factory/DatabaseFactory.js';
+import { EventService } from '../../../lib/services/EventService.js';
+
 export default async function handler(req, res) {
-  const baseUrl = new URL(import.meta.url);
-  const libUrl = new URL('../../../lib/', baseUrl).href;
-  
-  const { requireAdmin, cors, parseBody } = await import(new URL('auth.js', libUrl).href);
-  const { ok, fail, denied, notFound } = await import(new URL('respond.js', libUrl).href);
-  const { databaseFactory } = await import(new URL('factory/DatabaseFactory.js', libUrl).href);
-  const { EventService } = await import(new URL('services/EventService.js', libUrl).href);
   cors(res);
   if (req.method === 'OPTIONS') return res.status(204).end();
 
