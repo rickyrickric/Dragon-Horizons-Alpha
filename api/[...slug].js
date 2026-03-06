@@ -1,12 +1,8 @@
-import { fileURLToPath } from 'url';
-import { dirname, resolve } from 'path';
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
-const handlersDir = resolve(__dirname, '../serverless_handlers');
-
 export default async function handler(req, res) {
   try {
+    const baseUrl = new URL(import.meta.url);
+    const handlersUrl = new URL('../serverless_handlers/', baseUrl).href;
+
     const host = req.headers.host || 'localhost';
     const url = new URL(req.url, `http://${host}`);
     let pathname = url.pathname || '/';
@@ -23,8 +19,8 @@ export default async function handler(req, res) {
     // helper to dynamically import a handler and call it
     async function delegate(handlerPath) {
       try {
-        const fullPath = resolve(handlersDir, handlerPath);
-        const mod = await import(`file://${fullPath}`);
+        const handlerUrl = new URL(handlerPath, handlersUrl).href;
+        const mod = await import(handlerUrl);
         if (!mod || !mod.default) return res.status(500).end('Handler not found');
         return await mod.default(req, res);
       } catch (importErr) {
