@@ -1,6 +1,12 @@
-import supabase from '../lib/supabase.js';
-import { ok, fail } from '../lib/respond.js';
-import { cors }     from '../lib/auth.js';
+import { fileURLToPath } from 'url';
+import { dirname, resolve } from 'path';
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+const libDir = resolve(__dirname, '../lib');
+const supabaseModule = await import(`file://${resolve(libDir, 'supabase.js')}`);
+const supabase = supabaseModule.default;
+const { ok, fail } = await import(`file://${resolve(libDir, 'respond.js')}`);
+const { cors } = await import(`file://${resolve(libDir, 'auth.js')}`);
 
 export default async function handler(req, res) {
   cors(res);

@@ -1,7 +1,12 @@
-import { requireAdmin, cors, parseBody } from '../../lib/auth.js';
-import { ok, fail, denied, notFound } from '../../lib/respond.js';
-import { databaseFactory } from '../../lib/factory/DatabaseFactory.js';
-import { EventService } from '../../lib/services/EventService.js';
+import { fileURLToPath } from 'url';
+import { dirname, resolve } from 'path';
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+const libDir = resolve(__dirname, '../../lib');
+const { requireAdmin, cors, parseBody } = await import(`file://${resolve(libDir, 'auth.js')}`);
+const { ok, fail, denied, notFound } = await import(`file://${resolve(libDir, 'respond.js')}`);
+const { databaseFactory } = await import(`file://${resolve(libDir, 'factory/DatabaseFactory.js')}`);
+const { EventService } = await import(`file://${resolve(libDir, 'services/EventService.js')}`);
 
 export default async function handler(req, res) {
   cors(res);

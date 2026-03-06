@@ -1,5 +1,10 @@
-import { requireAdmin, cors } from '../../lib/auth.js';
-import { ok, fail, denied } from '../../lib/respond.js';
+import { fileURLToPath } from 'url';
+import { dirname, resolve } from 'path';
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+const libDir = resolve(__dirname, '../../lib');
+const { requireAdmin, cors } = await import(`file://${resolve(libDir, 'auth.js')}`);
+const { ok, fail, denied } = await import(`file://${resolve(libDir, 'respond.js')}`);
 
 export default async function handler(req, res) {
   cors(res);

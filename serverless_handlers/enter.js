@@ -1,6 +1,11 @@
-import { recordServerEntry } from '../lib/supabase.js';
-import { ok, fail } from '../lib/respond.js';
-import { cors, parseBody } from '../lib/auth.js';
+import { fileURLToPath } from 'url';
+import { dirname, resolve } from 'path';
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+const libDir = resolve(__dirname, '../lib');
+const { recordServerEntry } = await import(`file://${resolve(libDir, 'supabase.js')}`);
+const { ok, fail } = await import(`file://${resolve(libDir, 'respond.js')}`);
+const { cors, parseBody } = await import(`file://${resolve(libDir, 'auth.js')}`);
 
 function validateEntry(body) {
   const errors = [];
