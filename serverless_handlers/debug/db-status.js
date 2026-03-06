@@ -1,5 +1,5 @@
-import { requireAdmin, cors } from '../lib/auth.js';
-import { ok, fail, denied } from '../lib/respond.js';
+import { requireAdmin, cors } from '../../lib/auth.js';
+import { ok, fail, denied } from '../../lib/respond.js';
 
 export default async function handler(req, res) {
   cors(res);

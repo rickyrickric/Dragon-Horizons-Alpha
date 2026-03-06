@@ -1,7 +1,7 @@
-import { requireAdmin, cors } from '../lib/auth.js';
-import { ok, fail, denied } from '../lib/respond.js';
-import { databaseFactory } from '../lib/factory/DatabaseFactory.js';
-import { ApplicationService } from '../lib/services/ApplicationService.js';
+import { requireAdmin, cors } from '../../lib/auth.js';
+import { ok, fail, denied } from '../../lib/respond.js';
+import { databaseFactory } from '../../lib/factory/DatabaseFactory.js';
+import { ApplicationService } from '../../lib/services/ApplicationService.js';
 
 export default async function handler(req, res) {
   cors(res);

@@ -1,7 +1,7 @@
-import { requireAdmin, cors, parseBody } from '../lib/auth.js';
-import { ok, fail, denied } from '../lib/respond.js';
-import { databaseFactory } from '../lib/factory/DatabaseFactory.js';
-import { ModRecommendationService } from '../lib/services/ModRecommendationService.js';
+import { requireAdmin, cors, parseBody } from '../../lib/auth.js';
+import { ok, fail, denied } from '../../lib/respond.js';
+import { databaseFactory } from '../../lib/factory/DatabaseFactory.js';
+import { ModRecommendationService } from '../../lib/services/ModRecommendationService.js';
 
 export default async function handler(req, res) {
   cors(res);
