@@ -852,7 +852,7 @@
               </div>
             </div>
 
-            <button class="save-btn" onclick="createEvent()">➕ Create Event</button>
+            <button class="save-btn" id="createEventBtn">➕ Create Event</button>
           </div>
         </div>
 
@@ -1675,6 +1675,14 @@
     if (!status) return '';
     return String(status).charAt(0).toUpperCase() + String(status).slice(1).toLowerCase();
   }
+
+  // Attach event listeners after all functions are defined
+  document.addEventListener('DOMContentLoaded', function() {
+    const createEventBtn = document.getElementById('createEventBtn');
+    if (createEventBtn) {
+      createEventBtn.addEventListener('click', createEvent);
+    }
+  });
 </script>
 </body>
 </html>
