@@ -1,13 +1,7 @@
-import { fileURLToPath } from 'url';
-import { dirname, resolve } from 'path';
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
-const libDir = resolve(__dirname, '../lib');
-const { getServerEntries, getServerEntryById } = await import(`file://${resolve(libDir, 'supabase.js')}`);
-const { requireAdmin, cors } = await import(`file://${resolve(libDir, 'auth.js')}`);
-const { ok, fail, denied, notFound } = await import(`file://${resolve(libDir, 'respond.js')}`);
-
 export default async function handler(req, res) {
+  const { getServerEntries, getServerEntryById } = await import('../lib/supabase.js');
+  const { requireAdmin, cors } = await import('../lib/auth.js');
+  const { ok, fail, denied, notFound } = await import('../lib/respond.js');
   cors(res);
   if (req.method === 'OPTIONS') return res.status(204).end();
 

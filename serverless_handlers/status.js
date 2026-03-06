@@ -1,14 +1,8 @@
-import { fileURLToPath } from 'url';
-import { dirname, resolve } from 'path';
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
-const libDir = resolve(__dirname, '../lib');
-const supabaseModule = await import(`file://${resolve(libDir, 'supabase.js')}`);
-const supabase = supabaseModule.default;
-const { ok, fail } = await import(`file://${resolve(libDir, 'respond.js')}`);
-const { cors } = await import(`file://${resolve(libDir, 'auth.js')}`);
-
 export default async function handler(req, res) {
+  const supabaseModule = await import('../lib/supabase.js');
+  const supabase = supabaseModule.default;
+  const { ok, fail } = await import('../lib/respond.js');
+  const { cors } = await import('../lib/auth.js');
   cors(res);
   if (req.method === 'OPTIONS') return res.status(204).end();
   if (req.method !== 'GET') return fail(res, 'Method not allowed.', 405);

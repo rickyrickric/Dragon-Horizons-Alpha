@@ -1,12 +1,3 @@
-import { fileURLToPath } from 'url';
-import { dirname, resolve } from 'path';
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
-const libDir = resolve(__dirname, '../lib');
-const { recordServerEntry } = await import(`file://${resolve(libDir, 'supabase.js')}`);
-const { ok, fail } = await import(`file://${resolve(libDir, 'respond.js')}`);
-const { cors, parseBody } = await import(`file://${resolve(libDir, 'auth.js')}`);
-
 function validateEntry(body) {
   const errors = [];
   const nickname = body.nickname ? String(body.nickname).trim() : '';
@@ -25,6 +16,10 @@ function validateEntry(body) {
 }
 
 export default async function handler(req, res) {
+  const { recordServerEntry } = await import('../lib/supabase.js');
+  const { ok, fail } = await import('../lib/respond.js');
+  const { cors, parseBody } = await import('../lib/auth.js');
+
   cors(res);
   if (req.method === 'OPTIONS') return res.status(204).end();
   if (req.method !== 'POST') return fail(res, 'Method not allowed.', 405);

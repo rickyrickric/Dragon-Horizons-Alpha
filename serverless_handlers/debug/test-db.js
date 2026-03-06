@@ -1,14 +1,8 @@
-import { fileURLToPath } from 'url';
-import { dirname, resolve } from 'path';
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
-const libDir = resolve(__dirname, '../../lib');
-const { requireAdmin, cors } = await import(`file://${resolve(libDir, 'auth.js')}`);
-const { ok, fail, denied } = await import(`file://${resolve(libDir, 'respond.js')}`);
-const { databaseFactory } = await import(`file://${resolve(libDir, 'factory/DatabaseFactory.js')}`);
-const { ApplicationService } = await import(`file://${resolve(libDir, 'services/ApplicationService.js')}`);
-
 export default async function handler(req, res) {
+  const { requireAdmin, cors } = await import('../../lib/auth.js');
+  const { ok, fail, denied } = await import('../../lib/respond.js');
+  const { databaseFactory } = await import('../../lib/factory/DatabaseFactory.js');
+  const { ApplicationService } = await import('../../lib/services/ApplicationService.js');
   cors(res);
   if (req.method === 'OPTIONS') return res.status(204).end();
 
