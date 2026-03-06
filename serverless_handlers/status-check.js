@@ -1,7 +1,7 @@
-import { cors } from '../api/_lib/auth.js';
-import { ok, fail } from '../api/_lib/respond.js';
-import { databaseFactory } from '../api/_lib/factory/DatabaseFactory.js';
-import { ApplicationService } from '../api/_lib/services/ApplicationService.js';
+import { cors } from '../lib/auth.js';
+import { ok, fail } from '../lib/respond.js';
+import { databaseFactory } from '../lib/factory/DatabaseFactory.js';
+import { ApplicationService } from '../lib/services/ApplicationService.js';
 
 export default async function handler(req, res) {
   cors(res);

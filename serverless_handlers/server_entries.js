@@ -1,6 +1,6 @@
-import { getServerEntries, getServerEntryById } from '../api/_lib/supabase.js';
-import { requireAdmin, cors } from '../api/_lib/auth.js';
-import { ok, fail, denied, notFound } from '../api/_lib/respond.js';
+import { getServerEntries, getServerEntryById } from '../lib/supabase.js';
+import { requireAdmin, cors } from '../lib/auth.js';
+import { ok, fail, denied, notFound } from '../lib/respond.js';
 
 export default async function handler(req, res) {
   cors(res);

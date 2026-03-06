@@ -1,6 +1,6 @@
-import supabase from '../api/_lib/supabase.js';
-import { ok, fail } from '../api/_lib/respond.js';
-import { cors }     from '../api/_lib/auth.js';
+import supabase from '../lib/supabase.js';
+import { ok, fail } from '../lib/respond.js';
+import { cors }     from '../lib/auth.js';
 
 export default async function handler(req, res) {
   cors(res);

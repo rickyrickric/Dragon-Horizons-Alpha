@@ -1,6 +1,6 @@
-import { recordServerEntry } from '../api/_lib/supabase.js';
-import { ok, fail } from '../api/_lib/respond.js';
-import { cors, parseBody } from '../api/_lib/auth.js';
+import { recordServerEntry } from '../lib/supabase.js';
+import { ok, fail } from '../lib/respond.js';
+import { cors, parseBody } from '../lib/auth.js';
 
 function validateEntry(body) {
   const errors = [];
