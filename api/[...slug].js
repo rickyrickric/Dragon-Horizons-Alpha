@@ -1,3 +1,10 @@
+import { fileURLToPath } from 'url';
+import { dirname, resolve } from 'path';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+const handlersDir = resolve(__dirname, '../serverless_handlers');
+
 export default async function handler(req, res) {
   try {
     const host = req.headers.host || 'localhost';
@@ -14,13 +21,14 @@ export default async function handler(req, res) {
     const first = segments[0] || '';
 
     // helper to dynamically import a handler and call it
-    async function delegate(pathToModule) {
+    async function delegate(handlerPath) {
       try {
-        const mod = await import(pathToModule);
+        const fullPath = resolve(handlersDir, handlerPath);
+        const mod = await import(`file://${fullPath}`);
         if (!mod || !mod.default) return res.status(500).end('Handler not found');
         return await mod.default(req, res);
       } catch (importErr) {
-        console.error('Delegate import error:', { path: pathToModule, error: importErr.message, stack: importErr.stack });
+        console.error('Delegate import error:', { path: handlerPath, error: importErr.message, stack: importErr.stack });
         return res.status(500).end(`Handler import failed: ${importErr.message}`);
       }
     }
@@ -33,17 +41,17 @@ export default async function handler(req, res) {
       if (segments[1]) req.query.id = segments[1];
       if (segments[1]) {
         // delegate to the [id] handler
-        return delegate(`../serverless_handlers/${first}/[id].js`);
+        return delegate(`${first}/[id].js`);
       }
-      return delegate(`../serverless_handlers/${first}/index.js`);
+      return delegate(`${first}/index.js`);
     }
 
     // debug routes
     if (first === 'debug') {
       if (!segments[1]) return res.status(404).end('Not found');
       const debugMap = {
-        'test-db': '../serverless_handlers/debug/test-db.js',
-        'db-status': '../serverless_handlers/debug/db-status.js'
+        'test-db': 'debug/test-db.js',
+        'db-status': 'debug/db-status.js'
       };
       const target = debugMap[segments[1]];
       if (!target) return res.status(404).end('Not found');
@@ -52,11 +60,11 @@ export default async function handler(req, res) {
 
     // single-file routes
     const singleMap = {
-      enter: '../serverless_handlers/enter.js',
-      config: '../serverless_handlers/config.js',
-      server_entries: '../serverless_handlers/server_entries.js',
-      status: '../serverless_handlers/status.js',
-      'status-check': '../serverless_handlers/status-check.js',
+      enter: 'enter.js',
+      config: 'config.js',
+      server_entries: 'server_entries.js',
+      status: 'status.js',
+      'status-check': 'status-check.js',
       // other single routes can be added here
     };
 
