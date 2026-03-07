@@ -925,6 +925,10 @@
           <h3 style="margin:0 0 16px 0; color:#fff; font-size:1.1em;">➕ Create New Event</h3>
           <div class="event-form">
             <div class="form-row">
+              <div style="flex:1;">
+                <label class="form-label">Event Title (Optional)</label>
+                <input type="text" id="eventTitle" class="form-input" placeholder="e.g., ??? Weapon Gacha">
+              </div>
               <div>
                 <label class="form-label">Event Type</label>
                 <select id="eventType" class="form-input">
@@ -1735,6 +1739,7 @@
     const time = document.getElementById('eventTime').value;
     const duration = document.getElementById('eventDuration').value;
     const description = document.getElementById('eventDescription').value;
+    const title = document.getElementById('eventTitle')?.value || '';
 
     if (!type || !time || !duration || !description) {
       toast('error', '❌ Please fill in all fields');
@@ -1746,6 +1751,7 @@
         method: 'POST',
         headers: authHeader(),
         body: JSON.stringify({
+          title: title || null,
           event_type: type,
           event_time: new Date(time).toISOString(),
           duration: duration.trim(),
@@ -1757,6 +1763,7 @@
       if (!data.success) throw new Error(data.error);
 
       // Clear form
+      document.getElementById('eventTitle').value = '';
       document.getElementById('eventType').value = '';
       document.getElementById('eventTime').value = '';
       document.getElementById('eventDuration').value = '7-Day';
@@ -1805,6 +1812,10 @@
       const editForm = `
         <div class="event-edit-form">
           <div class="form-row">
+            <div style="flex:1;">
+              <label class="form-label">Event Title</label>
+              <input type="text" id="edit-title-${id}" class="form-input" placeholder="e.g., ??? Weapon Gacha">
+            </div>
             <div>
               <label class="form-label">Event Type</label>
               <select id="edit-type-${id}" class="form-input">
@@ -1852,6 +1863,7 @@
           const data = await res.json();
           if (data.success && data.data) {
             const event = data.data;
+            document.getElementById(`edit-title-${id}`).value = event.title || '';
             document.getElementById(`edit-type-${id}`).value = event.event_type || '';
             document.getElementById(`edit-duration-${id}`).value = event.duration || '7-Day';
             
@@ -1876,6 +1888,7 @@
   }
 
   async function saveEventEdit(id) {
+    const newTitle = document.getElementById(`edit-title-${id}`).value.trim() || null;
     const newType = document.getElementById(`edit-type-${id}`).value;
     const newTime = document.getElementById(`edit-time-${id}`).value;
     const newDuration = document.getElementById(`edit-duration-${id}`).value;
@@ -1891,6 +1904,7 @@
         method: 'PATCH',
         headers: authHeader(),
         body: JSON.stringify({
+          title: newTitle,
           event_type: newType,
           event_time: new Date(newTime).toISOString(),
           duration: newDuration.trim(),
