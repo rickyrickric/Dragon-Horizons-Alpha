@@ -614,19 +614,19 @@ class EventCardRenderer {
     const typeNames = {
       'patch': 'Patch and Fixes',
       'world_reset': 'World Reset',
-      'mystery': 'Mystery Event'
+      'mystery': '??? Weapon Gacha'
     };
     const title = event.title || typeNames[event.event_type] || 'Event';
     const durationText = '7-Day Event';
     
-    const desc = (event.description || 'Limited-time event with exclusive rewards.').split('\n').slice(0, 2);
+    const desc = (event.description || 'A limited-time event with exclusive rewards.').split('\n').slice(0, 2);
     
     card.innerHTML = `
       <div class="event-card-header">
         <h2 class="event-title">${this.escape(title)}</h2>
         <div class="event-duration-badge">${durationText}</div>
       </div>
-      <div class="event-countdown-label">⏱ Starts In</div>
+      <div class="event-countdown-label" style="text-align:center;">⏱ Starts In</div>
       <div class="countdown-timer" id="timer-${event.id}">
         <div class="countdown-unit"><div class="countdown-value">--</div><div class="countdown-label">Days</div></div>
         <div class="countdown-unit"><div class="countdown-value">--</div><div class="countdown-label">Hours</div></div>
@@ -634,13 +634,15 @@ class EventCardRenderer {
         <div class="countdown-unit"><div class="countdown-value">--</div><div class="countdown-label">Seconds</div></div>
       </div>
       <div class="event-progress-bar" id="progress-${event.id}">
+        <div class="progress-label-start">Start</div>
         <div class="event-progress-fill" style="width:0%"><span class="event-progress-text">0%</span></div>
+        <div class="progress-label-end">End</div>
       </div>
       <div class="event-description">
         ${desc.map(line => `<div class="event-description-line">${this.escape(line)}</div>`).join('')}
       </div>
       <div class="event-actions">
-        <button class="event-btn-secondary" onclick="eventRenderer.setReminder('${event.id}')">📌 Set Reminder</button>
+        <button class="event-btn-primary" onclick="eventRenderer.setReminder('${event.id}')">📌 Set Reminder</button>
         <button class="event-btn-primary" onclick="eventRenderer.learnMore('${event.id}')">📖 Learn More</button>
       </div>
     `;
@@ -676,7 +678,11 @@ class EventCardRenderer {
       const totalDuration = 7 * 86400000;
       const elapsed = totalDuration - diff;
       const progress = Math.min(100, Math.max(0, (elapsed / totalDuration) * 100));
-      progressEl.innerHTML = `<div class="event-progress-fill" style="width:${progress}%"><span class="event-progress-text">${Math.round(progress)}%</span></div>`;
+      const fillEl = progressEl.querySelector('.event-progress-fill');
+      if (fillEl) {
+        fillEl.style.width = `${progress}%`;
+        fillEl.querySelector('.event-progress-text').textContent = `${Math.round(progress)}%`;
+      }
     }
   }
   

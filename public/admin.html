@@ -1577,7 +1577,7 @@
       const typeNames = {
         'patch': 'Patch and Fixes',
         'world_reset': 'World Reset',
-        'mystery': 'Mystery Event'
+        'mystery': '??? Weapon Gacha'
       };
 
       let html = '';
@@ -1602,7 +1602,7 @@
                 <div class="countdown-unit"><div class="countdown-value">--</div><div class="countdown-label">Minutes</div></div>
                 <div class="countdown-unit"><div class="countdown-value">--</div><div class="countdown-label">Seconds</div></div>
               </div>
-              <div class="event-progress-bar" id="progress-${event.id}"><div class="event-progress-fill" style="width:50%"><span class="event-progress-text">50%</span></div></div>
+              <div class="event-progress-bar" id="progress-${event.id}"><div class="progress-label-start">Start</div><div class="event-progress-fill" style="width:50%"><span class="event-progress-text">50%</span></div><div class="progress-label-end">End</div></div>
               <div class="event-description">${esc(event.description || 'Active event in progress')}</div>
               <div class="event-actions">
                 <button class="event-btn-primary" onclick="deleteEvent('${event.id}', this)">🗑 Delete Event</button>
@@ -1635,7 +1635,7 @@
                 <div class="countdown-unit" style="padding:12px;"><div class="countdown-value" style="font-size:1.5em;">--</div><div class="countdown-label" style="font-size:.65em;">Minutes</div></div>
                 <div class="countdown-unit" style="padding:12px;"><div class="countdown-value" style="font-size:1.5em;">--</div><div class="countdown-label" style="font-size:.65em;">Seconds</div></div>
               </div>
-              <div class="event-progress-bar" id="progress-${event.id}" style="margin-bottom:15px;"><div class="event-progress-fill" style="width:0%"><span class="event-progress-text" style="font-size:.65em;">0%</span></div></div>
+              <div class="event-progress-bar" id="progress-${event.id}" style="margin-bottom:15px;"><div class="progress-label-start">Start</div><div class="event-progress-fill" style="width:0%"><span class="event-progress-text" style="font-size:.65em;">0%</span></div><div class="progress-label-end">End</div></div>
               <div class="event-description" style="font-size:.9em; margin-bottom:15px;">${esc(event.description || 'Upcoming event')}</div>
               <div class="event-actions" style="gap:8px;">
                 <button class="event-btn-secondary" style="flex:1; padding:8px 12px; font-size:.85em;" onclick="editEventShow('${event.id}', this)">✏️ Edit</button>
@@ -1704,7 +1704,12 @@
       const totalDuration = 7 * 86400000;
       const elapsed = totalDuration - diff;
       const progress = Math.min(100, Math.max(0, (elapsed / totalDuration) * 100));
-      progressEl.innerHTML = `<div class="event-progress-fill" style="width:${progress}%"><span class="event-progress-text">${Math.round(progress)}%</span></div>`;
+      const fillEl = progressEl.querySelector('.event-progress-fill');
+      if (fillEl) {
+        fillEl.style.width = `${progress}%`;
+        const textEl = fillEl.querySelector('.event-progress-text');
+        if (textEl) textEl.textContent = `${Math.round(progress)}%`;
+      }
     }
   }
 
