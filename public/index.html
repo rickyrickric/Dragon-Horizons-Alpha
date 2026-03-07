@@ -476,6 +476,12 @@ class EventCardRenderer {
         .sort((a,b) => new Date(b.event_time) - new Date(a.event_time));
       const upcoming = events.filter(e => new Date(e.event_time) > now)
         .sort((a,b) => new Date(a.event_time) - new Date(b.event_time));
+      
+      this.render(ongoing, upcoming);
+    } catch(err) { 
+      console.error('Event load failed:', err);
+    }
+  }
   
   render(ongoing, upcoming) {
     const onContainer = document.getElementById('ongoing-countdown');
@@ -519,7 +525,11 @@ class EventCardRenderer {
     card.className = 'event-card-redesign';
     card.id = 'event-' + event.id;
     
-    const typeNames = {'patch':'Patch & Fixes','world_reset':'World Reset','mystery':'Mystery Event'};
+    const typeNames = {
+      'patch': 'Patch and Fixes',
+      'world_reset': 'World Reset',
+      'mystery': 'Mystery Event'
+    };
     const title = event.title || typeNames[event.event_type] || 'Event';
     const durationText = '7-Day Event';
     
