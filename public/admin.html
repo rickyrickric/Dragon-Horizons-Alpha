@@ -934,6 +934,23 @@
                   <option value="mystery">🎁 Mystery Event</option>
                 </select>
               </div>
+              <div style="flex:1;">
+                <label class="form-label">Event Duration</label>
+                <div style="display:flex; gap:8px; margin-bottom:8px;">
+                  <select id="durationPreset" class="form-input" style="flex:1;" onchange="setDurationFromPreset()">
+                    <option value="">-- Preset --</option>
+                    <option value="1-Hour">1-Hour</option>
+                    <option value="6-Hour">6-Hour</option>
+                    <option value="12-Hour">12-Hour</option>
+                    <option value="24-Hour">24-Hour</option>
+                    <option value="3-Day">3-Day</option>
+                    <option value="7-Day">7-Day</option>
+                    <option value="14-Day">14-Day</option>
+                    <option value="custom">Custom...</option>
+                  </select>
+                </div>
+                <input type="text" id="eventDuration" class="form-input" placeholder="e.g., 7-Day, 24-Hour, 3-Day..." value="7-Day">
+              </div>
             </div>
 
             <div class="form-row">
@@ -1593,7 +1610,7 @@
             <div class="event-card-redesign" data-id="${event.id}">
               <div class="event-card-header">
                 <h2 class="event-title">${esc(event.title || eventName)}</h2>
-                <div class="event-duration-badge">7-Day Event</div>
+                <div class="event-duration-badge">${esc(event.duration || '7-Day')} Event</div>
               </div>
               <div class="event-countdown-label">⏱ Ends In</div>
               <div class="countdown-timer" id="timer-${event.id}">
@@ -1626,7 +1643,7 @@
             <div class="event-card-redesign" data-id="${event.id}" style="max-width:100%;">
               <div class="event-card-header">
                 <h2 class="event-title" style="font-size:1.3em;">${esc(event.title || eventName)}</h2>
-                <div class="event-duration-badge" style="font-size:.85em;">7 Days</div>
+                <div class="event-duration-badge" style="font-size:.85em;">${esc(event.duration || '7-Day')}</div>
               </div>
               <div class="event-countdown-label" style="font-size:.85em;">⏱ Starts In</div>
               <div class="countdown-timer" id="timer-${event.id}" style="grid-template-columns:repeat(2,1fr);gap:8px;">
@@ -1716,9 +1733,10 @@
   async function createEvent() {
     const type = document.getElementById('eventType').value;
     const time = document.getElementById('eventTime').value;
+    const duration = document.getElementById('eventDuration').value;
     const description = document.getElementById('eventDescription').value;
 
-    if (!type || !time || !description) {
+    if (!type || !time || !duration || !description) {
       toast('error', '❌ Please fill in all fields');
       return;
     }
@@ -1730,6 +1748,7 @@
         body: JSON.stringify({
           event_type: type,
           event_time: new Date(time).toISOString(),
+          duration: duration.trim(),
           description: description.trim()
         })
       });
@@ -1740,12 +1759,22 @@
       // Clear form
       document.getElementById('eventType').value = '';
       document.getElementById('eventTime').value = '';
+      document.getElementById('eventDuration').value = '7-Day';
+      document.getElementById('durationPreset').value = '';
       document.getElementById('eventDescription').value = '';
 
       toast('success', '✅ Event created successfully!');
       loadEvents();
     } catch (err) {
       toast('error', `Failed: ${err.message}`);
+    }
+  }
+  
+  function setDurationFromPreset() {
+    const preset = document.getElementById('durationPreset').value;
+    if (preset && preset !== 'custom') {
+      document.getElementById('eventDuration').value = preset;
+      document.getElementById('durationPreset').value = '';
     }
   }
 
@@ -1784,6 +1813,20 @@
                 <option value="mystery">🎁 Mystery Event</option>
               </select>
             </div>
+            <div>
+              <label class="form-label">Event Duration</label>
+              <select id="edit-duration-preset-${id}" class="form-input" onchange="setEditDurationFromPreset('${id}')">
+                <option value="">-- Preset --</option>
+                <option value="1-Hour">1-Hour</option>
+                <option value="6-Hour">6-Hour</option>
+                <option value="12-Hour">12-Hour</option>
+                <option value="24-Hour">24-Hour</option>
+                <option value="3-Day">3-Day</option>
+                <option value="7-Day">7-Day</option>
+                <option value="14-Day">14-Day</option>
+              </select>
+              <input type="text" id="edit-duration-${id}" class="form-input" placeholder="e.g., 7-Day, 24-Hour..." style="margin-top:4px;">
+            </div>
           </div>
           <div class="form-row">
             <div>
@@ -1801,15 +1844,44 @@
         </div>
       `;
       card.insertAdjacentHTML('beforeend', editForm);
+      
+      // Load and populate the event data
+      (async () => {
+        try {
+          const res = await fetch(`${API}/events/${id}`, { headers: authHeader() });
+          const data = await res.json();
+          if (data.success && data.data) {
+            const event = data.data;
+            document.getElementById(`edit-type-${id}`).value = event.event_type || '';
+            document.getElementById(`edit-duration-${id}`).value = event.duration || '7-Day';
+            
+            const timeInput = document.getElementById(`edit-time-${id}`);
+            if (event.event_time) {
+              const date = new Date(event.event_time);
+              const year = date.getFullYear();
+              const month = String(date.getMonth() + 1).padStart(2, '0');
+              const day = String(date.getDate()).padStart(2, '0');
+              const hours = String(date.getHours()).padStart(2, '0');
+              const minutes = String(date.getMinutes()).padStart(2, '0');
+              timeInput.value = `${year}-${month}-${day}T${hours}:${minutes}`;
+            }
+            
+            document.getElementById(`edit-desc-${id}`).value = event.description || '';
+          }
+        } catch (err) {
+          console.error('Failed to load event data:', err);
+        }
+      })();
     }
   }
 
   async function saveEventEdit(id) {
     const newType = document.getElementById(`edit-type-${id}`).value;
     const newTime = document.getElementById(`edit-time-${id}`).value;
+    const newDuration = document.getElementById(`edit-duration-${id}`).value;
     const newDesc = document.getElementById(`edit-desc-${id}`).value;
 
-    if (!newTime || !newDesc) {
+    if (!newTime || !newDuration || !newDesc) {
       toast('error', '❌ Please fill in all fields');
       return;
     }
@@ -1821,6 +1893,7 @@
         body: JSON.stringify({
           event_type: newType,
           event_time: new Date(newTime).toISOString(),
+          duration: newDuration.trim(),
           description: newDesc.trim()
         })
       });
@@ -1832,6 +1905,14 @@
       loadEvents();
     } catch (err) {
       toast('error', `Update failed: ${err.message}`);
+    }
+  }
+  
+  function setEditDurationFromPreset(id) {
+    const preset = document.getElementById(`edit-duration-preset-${id}`).value;
+    if (preset) {
+      document.getElementById(`edit-duration-${id}`).value = preset;
+      document.getElementById(`edit-duration-preset-${id}`).value = '';
     }
   }
 

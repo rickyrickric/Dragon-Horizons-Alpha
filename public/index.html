@@ -756,11 +756,12 @@ class EventCardRenderer {
       'mystery': '??? Weapon Gacha'
     };
     const title = event.title || typeNames[event.event_type] || 'Event';
+    const duration = event.duration || '7-Day';
     
     card.innerHTML = `
       <div class="event-row-name">${this.escape(title)}</div>
       <div class="event-row-countdown" id="countdown-compact-${event.id}">-- d -- h -- m</div>
-      <div class="event-row-duration">7-Day</div>
+      <div class="event-row-duration">${this.escape(duration)}</div>
       <button class="event-row-button" onclick="eventRenderer.learnMore('${event.id}')">Learn More</button>
     `;
     return card;
@@ -776,7 +777,7 @@ class EventCardRenderer {
       'mystery': '??? Weapon Gacha'
     };
     const title = event.title || typeNames[event.event_type] || 'Event';
-    const durationText = '7-Day Event';
+    const durationText = event.duration ? `${event.duration} Event` : '7-Day Event';
     
     let desc = (event.description || 'A limited-time event with exclusive rewards.').split('\n').slice(0, 2);
     desc = desc.map(line => line.replace(/\//g, '').replace(/\b(\d+)\s+Days?\b/g, '$1-Day'));
