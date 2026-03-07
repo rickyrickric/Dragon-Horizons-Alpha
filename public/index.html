@@ -200,7 +200,7 @@
   letter-spacing: 0.15em;
   text-transform: uppercase;
   padding: 8px 16px;
-  margin-bottom: 16px;
+  margin-bottom: 12px;
   background: rgba(212, 168, 83, 0.1);
   border: 1px solid var(--gold-d);
   border-radius: 3px;
@@ -211,17 +211,22 @@
 
 #ongoing-events,
 #upcoming-events {
-  margin-top: 32px;
-  margin-bottom: 32px;
+  margin-top: 8px;
+  margin-bottom: 8px;
   width: 100%;
+  max-width: 900px;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 0 20px;
 }
 
 #ongoing-countdown,
 #upcoming-countdown {
   display: grid;
-  gap: 20px;
+  gap: 8px;
   min-height: 1px;
   justify-items: center;
+  width: 100%;
 }
 
 .countdown-card {
@@ -399,7 +404,7 @@
   background: rgba(12,8,8,.6);
   border: 1px solid rgba(233,69,96,.2);
   border-radius: 6px;
-  margin-bottom: 10px;
+  margin-bottom: 8px;
 }
 
 .event-row-name {
@@ -597,7 +602,7 @@
   <div id="no-upcoming-msg" style="display:none; text-align:center; padding:20px; color:#999;">No upcoming events scheduled.</div>
 </div>
 
-<section class="features" style="padding-bottom:180px;margin-top:-60px;">
+<section class="features" style="padding-top:60px;padding-bottom:180px;margin-top:0;">
   <div class="feat-eyebrow">What Awaits You</div>
   <div class="feat-grid rv">
     <div class="panel bl"><div class="p-icon">⚔️</div><div class="p-title">Soulslike Combat</div><div class="p-desc">Posture, bleed buildup, and 9 hand-crafted bosses. Armor caps at 75% — no build is invincible.</div></div>
