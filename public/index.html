@@ -390,6 +390,102 @@
   margin-top: 8px;
 }
 
+/* COMPACT EVENT ROW LIST */
+.event-row-compact {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 14px 20px;
+  background: rgba(12,8,8,.6);
+  border: 1px solid rgba(233,69,96,.2);
+  border-radius: 6px;
+  margin-bottom: 10px;
+}
+
+.event-row-name {
+  flex: 0 0 180px;
+  font-family: var(--fc);
+  font-size: 0.95em;
+  font-weight: 600;
+  color: #FFD700;
+  white-space: nowrap;
+}
+
+.event-row-countdown {
+  flex: 1;
+  font-family: var(--fc);
+  font-size: 0.85em;
+  color: #c8b898;
+  letter-spacing: 0.05em;
+  text-align: center;
+}
+
+.event-row-duration {
+  flex: 0 0 70px;
+  background: rgba(212,168,83,.15);
+  border: 1px solid #d4a853;
+  color: #FFD700;
+  padding: 6px 12px;
+  border-radius: 4px;
+  font-family: var(--fc);
+  font-size: 0.8em;
+  font-weight: 600;
+  text-align: center;
+}
+
+.event-row-button {
+  flex: 0 0 120px;
+  background: linear-gradient(135deg,#E94560,#d4345a);
+  color: white;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  font-family: var(--fc);
+  font-size: 0.9em;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all .3s ease;
+  white-space: nowrap;
+}
+
+.event-row-button:hover {
+  background: linear-gradient(135deg,#FF6B7A,#E94560);
+  box-shadow: 0 0 15px rgba(233,69,96,.3);
+  transform: translateY(-1px);
+}
+
+/* EVENT DETAIL MODAL */
+#event-detail-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 2000;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0,0,0,.6);
+}
+
+.modal-backdrop {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  cursor: pointer;
+}
+
+.modal-container {
+  position: relative;
+  z-index: 2001;
+  max-height: 85vh;
+  overflow-y: auto;
+  max-width: 900px;
+  width: 90%;
+}
+
 @media (max-width: 640px) {
   .countdown-section {
     padding: 40px 24px;
@@ -405,6 +501,28 @@
   
   .event-desc {
     font-size: 0.95rem;
+  }
+  
+  .event-row-compact {
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  
+  .event-row-name {
+    flex: 0 0 100%;
+  }
+  
+  .event-row-countdown {
+    flex: 1 1 auto;
+    min-width: 120px;
+  }
+  
+  .event-row-duration {
+    flex: 0 0 auto;
+  }
+  
+  .event-row-button {
+    flex: 0 0 100%;
   }
 }
 </style>
@@ -490,6 +608,15 @@
     <div class="panel ru"><div class="p-icon">🗡️</div><div class="p-title">Arsenal of Steel</div><div class="p-desc">Spartan Weaponry and Marius Soulslike provide a full arsenal. Legendaries wait in boss loot only.</div></div>
   </div>
 </section>
+
+<!-- EVENT DETAIL MODAL -->
+<div id="event-detail-modal" style="display:none;">
+  <div class="modal-backdrop" onclick="eventRenderer.closeModal()"></div>
+  <div class="modal-container">
+    <div id="event-detail-content"></div>
+  </div>
+</div>
+
 </main>
 
 <footer>
@@ -534,7 +661,10 @@ loadPublicConfig();
 
 // ── Enhanced Event Card Renderer ────────────────────────────────
 class EventCardRenderer {
-  constructor() { this.intervals = new Map(); }
+  constructor() { 
+    this.intervals = new Map();
+    this.events = new Map(); // Store event data for detail view
+  }
   
   async loadEvents() {
     try {
@@ -554,6 +684,9 @@ class EventCardRenderer {
         .sort((a,b) => new Date(b.event_time) - new Date(a.event_time));
       const upcoming = events.filter(e => new Date(e.event_time) > now)
         .sort((a,b) => new Date(a.event_time) - new Date(b.event_time));
+      
+      // Store events for detail modal
+      [...ongoing, ...upcoming].forEach(e => this.events.set(e.id, e));
       
       // Show sections if there are events
       if (ongoing.length > 0) document.getElementById('ongoing-events').style.display = 'block';
@@ -609,8 +742,28 @@ class EventCardRenderer {
   
   createCard(event) {
     const card = document.createElement('div');
-    card.className = 'event-card-redesign';
+    card.className = 'event-row-compact';
     card.id = 'event-' + event.id;
+    
+    const typeNames = {
+      'patch': 'Patch and Fixes',
+      'world_reset': 'World Reset',
+      'mystery': '??? Weapon Gacha'
+    };
+    const title = event.title || typeNames[event.event_type] || 'Event';
+    
+    card.innerHTML = `
+      <div class="event-row-name">${this.escape(title)}</div>
+      <div class="event-row-countdown" id="countdown-compact-${event.id}">-- d -- h -- m</div>
+      <div class="event-row-duration">7-Day</div>
+      <button class="event-row-button" onclick="eventRenderer.learnMore('${event.id}')">Learn More</button>
+    `;
+    return card;
+  }
+  
+  createDetailCard(event) {
+    const card = document.createElement('div');
+    card.className = 'event-card-redesign';
     
     const typeNames = {
       'patch': 'Patch and Fixes',
@@ -621,7 +774,6 @@ class EventCardRenderer {
     const durationText = '7-Day Event';
     
     let desc = (event.description || 'A limited-time event with exclusive rewards.').split('\n').slice(0, 2);
-    // Remove "/s" entirely and clean up Day/s format (e.g., "7 Day/s" → "7-Day")
     desc = desc.map(line => line.replace(/\//g, '').replace(/\b(\d+)\s+Days?\b/g, '$1-Day'));
     
     card.innerHTML = `
@@ -630,38 +782,32 @@ class EventCardRenderer {
         <div class="event-duration-badge">${durationText}</div>
       </div>
       <div class="event-countdown-label" style="text-align:center;">⏱ Starts In</div>
-      <div class="countdown-timer" id="timer-${event.id}">
+      <div class="countdown-timer" id="timer-detail-${event.id}">
         <div class="countdown-unit"><div class="countdown-value">--</div><div class="countdown-label">Days</div></div>
         <div class="countdown-unit"><div class="countdown-value">--</div><div class="countdown-label">Hours</div></div>
         <div class="countdown-unit"><div class="countdown-value">--</div><div class="countdown-label">Minutes</div></div>
         <div class="countdown-unit"><div class="countdown-value">--</div><div class="countdown-label">Seconds</div></div>
-      </div>
-      <div class="event-progress-bar" id="progress-${event.id}">
-        <div class="progress-label-start">Start</div>
-        <div class="event-progress-fill" style="width:0%"><span class="event-progress-text">0%</span></div>
-        <div class="progress-label-end">End</div>
       </div>
       <div class="event-description">
         ${desc.map(line => `<div class="event-description-line">${this.escape(line)}</div>`).join('')}
       </div>
       <div class="event-actions">
         <button class="event-btn-primary" onclick="eventRenderer.setReminder('${event.id}')">📌 Set Reminder</button>
-        <button class="event-btn-primary" onclick="eventRenderer.learnMore('${event.id}')">📖 Learn More</button>
+        <button class="event-btn-secondary" onclick="eventRenderer.closeModal()">Close</button>
       </div>
     `;
     return card;
   }
   
   updateTimer(eventId, eventTime) {
-    const timerEl = document.getElementById('timer-' + eventId);
-    const progressEl = document.getElementById('progress-' + eventId);
-    if (!timerEl) return;
+    const compactEl = document.getElementById('countdown-compact-' + eventId);
+    const detailEl = document.getElementById('timer-detail-' + eventId);
     
     const now = new Date(), target = new Date(eventTime), diff = target - now;
     
     if (diff < 0) {
-      timerEl.innerHTML = '<div class="countdown-unit" style="grid-column:span 4;text-align:center;"><div class="countdown-value">ENDED</div></div>';
-      if (progressEl) progressEl.innerHTML = '<div class="event-progress-fill" style="width:100%"><span class="event-progress-text">100%</span></div>';
+      if (compactEl) compactEl.textContent = 'ENDED';
+      if (detailEl) detailEl.innerHTML = '<div class="countdown-unit" style="grid-column:span 4;text-align:center;"><div class="countdown-value">ENDED</div></div>';
       return;
     }
     
@@ -670,31 +816,19 @@ class EventCardRenderer {
     const mins = Math.floor((diff % 3600000) / 60000);
     const secs = Math.floor((diff % 60000) / 1000);
     
-    timerEl.innerHTML = `
-      <div class="countdown-unit"><div class="countdown-value">${String(days).padStart(2,'0')}</div><div class="countdown-label">Days</div></div>
-      <div class="countdown-unit"><div class="countdown-value">${String(hours).padStart(2,'0')}</div><div class="countdown-label">Hours</div></div>
-      <div class="countdown-unit"><div class="countdown-value">${String(mins).padStart(2,'0')}</div><div class="countdown-label">Minutes</div></div>
-      <div class="countdown-unit"><div class="countdown-value">${String(secs).padStart(2,'0')}</div><div class="countdown-label">Seconds</div></div>
-    `;
+    // Update compact row countdown
+    if (compactEl) {
+      compactEl.textContent = `${days}d ${String(hours).padStart(2,'0')}h ${String(mins).padStart(2,'0')}m`;
+    }
     
-    if (progressEl) {
-      const fillEl = progressEl.querySelector('.event-progress-fill');
-      if (diff > 0) {
-        // Event hasn't started yet - show 0% (nearly empty, starting soon)
-        if (fillEl) {
-          fillEl.style.width = '0%';
-          fillEl.querySelector('.event-progress-text').textContent = 'Starting soon';
-        }
-      } else {
-        // Event has started - show progress from start to end date
-        const totalDuration = 7 * 86400000; // 7 days in milliseconds
-        const elapsed = -diff; // Convert negative diff to positive elapsed time
-        const progressPercent = Math.min(100, (elapsed / totalDuration) * 100);
-        if (fillEl) {
-          fillEl.style.width = `${progressPercent}%`;
-          fillEl.querySelector('.event-progress-text').textContent = `${Math.round(progressPercent)}% complete`;
-        }
-      }
+    // Update detail card countdown
+    if (detailEl) {
+      detailEl.innerHTML = `
+        <div class="countdown-unit"><div class="countdown-value">${String(days).padStart(2,'0')}</div><div class="countdown-label">Days</div></div>
+        <div class="countdown-unit"><div class="countdown-value">${String(hours).padStart(2,'0')}</div><div class="countdown-label">Hours</div></div>
+        <div class="countdown-unit"><div class="countdown-value">${String(mins).padStart(2,'0')}</div><div class="countdown-label">Minutes</div></div>
+        <div class="countdown-unit"><div class="countdown-value">${String(secs).padStart(2,'0')}</div><div class="countdown-label">Seconds</div></div>
+      `;
     }
   }
   
@@ -703,7 +837,29 @@ class EventCardRenderer {
   }
   
   learnMore(eventId) {
-    alert('📖 Event details are coming soon. Check back for more information!');
+    const event = this.events.get(eventId);
+    if (!event) return;
+    
+    const modal = document.getElementById('event-detail-modal');
+    const modalContent = document.getElementById('event-detail-content');
+    
+    // Create and insert detail card
+    modalContent.innerHTML = '';
+    const detailCard = this.createDetailCard(event);
+    modalContent.appendChild(detailCard);
+    
+    // Start timer for detail card
+    this.updateTimer(eventId, event.event_time);
+    
+    // Show modal
+    modal.style.display = 'flex';
+    document.body.style.overflow = 'hidden';
+  }
+  
+  closeModal() {
+    const modal = document.getElementById('event-detail-modal');
+    modal.style.display = 'none';
+    document.body.style.overflow = 'auto';
   }
   
   escape(text) {
