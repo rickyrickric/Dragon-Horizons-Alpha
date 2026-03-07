@@ -178,8 +178,12 @@
 }
 
 .countdown-container {
-  display: flex;
-  justify-content: center;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 24px;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
 }
 
 .countdown-card {
@@ -333,13 +337,9 @@
 <section class="countdown-section" id="countdownSection" style="display:none;">
   <div class="countdown-bg"></div>
   <div class="countdown-wrapper">
-    <div class="countdown-label">⏱️ Upcoming Event</div>
-    <div class="countdown-container">
-      <div class="countdown-card">
-        <div class="event-type-badge" id="eventTypeBadge"></div>
-        <div class="countdown-timer" id="countdownTimer">Loading...</div>
-        <div class="event-desc" id="eventDesc"></div>
-      </div>
+    <div class="countdown-label">⏱️ Upcoming Events</div>
+    <div class="countdown-container" id="countdownContainer">
+      <!-- Events will be loaded here -->
     </div>
   </div>
 </section>
@@ -398,7 +398,7 @@ document.querySelectorAll('.rv').forEach(function(el){
 loadPublicConfig();
 
 // ── Countdown Timer ─────────────────────────────────────
-async function loadCountdownEvent() {
+async function loadCountdownEvents() {
   try {
     const res = await fetch('/api/events');
     if (!res.ok) throw new Error('Events load failed');
@@ -410,45 +410,67 @@ async function loadCountdownEvent() {
       return;
     }
     
-    // Find the next upcoming event
+    // Filter events that are in the future and sort by time
     const now = new Date();
-    const nextEvent = events.find(e => new Date(e.event_time) > now);
+    const upcomingEvents = events
+      .filter(e => new Date(e.event_time) > now)
+      .sort((a, b) => new Date(a.event_time) - new Date(b.event_time))
+      .slice(0, 3); // Get only the first 3 nearest events
     
-    if (nextEvent) {
-      displayCountdownEvent(nextEvent);
-    } else {
+    if (upcomingEvents.length === 0) {
       document.getElementById('countdownSection').style.display = 'none';
+      return;
     }
+    
+    displayCountdownEvents(upcomingEvents);
   } catch (e) {
-    console.warn('Failed to load countdown event:', e.message);
+    console.warn('Failed to load countdown events:', e.message);
   }
 }
 
-function displayCountdownEvent(event) {
+function displayCountdownEvents(events) {
   const section = document.getElementById('countdownSection');
-  const badge = document.getElementById('eventTypeBadge');
-  const timer = document.getElementById('countdownTimer');
-  const desc = document.getElementById('eventDesc');
+  const container = document.getElementById('countdownContainer');
   
-  // Set event type badge
+  // Clear previous content
+  container.innerHTML = '';
+  
+  // Type names mapping
   const typeNames = {
     'patch': '🔧 Patch and Fixes',
     'world_reset': '🌍 World Reset',
     'mystery': '🎁 Mystery Event'
   };
   
-  badge.className = `event-type-badge ${event.event_type}`;
-  badge.textContent = typeNames[event.event_type] || 'Upcoming Event';
-  
-  // Set description
-  desc.textContent = event.description;
+  // Create card for each event
+  events.forEach(event => {
+    const card = document.createElement('div');
+    card.className = 'countdown-card';
+    
+    const badge = document.createElement('div');
+    badge.className = `event-type-badge ${event.event_type}`;
+    badge.textContent = typeNames[event.event_type] || 'Upcoming Event';
+    
+    const timer = document.createElement('div');
+    timer.className = 'countdown-timer';
+    timer.textContent = 'Loading...';
+    
+    const desc = document.createElement('div');
+    desc.className = 'event-desc';
+    desc.textContent = event.description;
+    
+    card.appendChild(badge);
+    card.appendChild(timer);
+    card.appendChild(desc);
+    container.appendChild(card);
+    
+    // Start countdown update for this event
+    updateCountdown(event.event_time, timer);
+    setInterval(() => updateCountdown(event.event_time, timer), 1000);
+  });
   
   // Show section
   section.style.display = 'block';
-  
-  // Update countdown every second
-  updateCountdown(event.event_time, timer);
-  setInterval(() => updateCountdown(event.event_time, timer), 1000);
 }
 
 function updateCountdown(eventIsoTime, timerEl) {
@@ -475,7 +497,7 @@ function updateCountdown(eventIsoTime, timerEl) {
   }
 }
 
-loadCountdownEvent();
+loadCountdownEvents();
 </script>
 </body>
 </html>
