@@ -112,10 +112,10 @@ body::after{
 .ch{margin-bottom:64px;}
 .ch-eyebrow{
   font-family:var(--fc);font-size:.56rem;letter-spacing:.45em;text-transform:uppercase;
-  color:var(--ember-d);margin-bottom:10px;
+  color:var(--ember);margin-bottom:10px;
   display:flex;align-items:center;gap:14px;
 }
-.ch-eyebrow::before{content:'';width:28px;height:1px;background:var(--ember-d);flex-shrink:0;}
+.ch-eyebrow::before{content:'';width:28px;height:1px;background:var(--ember);flex-shrink:0;}
 .ch-title{
   font-family:var(--fc);font-size:clamp(2rem,5vw,3.8rem);font-weight:700;
   color:var(--gold-l);line-height:1.05;letter-spacing:.02em;
