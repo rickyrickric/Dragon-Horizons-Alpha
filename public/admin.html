@@ -646,20 +646,60 @@
 .events-list {
   display:grid; gap:16px;
 }
+
 .event-card {
   background:var(--bg2); border:1px solid var(--border);
   padding:20px; border-radius:2px;
   transition:border-color .2s;
 }
+
 @media(max-width:640px) {
   .event-card {
     padding:16px;
   }
 }
+
 .event-card:hover { border-color:var(--gold-d); }
+
 .event-card.patch { border-left:4px solid #d4a853; }
 .event-card.world_reset { border-left:4px solid #5aaa6a; }
 .event-card.mystery { border-left:4px solid #a76e9b; }
+
+/* Ongoing events - main view */
+.events-section-ongoing {
+  margin-bottom:12px;
+}
+
+.event-card-ongoing {
+  background:rgba(20,13,13,.8);
+  border:2px solid #ff6b6b !important;
+  border-left:4px solid #ff6b6b !important;
+  padding:28px;
+  box-shadow:0 0 20px rgba(255,107,107,.15);
+}
+
+.event-card-ongoing:hover {
+  border-color:#ff8888 !important;
+  box-shadow:0 0 30px rgba(255,107,107,.25);
+}
+
+/* Upcoming events - sub view */
+.events-section-upcoming {
+  opacity:0.9;
+}
+
+.upcoming-events-grid {
+  display:grid;
+  grid-template-columns:repeat(auto-fit, minmax(280px, 1fr));
+  gap:12px;
+}
+
+.event-card-upcoming {
+  background:var(--bg2);
+  border:1px solid rgba(212,168,83,.15) !important;
+  padding:16px;
+  font-size:0.9em;
+}
 
 .event-head {
   display:flex; justify-content:space-between; align-items:flex-start; gap:12px; margin-bottom:12px;
@@ -1461,41 +1501,98 @@
         return;
       }
 
-      list.innerHTML = events.map(event => {
-        const eventEmoji = {
-          'patch': '🔧',
-          'world_reset': '🌍',
-          'mystery': '🎁'
-        }[event.event_type] || '⏱️';
+      // Separate ongoing and upcoming events
+      const now = new Date();
+      const ongoingEvents = events
+        .filter(e => new Date(e.event_time) <= now)
+        .sort((a, b) => new Date(b.event_time) - new Date(a.event_time));
+      
+      const upcomingEvents = events
+        .filter(e => new Date(e.event_time) > now)
+        .sort((a, b) => new Date(a.event_time) - new Date(b.event_time));
 
-        const eventName = {
-          'patch': 'Patch and Fixes',
-          'world_reset': 'World Reset',
-          'mystery': 'Mystery Event'
-        }[event.event_type];
+      // Type emoji mapping
+      const typeEmoji = {
+        'patch': '🔧',
+        'world_reset': '🌍',
+        'mystery': '🎁'
+      };
 
-        const countdown = formatCountdownDiff(event.event_time);
+      const typeNames = {
+        'patch': 'Patch and Fixes',
+        'world_reset': 'World Reset',
+        'mystery': 'Mystery Event'
+      };
 
-        return `
-          <div class="event-card ${event.event_type}" data-id="${event.id}">
-            <div class="event-head">
-              <div class="event-info">
-                <div class="event-type">${eventEmoji} &nbsp;${eventName}</div>
-                <div class="event-time">${fmtDate(event.event_time)}</div>
-                <div class="event-countdown">⏰ ${countdown}</div>
+      let html = '';
+
+      // Render ongoing events (main view)
+      if (ongoingEvents.length > 0) {
+        html += '<div class="events-section-ongoing"><h4 style="color:#ff6b6b; margin-bottom:16px; font-size:1.1em;">🔥 Ongoing Event(s)</h4>';
+        
+        html += ongoingEvents.map(event => {
+          const eventEmoji = typeEmoji[event.event_type] || '⏱️';
+          const eventName = typeNames[event.event_type];
+          const countdown = formatCountdownDiff(event.event_time);
+
+          return `
+            <div class="event-card ${event.event_type} event-card-ongoing" data-id="${event.id}">
+              <div class="event-head">
+                <div class="event-info">
+                  <div class="event-type">${eventEmoji} &nbsp;${eventName}</div>
+                  <div class="event-time">${fmtDate(event.event_time)}</div>
+                  <div class="event-countdown">⏰ ${countdown}</div>
+                </div>
+                <span class="event-pill ${event.event_type}">${eventName}</span>
               </div>
-              <span class="event-pill ${event.event_type}">${eventName}</span>
-            </div>
-            
-            <div class="event-description">${esc(event.description)}</div>
+              
+              <div class="event-description">${esc(event.description)}</div>
 
-            <div class="event-controls">
-              <button class="event-btn" onclick="editEventShow('${event.id}', this)">✏️ Edit</button>
-              <button class="event-btn delete" onclick="deleteEvent('${event.id}', this)">🗑️ Delete</button>
+              <div class="event-controls">
+                <button class="event-btn" onclick="editEventShow('${event.id}', this)">✏️ Edit</button>
+                <button class="event-btn delete" onclick="deleteEvent('${event.id}', this)">🗑️ Delete</button>
+              </div>
             </div>
-          </div>
-        `;
-      }).join('');
+          `;
+        }).join('');
+        
+        html += '</div>';
+      }
+
+      // Render upcoming events (sub view)
+      if (upcomingEvents.length > 0) {
+        html += '<div class="events-section-upcoming" style="margin-top:28px;"><h4 style="color:#d4a853; margin-bottom:16px; font-size:1em;">⏳ Upcoming Event(s)</h4>';
+        html += '<div class="upcoming-events-grid">';
+        
+        html += upcomingEvents.map(event => {
+          const eventEmoji = typeEmoji[event.event_type] || '⏱️';
+          const eventName = typeNames[event.event_type];
+          const countdown = formatCountdownDiff(event.event_time);
+
+          return `
+            <div class="event-card ${event.event_type} event-card-upcoming" data-id="${event.id}">
+              <div class="event-head">
+                <div class="event-info">
+                  <div class="event-type" style="font-size:.5rem;">${eventEmoji} &nbsp;${eventName}</div>
+                  <div class="event-time" style="font-size:.85rem;">${fmtDate(event.event_time)}</div>
+                  <div class="event-countdown" style="font-size:.95rem;">⏰ ${countdown}</div>
+                </div>
+              </div>
+              
+              <div class="event-description" style="font-size:.85rem;">${esc(event.description)}</div>
+
+              <div class="event-controls">
+                <button class="event-btn" style="font-size:.38rem; padding:6px 12px;" onclick="editEventShow('${event.id}', this)">✏️ Edit</button>
+                <button class="event-btn delete" style="font-size:.38rem; padding:6px 12px;" onclick="deleteEvent('${event.id}', this)">🗑️ Delete</button>
+              </div>
+            </div>
+          `;
+        }).join('');
+        
+        html += '</div></div>';
+      }
+
+      list.innerHTML = html;
 
     } catch (err) {
       console.error('loadEvents error:', err);
