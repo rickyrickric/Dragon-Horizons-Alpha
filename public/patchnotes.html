@@ -26,11 +26,19 @@
   <div class="ch rv">
     <div class="ch-eyebrow">Version History</div>
     <h1 class="ch-title">Patch Notes</h1>
-    <div style="display:inline-block;font-family:var(--fc);font-size:.55rem;font-weight:700;letter-spacing:.35em;padding:4px 18px;border:1px solid var(--blood);color:var(--blood-b);background:rgba(107,18,18,.15);text-transform:uppercase;margin-bottom:4px;">🐉 v2.0.1 · March 6, 2026</div>
+    <div style="display:flex;gap:16px;align-items:center;margin-bottom:16px;flex-wrap:wrap;">
+      <label for="version-select" style="font-weight:700;font-size:.9rem;">View Version:</label>
+      <select id="version-select" style="padding:8px 12px;font-size:.9rem;background:rgba(107,18,18,.25);border:1px solid var(--blood);color:var(--text-main);border-radius:4px;cursor:pointer;">
+        <option value="v2.0.1">v2.0.1 — March 6, 2026 (Current)</option>
+        <option value="v2.0.0">v2.0.0 — December 20, 2025</option>
+        <option value="v1.0.0">v1.0.0 — September 15, 2025 (Release)</option>
+      </select>
+    </div>
+    <div id="version-badge" style="display:inline-block;font-family:var(--fc);font-size:.55rem;font-weight:700;letter-spacing:.35em;padding:4px 18px;border:1px solid var(--blood);color:var(--blood-b);background:rgba(107,18,18,.15);text-transform:uppercase;margin-bottom:4px;">🐉 v2.0.1 · March 6, 2026</div>
     <div class="ch-rule"></div>
   </div>
 
-  <!-- OVERVIEW -->
+  <div id="content-v2.0.1" class="version-content" style="display:block;">
   <div class="rv rv2" style="margin-bottom:44px;">
     <div class="sh">Overview</div>
     <div class="scroll">
@@ -155,7 +163,69 @@
       <div class="scroll-e"><span class="sg">◆</span><span class="st"><strong>Total Mods:</strong> 72 mods  •  Forge 1.20.1 <span style="color:var(--text-sub);">(Minecraft 1.20.1)</span></span></div>
     </div>
   </div>
+  </div>
 
+  <!-- VERSION 2.0.0 SECTION -->
+  <div id="content-v2.0.0" class="version-content" style="display:none;">
+  <div class="rv rv2" style="margin-bottom:44px;">
+    <div style="font-weight:700;font-size:.55rem;letter-spacing:.35em;padding:4px 18px;border:1px solid var(--blood);color:var(--blood-b);background:rgba(107,18,18,.15);text-transform:uppercase;margin-bottom:16px;display:inline-block;">🐉 v2.0.0 · December 20, 2025</div>
+    <div class="sh">Overview</div>
+    <div class="scroll">
+      <div class="scroll-e"><span class="sg">◆</span><span class="st"><strong>v2.0.0</strong> marks the major feature update to Dragon's Horizon. This release introduces multi-boss encounters, complete progression rework with Origins integration, and a massive 39% modlist expansion. Server upgraded to host larger player populations with optimized performance settings.</span></div>
+    </div>
+  </div>
+
+  <div class="rv rv2" style="margin-bottom:44px;">
+    <div class="sh">✅ Added Major Features</div>
+    <div class="scroll">
+      <div class="scroll-e"><span class="sg">◆</span><span class="st"><strong>Boss Encounters System</strong> — 8 new boss mobs implemented with unique attack patterns and reward loot pools</span></div>
+      <div class="scroll-e"><span class="sg">◆</span><span class="st"><strong>Origins System</strong> — Players now choose a race at world start with unique traits affecting playstyle</span></div>
+      <div class="scroll-e"><span class="sg">◆</span><span class="st"><strong>Advanced Crafting Trees</strong> — New progression gates with multi-stage crafting recipes</span></div>
+      <div class="scroll-e"><span class="sg">◆</span><span class="st"><strong>Expanded Biome Generation</strong> — 15+ new biome types with specialized structures and loot</span></div>
+      <div class="scroll-e"><span class="sg">◆</span><span class="st"><strong>Enhanced Admin Tools</strong> — Complete rewrite of admin panel with event management and real-time statistics</span></div>
+    </div>
+  </div>
+
+  <div class="rv rv2" style="margin-bottom:44px;">
+    <div class="sh">⚖️ Balance Overhaul</div>
+    <div class="scroll">
+      <div class="scroll-e"><span class="sg">↓</span><span class="st"><strong>Combat Difficulty</strong> — Early game mob damage -15%, mid-game -10%. Late-game bosses now represent true progression gates.</span></div>
+      <div class="scroll-e"><span class="sg">↑</span><span class="st"><strong>Loot Quality</strong> — All boss drops now supply unique endgame materials for gear crafting</span></div>
+      <div class="scroll-e"><span class="sg">◆</span><span class="st"><strong>Total Mods:</strong> 62 mods  •  Forge 1.20.1</span></div>
+    </div>
+  </div>
+  </div>
+
+  <!-- VERSION 1.0.0 SECTION -->
+  <div id="content-v1.0.0" class="version-content" style="display:none;">
+  <div class="rv rv2" style="margin-bottom:44px;">
+    <div style="font-weight:700;font-size:.55rem;letter-spacing:.35em;padding:4px 18px;border:1px solid var(--blood);color:var(--blood-b);background:rgba(107,18,18,.15);text-transform:uppercase;margin-bottom:16px;display:inline-block;">🐉 v1.0.0 · September 15, 2025 (Release)</div>
+    <div class="sh">Overview</div>
+    <div class="scroll">
+      <div class="scroll-e"><span class="sg">◆</span><span class="st"><strong>v1.0.0</strong> is the inaugural release of Dragon's Horizon. A handcrafted modpack featuring 52 mods designed to provide a balanced, immersive, and challenging Minecraft 1.20.1 experience. This release focuses on core gameplay mechanics, world generation, and combat variety.</span></div>
+    </div>
+  </div>
+
+  <div class="rv rv2" style="margin-bottom:44px;">
+    <div class="sh">📦 Core Modlist (52 Mods)</div>
+    <div class="scroll">
+      <div class="scroll-e"><span class="sg">◆</span><span class="st"><strong>World Enhancement:</strong> Dynamic Trees, Biomes O' Plenty, Terrain features for diverse landscapes</span></div>
+      <div class="scroll-e"><span class="sg">◆</span><span class="st"><strong>Combat & Progression:</strong> Marius Soulslike, Reskillable, AutoLeveling skill trees</span></div>
+      <div class="scroll-e"><span class="sg">◆</span><span class="st"><strong>Quality of Life:</strong> Waystones fast-travel, Inventory improvements, JEI recipe viewer</span></div>
+      <div class="scroll-e"><span class="sg">◆</span><span class="st"><strong>Creature Diversity:</strong> Alex's Mobs, Graveyard mobs, Goblin Traders for dynamic encounters</span></div>
+      <div class="scroll-e"><span class="sg">◆</span><span class="st"><strong>Building & Decoration:</strong> Expanded block palettes and building materials</span></div>
+    </div>
+  </div>
+
+  <div class="rv rv2" style="margin-bottom:44px;">
+    <div class="sh">🎮 Initial Balance</div>
+    <div class="scroll">
+      <div class="scroll-e"><span class="sg">◆</span><span class="st"><strong>Difficulty:</strong> Balanced for experienced Minecraft players. Hostile mobs spawn at vanilla rates with additional custom mobs.</span></div>
+      <div class="scroll-e"><span class="sg">◆</span><span class="st"><strong>Progression:</strong> Skill-based progression system rewards player investment and learning curve.</span></div>
+      <div class="scroll-e"><span class="sg">◆</span><span class="st"><strong>Performance:</strong> Optimized configs for stable 60+ FPS on mid-range hardware.</span></div>
+      <div class="scroll-e"><span class="sg">◆</span><span class="st"><strong>Total Mods:</strong> 52 mods  •  Forge 1.20.1  •  Multiplayer-Ready</span></div>
+    </div>
+  </div>
   </div>
 </main>
 
@@ -168,6 +238,39 @@
 
 <script>
 document.querySelectorAll('.rv').forEach(function(el){new IntersectionObserver(function(e){e.forEach(function(x){if(x.isIntersecting)x.target.classList.add('in');});},{threshold:.08}).observe(el);});
+
+// Version switching functionality
+const versionSelect = document.getElementById('version-select');
+const versionBadge = document.getElementById('version-badge');
+const versionContents = document.querySelectorAll('.version-content');
+
+const versionInfo = {
+  'v2.0.1': { date: 'March 6, 2026', emoji: '🐉' },
+  'v2.0.0': { date: 'December 20, 2025', emoji: '🐉' },
+  'v1.0.0': { date: 'September 15, 2025', emoji: '🐉' }
+};
+
+versionSelect.addEventListener('change', function() {
+  const selectedVersion = this.value;
+  
+  // Hide all version contents
+  versionContents.forEach(content => {
+    content.style.display = 'none';
+  });
+  
+  // Show selected version content
+  const selectedContent = document.getElementById('content-' + selectedVersion);
+  if (selectedContent) {
+    selectedContent.style.display = 'block';
+  }
+  
+  // Update badge
+  const version = versionInfo[selectedVersion];
+  versionBadge.textContent = version.emoji + ' ' + selectedVersion + ' · ' + version.date;
+  
+  // Scroll to top of content
+  document.querySelector('main').scrollIntoView({ behavior: 'smooth', block: 'start' });
+});
 </script>
 </body>
 </html>
