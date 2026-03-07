@@ -307,7 +307,7 @@ body::after{
 /* INSTALL */
 .step{display:flex;gap:18px;align-items:flex-start;padding:14px 18px;background:rgba(12,8,8,.75);border-left:1px solid var(--gold-d);margin-bottom:7px;transition:background .25s,border-color .25s,transform .25s;}
 .step:hover{background:rgba(20,13,13,.95);border-left-color:var(--gold);transform:translateX(4px);}
-.step-n{font-family:var(--fc);font-size:1.2rem;color:rgba(212,168,83,.18);flex-shrink:0;line-height:1.5;}
+.step-n{font-family:var(--fc);font-size:1.2rem;color:#d4a853;flex-shrink:0;line-height:1.5;}
 .step-t{font-size:.95rem;color:var(--parch);line-height:1.6;}
 .step-t strong{color:var(--gold-l);font-weight:600;}
 code{background:rgba(212,168,83,.08);padding:1px 7px;color:var(--gold-l);font-size:.85em;}
