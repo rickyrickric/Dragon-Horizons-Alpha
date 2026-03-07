@@ -479,7 +479,7 @@
   <div id="no-upcoming-msg" style="display:none; text-align:center; padding:20px; color:#999;">No upcoming events scheduled.</div>
 </div>
 
-<section class="features">
+<section class="features" style="padding-bottom:120px;">
   <div class="feat-eyebrow">What Awaits You</div>
   <div class="feat-grid rv">
     <div class="panel bl"><div class="p-icon">⚔️</div><div class="p-title">Soulslike Combat</div><div class="p-desc">Posture, bleed buildup, and 9 hand-crafted bosses. Armor caps at 75% — no build is invincible.</div></div>
@@ -621,8 +621,8 @@ class EventCardRenderer {
     const durationText = '7-Day Event';
     
     let desc = (event.description || 'A limited-time event with exclusive rewards.').split('\n').slice(0, 2);
-    // Remove "/s" formatting (e.g., "7 Day/s" → "7-Day")
-    desc = desc.map(line => line.replace(/\b(\d+)\s+Day\/s\b/g, '$1-Day'));
+    // Remove "/s" entirely and clean up Day/s format (e.g., "7 Day/s" → "7-Day")
+    desc = desc.map(line => line.replace(/\//g, '').replace(/\b(\d+)\s+Days?\b/g, '$1-Day'));
     
     card.innerHTML = `
       <div class="event-card-header">
@@ -678,13 +678,13 @@ class EventCardRenderer {
     `;
     
     if (progressEl) {
-      const totalDuration = 7 * 86400000;
-      // Show time REMAINING (not elapsed), so bar depletes as countdown approaches
-      const progress = Math.min(100, Math.max(0, (diff / totalDuration) * 100));
+      // Event duration: assume 7 days. Show remaining time percentage only while countdown is active.
+      const totalDuration = 7 * 86400000; // 7 days in milliseconds
+      const remainingPercent = Math.min(100, Math.max(0, (diff / totalDuration) * 100));
       const fillEl = progressEl.querySelector('.event-progress-fill');
       if (fillEl) {
-        fillEl.style.width = `${progress}%`;
-        fillEl.querySelector('.event-progress-text').textContent = `${Math.round(progress)}%`;
+        fillEl.style.width = `${remainingPercent}%`;
+        fillEl.querySelector('.event-progress-text').textContent = `${Math.round(remainingPercent)}% remaining`;
       }
     }
   }
