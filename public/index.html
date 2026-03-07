@@ -394,12 +394,25 @@
 <section class="countdown-section" id="countdownSection" style="display:none;">
   <div class="countdown-bg"></div>
   <div class="countdown-wrapper">
-    <div class="countdown-label">⏱️ Upcoming Events</div>
+    <div class="countdown-label">⏱️ Events</div>
     <div class="countdown-container" id="countdownContainer">
       <!-- Events will be loaded here -->
     </div>
   </div>
 </section>
+
+<!-- Event Display Containers for EventCardRenderer -->
+<div id="ongoing-events" style="display:none;">
+  <div class="event-section-label">🔥 Ongoing Event</div>
+  <div id="ongoing-countdown"></div>
+  <div id="no-ongoing-msg" style="display:none; text-align:center; padding:20px; color:#999;">No ongoing events at this time.</div>
+</div>
+
+<div id="upcoming-events" style="display:none;">
+  <div class="event-section-label">📅 Upcoming Events</div>
+  <div id="upcoming-countdown"></div>
+  <div id="no-upcoming-msg" style="display:none; text-align:center; padding:20px; color:#999;">No upcoming events scheduled.</div>
+</div>
 
 <section class="features">
   <div class="feat-eyebrow">What Awaits You</div>
@@ -477,6 +490,10 @@ class EventCardRenderer {
       const upcoming = events.filter(e => new Date(e.event_time) > now)
         .sort((a,b) => new Date(a.event_time) - new Date(b.event_time));
       
+      // Show sections if there are events
+      if (ongoing.length > 0) document.getElementById('ongoing-events').style.display = 'block';
+      if (upcoming.length > 0) document.getElementById('upcoming-events').style.display = 'block';
+      
       this.render(ongoing, upcoming);
     } catch(err) { 
       console.error('Event load failed:', err);
@@ -489,6 +506,11 @@ class EventCardRenderer {
     const onEmpty = document.getElementById('no-ongoing-msg');
     const upEmpty = document.getElementById('no-upcoming-msg');
     
+    if (!onContainer || !upContainer) {
+      console.error('Event containers not found in DOM');
+      return;
+    }
+    
     if (ongoing.length > 0) {
       onContainer.innerHTML = '';
       ongoing.forEach(e => {
@@ -498,10 +520,10 @@ class EventCardRenderer {
         this.intervals.set(e.id, setInterval(() => this.updateTimer(e.id, e.event_time), 1000));
       });
       onContainer.style.display = 'flex';
-      onEmpty.style.display = 'none';
+      if (onEmpty) onEmpty.style.display = 'none';
     } else {
       onContainer.style.display = 'none';
-      onEmpty.style.display = 'block';
+      if (onEmpty) onEmpty.style.display = 'block';
     }
     
     if (upcoming.length > 0) {
@@ -513,10 +535,10 @@ class EventCardRenderer {
         this.intervals.set(e.id, setInterval(() => this.updateTimer(e.id, e.event_time), 1000));
       });
       upContainer.style.display = 'grid';
-      upEmpty.style.display = 'none';
+      if (upEmpty) upEmpty.style.display = 'none';
     } else {
       upContainer.style.display = 'none';
-      upEmpty.style.display = 'block';
+      if (upEmpty) upEmpty.style.display = 'block';
     }
   }
   
