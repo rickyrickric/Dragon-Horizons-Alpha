@@ -69,7 +69,7 @@
   display:inline-block;
   font-family:var(--fc);font-size:.58rem;font-weight:700;letter-spacing:.35em;
   padding:5px 22px;
-  border:1px solid var(--blood);color:var(--blood-b);
+  border:1px solid var(--blood);color:#ff6b6b;
   background:rgba(107,18,18,.15);text-transform:uppercase;
   margin-bottom:28px;
 }
@@ -302,9 +302,43 @@
   letter-spacing: 0.05em;
   margin: 20px 0;
   min-height: 60px;
-  display: flex;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
   align-items: center;
   justify-content: center;
+}
+
+.countdown-unit {
+  border: 2px solid var(--gold-d);
+  padding: 12px;
+  text-align: center;
+  background: rgba(212, 168, 83, 0.08);
+  border-radius: 4px;
+  transition: all 0.2s;
+}
+
+.countdown-unit:hover {
+  border-color: var(--gold-l);
+  background: rgba(212, 168, 83, 0.12);
+}
+
+.countdown-value {
+  font-size: 1.8em;
+  font-weight: bold;
+  color: var(--gold-l);
+  font-family: var(--fc);
+  letter-spacing: 0.05em;
+  display: block;
+  margin-bottom: 4px;
+}
+
+.countdown-label {
+  font-size: 0.65em;
+  color: var(--gold);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-family: var(--fc);
 }
 
 .countdown-card.upcoming .countdown-timer {
