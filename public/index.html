@@ -194,7 +194,7 @@
 }
 
 .event-section-label {
-  display: inline-block;
+  display: block;
   font-family: var(--fc);
   font-size: 0.65rem;
   letter-spacing: 0.15em;
@@ -206,6 +206,21 @@
   border-radius: 3px;
   color: var(--gold-l);
   font-weight: 600;
+  width: fit-content;
+}
+
+#ongoing-events,
+#upcoming-events {
+  margin-top: 32px;
+  margin-bottom: 32px;
+  width: 100%;
+}
+
+#ongoing-countdown,
+#upcoming-countdown {
+  display: grid;
+  gap: 20px;
+  min-height: 1px;
 }
 
 .countdown-card {
