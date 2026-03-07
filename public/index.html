@@ -479,7 +479,7 @@
   <div id="no-upcoming-msg" style="display:none; text-align:center; padding:20px; color:#999;">No upcoming events scheduled.</div>
 </div>
 
-<section class="features" style="padding-bottom:120px;">
+<section class="features" style="padding-bottom:180px;margin-top:-60px;">
   <div class="feat-eyebrow">What Awaits You</div>
   <div class="feat-grid rv">
     <div class="panel bl"><div class="p-icon">⚔️</div><div class="p-title">Soulslike Combat</div><div class="p-desc">Posture, bleed buildup, and 9 hand-crafted bosses. Armor caps at 75% — no build is invincible.</div></div>
@@ -678,13 +678,22 @@ class EventCardRenderer {
     `;
     
     if (progressEl) {
-      // Event duration: assume 7 days. Show remaining time percentage only while countdown is active.
-      const totalDuration = 7 * 86400000; // 7 days in milliseconds
-      const remainingPercent = Math.min(100, Math.max(0, (diff / totalDuration) * 100));
       const fillEl = progressEl.querySelector('.event-progress-fill');
-      if (fillEl) {
-        fillEl.style.width = `${remainingPercent}%`;
-        fillEl.querySelector('.event-progress-text').textContent = `${Math.round(remainingPercent)}% remaining`;
+      if (diff > 0) {
+        // Event hasn't started yet - show 0% (nearly empty, starting soon)
+        if (fillEl) {
+          fillEl.style.width = '0%';
+          fillEl.querySelector('.event-progress-text').textContent = 'Starting soon';
+        }
+      } else {
+        // Event has started - show progress from start to end date
+        const totalDuration = 7 * 86400000; // 7 days in milliseconds
+        const elapsed = -diff; // Convert negative diff to positive elapsed time
+        const progressPercent = Math.min(100, (elapsed / totalDuration) * 100);
+        if (fillEl) {
+          fillEl.style.width = `${progressPercent}%`;
+          fillEl.querySelector('.event-progress-text').textContent = `${Math.round(progressPercent)}% complete`;
+        }
       }
     }
   }
