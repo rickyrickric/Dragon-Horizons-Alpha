@@ -460,7 +460,7 @@ class EventCardRenderer {
   
   async loadEvents() {
     try {
-      const res = await fetch('/.netlify/functions/api?action=events_list');
+      const res = await fetch('/api/events');
       if (!res.ok) throw new Error('Events load failed');
       const events = await res.json();
       
