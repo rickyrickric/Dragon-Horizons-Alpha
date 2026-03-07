@@ -221,6 +221,7 @@
   display: grid;
   gap: 20px;
   min-height: 1px;
+  justify-items: center;
 }
 
 .countdown-card {
@@ -619,7 +620,9 @@ class EventCardRenderer {
     const title = event.title || typeNames[event.event_type] || 'Event';
     const durationText = '7-Day Event';
     
-    const desc = (event.description || 'A limited-time event with exclusive rewards.').split('\n').slice(0, 2);
+    let desc = (event.description || 'A limited-time event with exclusive rewards.').split('\n').slice(0, 2);
+    // Remove "/s" formatting (e.g., "7 Day/s" → "7-Day")
+    desc = desc.map(line => line.replace(/\b(\d+)\s+Day\/s\b/g, '$1-Day'));
     
     card.innerHTML = `
       <div class="event-card-header">
@@ -676,8 +679,8 @@ class EventCardRenderer {
     
     if (progressEl) {
       const totalDuration = 7 * 86400000;
-      const elapsed = totalDuration - diff;
-      const progress = Math.min(100, Math.max(0, (elapsed / totalDuration) * 100));
+      // Show time REMAINING (not elapsed), so bar depletes as countdown approaches
+      const progress = Math.min(100, Math.max(0, (diff / totalDuration) * 100));
       const fillEl = progressEl.querySelector('.event-progress-fill');
       if (fillEl) {
         fillEl.style.width = `${progress}%`;

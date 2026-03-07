@@ -321,7 +321,7 @@ footer{position:relative;z-index:1;text-align:center;padding:48px 28px 30px;bord
 
 /* ─ EVENT CARD REDESIGN ─ */
 .event-card-redesign {background:rgba(12,8,8,.95);border:2px solid #E94560;border-radius:8px;padding:32px;margin-bottom:20px;max-width:900px;margin-left:auto;margin-right:auto;display:flex;flex-direction:column;}
-.event-card-header {display:grid;grid-template-columns:1fr auto;gap:20px;align-items:start;margin-bottom:28px;padding-bottom:15px;border-bottom:1px solid rgba(233,69,96,.3);}
+.event-card-header {display:grid;grid-template-columns:1fr auto;gap:20px;align-items:start;margin-bottom:28px;padding-bottom:0;border-bottom:none;}
 .event-title {font-family:var(--fc);font-size:1.8em;color:#FFD700;margin:0;font-weight:700;text-align:center;}
 .event-duration-badge {background:rgba(212,168,83,.15);border:1px solid #d4a853;color:#FFD700;padding:8px 16px;border-radius:4px;font-family:var(--fc);font-size:.9em;font-weight:600;text-align:center;white-space:nowrap;}
 .event-countdown-label {color:#FFD700;font-family:var(--fc);font-size:.9em;font-weight:600;letter-spacing:.1em;margin-bottom:16px;text-transform:uppercase;display:flex;align-items:center;gap:8px;justify-content:center;}
@@ -334,7 +334,7 @@ footer{position:relative;z-index:1;text-align:center;padding:48px 28px 30px;bord
 .progress-label-end {font-family:var(--fc);font-size:.7em;color:#c8b898;text-transform:uppercase;letter-spacing:.05em;white-space:nowrap;}
 .event-progress-bar .event-progress-fill {flex:1;background:linear-gradient(90deg,#E94560,#FFD700);height:10px;border-radius:4px;border:1px solid rgba(233,69,96,.3);transition:width .3s ease;display:flex;align-items:center;justify-content:flex-end;padding-right:6px;}
 .event-progress-text {font-family:var(--fc);font-size:.65em;color:#FFD700;font-weight:600;}
-.event-description {color:#c8b898;line-height:1.6;margin-bottom:24px;font-size:1em;}
+.event-description {color:#FFD700;line-height:1.6;margin-bottom:24px;font-size:1.15em;font-weight:500;}
 .event-description-line {margin-bottom:8px;}
 .event-actions {display:flex;gap:12px;justify-content:center;}
 .event-btn-primary {background:linear-gradient(135deg,#E94560,#d4345a);color:white;padding:12px 24px;border:none;border-radius:4px;font-family:var(--fc);font-size:.95em;font-weight:600;cursor:pointer;transition:all .3s ease;display:flex;align-items:center;gap:8px;}
