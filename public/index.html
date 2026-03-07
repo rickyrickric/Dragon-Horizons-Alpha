@@ -460,22 +460,21 @@ class EventCardRenderer {
   
   async loadEvents() {
     try {
-      const res = await fetch('/api/events');
+      const res = await fetch('/.netlify/functions/api?action=events_list');
       if (!res.ok) throw new Error('Events load failed');
-      const data = await res.json();
-      const events = data.events || [];
+      const events = await res.json();
       
-      if (events.length === 0) {
+      if (!events || events.length === 0) {
         document.getElementById('ongoing-events').style.display = 'none';
         document.getElementById('upcoming-events').style.display = 'none';
         return;
       }
       
       const now = new Date();
-      const ongoing = events.filter(e => new Date(e.event_time) <= now)
-        .sort((a,b) => new Date(b.event_time) - new Date(a.event_time));
-      const upcoming = events.filter(e => new Date(e.event_time) > now)
-        .sort((a,b) => new Date(a.event_time) - new Date(b.event_time));
+      const ongoing = events.filter(e => new Date(e.date) <= now)
+        .sort((a,b) => new Date(b.date) - new Date(a.date));
+      const upcoming = events.filter(e => new Date(e.date) > now)
+        .sort((a,b) => new Date(a.date) - new Date(b.date));
         
       this.render(ongoing, upcoming);
     } catch(err) { console.error('Event load failed:', err); }
@@ -492,8 +491,8 @@ class EventCardRenderer {
       ongoing.forEach(e => {
         const card = this.createCard(e);
         onContainer.appendChild(card);
-        this.updateTimer(e.id, e.event_time);
-        this.intervals.set(e.id, setInterval(() => this.updateTimer(e.id, e.event_time), 1000));
+        this.updateTimer(e.id, e.date);
+        this.intervals.set(e.id, setInterval(() => this.updateTimer(e.id, e.date), 1000));
       });
       onContainer.style.display = 'flex';
       onEmpty.style.display = 'none';
@@ -507,8 +506,8 @@ class EventCardRenderer {
       upcoming.forEach(e => {
         const card = this.createCard(e);
         upContainer.appendChild(card);
-        this.updateTimer(e.id, e.event_time);
-        this.intervals.set(e.id, setInterval(() => this.updateTimer(e.id, e.event_time), 1000));
+        this.updateTimer(e.id, e.date);
+        this.intervals.set(e.id, setInterval(() => this.updateTimer(e.id, e.date), 1000));
       });
       upContainer.style.display = 'grid';
       upEmpty.style.display = 'none';
@@ -523,8 +522,7 @@ class EventCardRenderer {
     card.className = 'event-card-redesign';
     card.id = 'event-' + event.id;
     
-    const typeNames = {'patch':'Patch & Fixes','world_reset':'World Reset','mystery':'Mystery Event'};
-    const title = event.title || typeNames[event.event_type] || 'Event';
+    const title = event.name || 'Event';
     const durationText = '7-Day Event';
     
     const desc = (event.description || 'Limited-time event with exclusive rewards.').split('\n').slice(0, 2);
