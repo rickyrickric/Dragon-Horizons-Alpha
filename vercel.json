@@ -17,12 +17,12 @@
   "redirects": [
     {
       "source": "/",
-      "destination": "/index.html",
+      "destination": "/home.html",
       "permanent": false
     },
     {
       "source": "/home",
-      "destination": "/index.html",
+      "destination": "/home.html",
       "permanent": true
     },
     {
