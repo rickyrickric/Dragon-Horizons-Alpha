@@ -331,27 +331,28 @@
 
 .countdown-timer {
   font-family: var(--fc);
-  font-size: clamp(2rem, 6vw, 3.5rem);
+  font-size: clamp(1.2rem, 4vw, 3rem);
   font-weight: bold;
   color: var(--gold-l);
   text-shadow: 0 0 20px rgba(212, 168, 83, 0.4);
   letter-spacing: 0.05em;
-  margin: 20px 0;
-  min-height: 60px;
+  margin: 16px 0;
+  min-height: auto;
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 12px;
+  gap: 8px;
   align-items: center;
   justify-content: center;
 }
 
 .countdown-unit {
   border: 2px solid var(--gold-d);
-  padding: 12px;
+  padding: 8px 6px;
   text-align: center;
   background: rgba(212, 168, 83, 0.08);
   border-radius: 4px;
   transition: all 0.2s;
+  min-height: 100px;
 }
 
 .countdown-unit:hover {
@@ -440,10 +441,10 @@
 
 .event-row-button {
   flex: 0 0 120px;
-  background: linear-gradient(135deg,#E94560,#d4345a);
-  color: white;
+  background: transparent;
+  color: #C8A84B;
   padding: 8px 16px;
-  border: none;
+  border: 1px solid #C8A84B;
   border-radius: 4px;
   font-family: var(--fc);
   font-size: 0.9em;
@@ -454,8 +455,10 @@
 }
 
 .event-row-button:hover {
-  background: linear-gradient(135deg,#FF6B7A,#E94560);
-  box-shadow: 0 0 15px rgba(233,69,96,.3);
+  background: rgba(200, 168, 75, 0.15);
+  border-color: #FFB85C;
+  color: #FFB85C;
+  box-shadow: 0 0 15px rgba(200,168,75,.3);
   transform: translateY(-1px);
 }
 
@@ -496,9 +499,10 @@
   z-index: 2001;
   max-height: 85vh;
   overflow-y: auto;
-  max-width: 900px;
+  max-width: 520px;
   width: 100%;
   margin: auto;
+  padding: 24px;
 }
 
 @media (max-width: 640px) {
@@ -792,14 +796,14 @@ class EventCardRenderer {
     let desc = (event.description || 'A limited-time event with exclusive rewards.').split('\n').slice(0, 2);
     desc = desc.map(line => line.replace(/\//g, '').replace(/\b(\d+)\s+Days?\b/g, '$1-Day'));
     
-    // Calculate progress percentage
+    // Calculate progress percentage (inverted: 100% at start, depletes to 0%)
     const now = new Date();
     const eventStart = new Date(event.event_time);
     const durationMs = this.parseDurationToMs(event.duration || '7-Day');
     const eventEnd = new Date(eventStart.getTime() + durationMs);
     const totalDuration = eventEnd - eventStart;
     const elapsed = Math.max(0, now - eventStart);
-    const progress = Math.min(100, (elapsed / totalDuration) * 100);
+    const progress = Math.max(0, 100 - (elapsed / totalDuration) * 100);
     
     const patchNotesLink = event.event_type === 'mystery' ? `<div class="event-patch-link"><a href="patchnotes.html" target="_blank">View full details in Patch Notes →</a></div>` : '';
     
