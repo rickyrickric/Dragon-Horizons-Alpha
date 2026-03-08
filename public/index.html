@@ -468,19 +468,27 @@
   bottom: 0;
   z-index: 2000;
   display: none;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  background: rgba(0, 0, 0, 0.75);
-  backdrop-filter: blur(2px);
+  background: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(3px);
+  overflow-y: auto;
+  padding: 40px 20px;
+}
+
+#event-detail-modal.show {
+  display: flex;
 }
 
 .modal-backdrop {
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
   cursor: pointer;
+  z-index: 1999;
 }
 
 .modal-container {
@@ -489,7 +497,8 @@
   max-height: 85vh;
   overflow-y: auto;
   max-width: 900px;
-  width: 90%;
+  width: 100%;
+  margin: auto;
 }
 
 @media (max-width: 640px) {
@@ -783,6 +792,17 @@ class EventCardRenderer {
     let desc = (event.description || 'A limited-time event with exclusive rewards.').split('\n').slice(0, 2);
     desc = desc.map(line => line.replace(/\//g, '').replace(/\b(\d+)\s+Days?\b/g, '$1-Day'));
     
+    // Calculate progress percentage
+    const now = new Date();
+    const eventStart = new Date(event.event_time);
+    const durationMs = this.parseDurationToMs(event.duration || '7-Day');
+    const eventEnd = new Date(eventStart.getTime() + durationMs);
+    const totalDuration = eventEnd - eventStart;
+    const elapsed = Math.max(0, now - eventStart);
+    const progress = Math.min(100, (elapsed / totalDuration) * 100);
+    
+    const patchNotesLink = event.event_type === 'mystery' ? `<div class="event-patch-link"><a href="patchnotes.html" target="_blank">View full details in Patch Notes →</a></div>` : '';
+    
     card.innerHTML = `
       <div class="event-card-header">
         <h2 class="event-title">${this.escape(title)}</h2>
@@ -795,15 +815,35 @@ class EventCardRenderer {
         <div class="countdown-unit"><div class="countdown-value">--</div><div class="countdown-label">Minutes</div></div>
         <div class="countdown-unit"><div class="countdown-value">--</div><div class="countdown-label">Seconds</div></div>
       </div>
+      <div class="event-progress-bar">
+        <span class="progress-label-start">Start</span>
+        <div class="event-progress-fill" style="width: ${progress}%"></div>
+        <span class="progress-label-end">End</span>
+      </div>
       <div class="event-description">
         ${desc.map(line => `<div class="event-description-line">${this.escape(line)}</div>`).join('')}
       </div>
+      ${patchNotesLink}
       <div class="event-actions">
         <button class="event-btn-primary" onclick="eventRenderer.setReminder('${event.id}')">📌 Set Reminder</button>
         <button class="event-btn-secondary" onclick="eventRenderer.closeModal()">Close</button>
       </div>
     `;
     return card;
+  }
+  
+  parseDurationToMs(duration) {
+    const match = duration.match(/(\d+)\s*-?(hour|day|week)/i);
+    if (!match) return 7 * 24 * 60 * 60 * 1000; // Default to 7 days
+    
+    const amount = parseInt(match[1]);
+    const unit = match[2].toLowerCase();
+    
+    if (unit.startsWith('h')) return amount * 60 * 60 * 1000;
+    if (unit.startsWith('d')) return amount * 24 * 60 * 60 * 1000;
+    if (unit.startsWith('w')) return amount * 7 * 24 * 60 * 60 * 1000;
+    
+    return 7 * 24 * 60 * 60 * 1000;
   }
   
   updateTimer(eventId, eventTime) {
@@ -859,13 +899,13 @@ class EventCardRenderer {
     this.updateTimer(eventId, event.event_time);
     
     // Show modal
-    modal.style.display = 'flex';
+    modal.classList.add('show');
     document.body.style.overflow = 'hidden';
   }
   
   closeModal() {
     const modal = document.getElementById('event-detail-modal');
-    modal.style.display = 'none';
+    modal.classList.remove('show');
     document.body.style.overflow = 'auto';
   }
   
