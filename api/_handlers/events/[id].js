@@ -16,7 +16,7 @@ export default async function handler(req, res) {
       if (!id) return notFound(res);
       const result = await eventService.getEventById(id);
       if (!result.success) return notFound(res);
-      return ok(res, { event: result.data });
+      return ok(res, { data: result.data });
     }
 
     if (req.method === 'PATCH') {
