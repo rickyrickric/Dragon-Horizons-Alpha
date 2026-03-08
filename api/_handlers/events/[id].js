@@ -24,8 +24,13 @@ export default async function handler(req, res) {
       if (!auth.ok) return denied(res);
 
       const body = parseBody(req);
+      console.log('📝 PATCH /api/events/[id] received:', { id, body });
+      
       const result = await eventService.updateEvent(id, body);
-      if (!result.success) return fail(res, result.error, 400);
+      if (!result.success) {
+        console.error('❌ Update failed:', { id, error: result.error });
+        return fail(res, result.error, 400);
+      }
       return ok(res, { message: 'Event updated', event: result.data });
     }
 
