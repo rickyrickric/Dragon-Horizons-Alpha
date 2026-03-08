@@ -1,0 +1,1059 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dragon Horizons</title>
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="icon" type="image/png" href="/favicon.png">
+<link rel="stylesheet" href="style.css">
+<style>
+.hero{
+  min-height:100vh;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  text-align:center;padding:80px 36px 80px;
+  position:relative;z-index:1;
+}
+
+/* Big diagonal rule */
+.hero::before{
+  content:'';
+  position:absolute;top:0;left:0;right:0;bottom:0;
+  background:
+    repeating-linear-gradient(
+      -45deg,
+      rgba(212,168,83,.012) 0px,
+      rgba(212,168,83,.012) 1px,
+      transparent 1px,
+      transparent 60px
+    );
+  pointer-events:none;
+}
+
+.hero-glyph{
+  font-family:var(--fc);font-size:.6rem;letter-spacing:.6em;text-transform:uppercase;
+  color:var(--ember);margin-bottom:24px;
+  display:flex;align-items:center;gap:20px;justify-content:center;
+}
+.hero-glyph::before,.hero-glyph::after{content:'';width:50px;height:1px;background:linear-gradient(90deg,transparent,var(--ember));}
+.hero-glyph::after{background:linear-gradient(90deg,var(--ember),transparent);}
+
+.hero-dragon{
+  font-size:7rem;line-height:1;margin-bottom:24px;
+  animation:breathe 4s ease-in-out infinite;
+}
+@keyframes breathe{
+  0%,100%{filter:drop-shadow(0 0 24px rgba(212,168,83,.8)) drop-shadow(0 0 48px rgba(168,32,32,.5));}
+  50%    {filter:drop-shadow(0 0 40px rgba(212,168,83,1))   drop-shadow(0 0 80px rgba(200,88,26,.8));}
+}
+
+.hero-eyebrow{
+  font-family:var(--fc);font-size:.6rem;letter-spacing:.5em;text-transform:uppercase;
+  color:var(--parch);margin-bottom:10px;
+}
+
+.hero-title{
+  font-family:var(--fc);font-weight:900;
+  font-size:clamp(3rem,8vw,7rem);
+  color:var(--gold-l);
+  letter-spacing:.06em;
+  line-height:.95;
+  text-shadow:
+    0 0 40px rgba(212,168,83,.5),
+    0 0 100px rgba(212,168,83,.2),
+    4px 4px 0 rgba(0,0,0,.8);
+  margin-bottom:18px;
+}
+
+.hero-ver{
+  display:inline-block;
+  font-family:var(--fc);font-size:.58rem;font-weight:700;letter-spacing:.35em;
+  padding:5px 22px;
+  border:1px solid var(--blood);color:#ff6b6b;
+  background:rgba(107,18,18,.15);text-transform:uppercase;
+  margin-bottom:28px;
+}
+
+.hero-tag{
+  font-family:var(--fi);font-size:1.15rem;font-style:italic;
+  color:var(--parch);max-width:520px;margin:0 auto 40px;
+  line-height:1.75;
+}
+
+.hero-btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-bottom:48px;}
+
+/* SERVER BLOCK */
+.srv-wrap{
+  display:flex;flex-direction:column;align-items:center;gap:10px;
+}
+.srv-eyebrow{
+  font-family:var(--fc);font-size:.52rem;letter-spacing:.45em;text-transform:uppercase;
+  color:var(--parch);
+}
+.srv-badge{
+  display:inline-flex;align-items:center;gap:14px;flex-wrap:wrap;justify-content:center;
+  padding:16px 26px;
+  background:rgba(10,6,6,.94);
+  border:1px solid rgba(212,168,83,.2);
+  position:relative;
+}
+.srv-badge::before,.srv-badge::after{content:'';position:absolute;width:10px;height:10px;}
+.srv-badge::before{top:-1px;left:-1px;border-top:1px solid var(--gold);border-left:1px solid var(--gold);}
+.srv-badge::after{bottom:-1px;right:-1px;border-bottom:1px solid var(--gold);border-right:1px solid var(--gold);}
+.srv-pip{width:9px;height:9px;border-radius:50%;background:#5aaa6a;box-shadow:0 0 10px #5aaa6a;animation:pip 2s ease-in-out infinite;flex-shrink:0;}
+@keyframes pip{0%,100%{opacity:1;box-shadow:0 0 10px #5aaa6a}50%{opacity:.3;box-shadow:0 0 3px #5aaa6a}}
+.srv-info{text-align:left;}
+.srv-lbl{font-family:var(--fc);font-size:.5rem;letter-spacing:.3em;text-transform:uppercase;color:var(--parch);}
+.srv-addr{font-family:var(--fi);font-size:1.15rem;color:var(--gold-l);letter-spacing:.02em;}
+.srv-cpbtn{
+  font-family:var(--fc);font-size:.52rem;letter-spacing:.2em;text-transform:uppercase;
+  padding:7px 14px;border:1px solid rgba(212,168,83,.22);
+  color:var(--gold);background:transparent;cursor:pointer;
+  transition:background .2s,color .2s;
+}
+.srv-cpbtn:hover{background:rgba(212,168,83,.1);color:var(--gold-l);}
+.srv-cpbtn.ok{border-color:#3a7a4a;color:#5aaa6a;}
+.srv-note{font-family:var(--fc);font-size:.75rem;letter-spacing:.15em;text-transform:uppercase;color:#f59e0b;font-weight:600;margin-top:8px;}
+
+.hero-rule{width:min(500px,80%);height:1px;background:linear-gradient(90deg,transparent,var(--gold-d),transparent);margin:60px auto 0;}
+
+/* FEATURES */
+.features{position:relative;z-index:1;max-width:1040px;margin:0 auto;padding:16px 36px 100px;}
+.feat-eyebrow{
+  font-family:var(--fc);font-size:.58rem;letter-spacing:.45em;text-transform:uppercase;
+  color:var(--parch);text-align:center;margin-bottom:36px;
+  display:flex;align-items:center;gap:16px;
+}
+.feat-eyebrow::before,.feat-eyebrow::after{content:'';flex:1;height:1px;background:rgba(212,168,83,.1);}
+.feat-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:12px;}
+
+/* ═══════════════════════════════════════════════════
+   COUNTDOWN TIMER SECTION
+═══════════════════════════════════════════════════ */
+.countdown-section {
+  position: relative;
+  background: linear-gradient(135deg, rgba(212,168,83,0.08) 0%, rgba(200,88,26,0.06) 100%);
+  border-top: 2px solid rgba(212,168,83,0.2);
+  border-bottom: 2px solid rgba(212,168,83,0.2);
+  padding: 60px 36px;
+  overflow: hidden;
+}
+
+.countdown-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background:
+    repeating-linear-gradient(
+      -45deg,
+      rgba(212,168,83,.01) 0px,
+      rgba(212,168,83,.01) 1px,
+      transparent 1px,
+      transparent 60px
+    );
+  pointer-events: none;
+}
+
+.countdown-wrapper {
+  position: relative;
+  z-index: 1;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.countdown-label {
+  font-family:var(--fc);
+  font-size: 0.58rem;
+  letter-spacing: 0.45em;
+  text-transform: uppercase;
+  color: var(--ember);
+  margin-bottom: 24px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  justify-content: center;
+  border-bottom: 1px solid rgba(200, 88, 26, 0.3);
+  padding-bottom: 16px;
+}
+
+.countdown-container {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+.event-section-ongoing {
+  margin-bottom: 12px;
+}
+
+.event-section-upcoming {
+  margin-top: 12px;
+}
+
+.event-section-label {
+  display: inline-block;
+  font-family: var(--fc);
+  font-size: 0.65rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  padding: 8px 16px;
+  margin-bottom: 12px;
+  background: rgba(212, 168, 83, 0.1);
+  border: 1px solid var(--gold-d);
+  border-radius: 3px;
+  color: var(--gold-l);
+  font-weight: 600;
+}
+
+#ongoing-events,
+#upcoming-events {
+  margin-top: 8px;
+  margin-bottom: 8px;
+  width: 100%;
+  max-width: 900px;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 0 20px;
+  text-align: center;
+}
+
+#ongoing-countdown,
+#upcoming-countdown {
+  display: grid;
+  gap: 8px;
+  min-height: 1px;
+  justify-items: center;
+  width: 100%;
+}
+
+.countdown-card {
+  background: rgba(10, 6, 6, 0.7);
+  border: 1px solid rgba(212, 168, 83, 0.3);
+  padding: 32px 40px;
+  position: relative;
+}
+
+.countdown-card.ongoing {
+  background: rgba(10, 6, 6, 0.95);
+  border: 2px solid var(--gold);
+  padding: 40px 48px;
+  box-shadow: 0 0 30px rgba(212, 168, 83, 0.2);
+  max-width: 800px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.countdown-card.ongoing::before,
+.countdown-card.ongoing::after {
+  content: '';
+  position: absolute;
+  width: 14px;
+  height: 14px;
+}
+
+.countdown-card.ongoing::before {
+  top: -2px;
+  left: -2px;
+  border-top: 2px solid var(--gold);
+  border-left: 2px solid var(--gold);
+}
+
+.countdown-card.ongoing::after {
+  bottom: -2px;
+  right: -2px;
+  border-bottom: 2px solid var(--gold);
+  border-right: 2px solid var(--gold);
+}
+
+.countdown-card.ongoing:hover {
+  box-shadow: 0 0 40px rgba(212, 168, 83, 0.3);
+  border-color: var(--gold-l);
+}
+
+.countdown-card.upcoming {
+  max-width: 400px;
+  padding: 20px 28px;
+  background: rgba(12, 8, 8, 0.6);
+  border: 1px solid rgba(212, 168, 83, 0.2);
+}
+
+.countdown-card.upcoming::before,
+.countdown-card.upcoming::after {
+  display: none;
+}
+
+.countdown-card.upcoming:hover {
+  border-color: var(--gold-d);
+  background: rgba(12, 8, 8, 0.8);
+}
+
+.upcoming-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 16px;
+  max-width: 800px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.event-type-badge {
+  display: inline-block;
+  padding: 8px 16px;
+  font-family: var(--fc);
+  font-size: 0.48rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  border-radius: 2px;
+  margin-bottom: 16px;
+  font-weight: bold;
+}
+
+.event-type-badge.patch {
+  background: rgba(212, 168, 83, 0.2);
+  color: var(--gold-l);
+  border: 1px solid var(--gold-d);
+}
+
+.event-type-badge.world_reset {
+  background: rgba(90, 170, 106, 0.2);
+  color: #5aaa6a;
+  border: 1px solid #5aaa6a;
+}
+
+.event-type-badge.mystery {
+  background: rgba(167, 110, 155, 0.2);
+  color: #a76e9b;
+  border: 1px solid #a76e9b;
+}
+
+.countdown-timer {
+  font-family: var(--fc);
+  font-size: clamp(1.2rem, 4vw, 3rem);
+  font-weight: bold;
+  color: var(--gold-l);
+  text-shadow: 0 0 20px rgba(212, 168, 83, 0.4);
+  letter-spacing: 0.05em;
+  margin: 16px 0;
+  min-height: auto;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 4px;
+  align-items: center;
+  justify-content: center;
+}
+
+.countdown-unit {
+  border: 2px solid var(--gold-d);
+  padding: 6px;
+  text-align: center;
+  background: rgba(212, 168, 83, 0.08);
+  border-radius: 4px;
+  transition: all 0.2s;
+  min-height: 100px;
+  min-width: 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+}
+
+.countdown-unit:hover {
+  border-color: var(--gold-l);
+  background: rgba(212, 168, 83, 0.12);
+}
+
+.countdown-value {
+  font-size: clamp(16px, 5vw, 36px);
+  font-weight: bold;
+  color: var(--gold-l);
+  font-family: var(--fc);
+  letter-spacing: 0.05em;
+  display: block;
+  margin: 0;
+  line-height: 1;
+}
+
+.countdown-label {
+  font-size: clamp(8px, 1.5vw, 12px);
+  color: var(--gold);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-family: var(--fc);
+  margin: 0;
+  line-height: 1.1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 100%;
+}
+
+.countdown-card.upcoming .countdown-timer {
+  font-size: clamp(1.2rem, 4vw, 1.8rem);
+  min-height: 40px;
+}
+
+.event-desc {
+  font-family: var(--fi);
+  font-size: 1rem;
+  color: var(--parch);
+  line-height: 1.6;
+  margin-top: 16px;
+}
+
+.countdown-card.upcoming .event-desc {
+  font-size: 0.85rem;
+  margin-top: 8px;
+}
+
+/* COMPACT EVENT ROW LIST */
+.event-row-compact {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 14px 20px;
+  background: rgba(12,8,8,.6);
+  border: 1px solid rgba(233,69,96,.2);
+  border-radius: 6px;
+  margin-bottom: 8px;
+}
+
+.event-row-name {
+  flex: 0 0 180px;
+  font-family: var(--fc);
+  font-size: 0.95em;
+  font-weight: 600;
+  color: #FFD700;
+  white-space: nowrap;
+}
+
+.event-row-countdown {
+  flex: 1;
+  font-family: var(--fc);
+  font-size: 0.85em;
+  color: #c8b898;
+  letter-spacing: 0.05em;
+  text-align: center;
+}
+
+.event-row-duration {
+  flex: 0 0 70px;
+  background: rgba(212,168,83,.15);
+  border: 1px solid #d4a853;
+  color: #FFD700;
+  padding: 6px 12px;
+  border-radius: 4px;
+  font-family: var(--fc);
+  font-size: 0.8em;
+  font-weight: 600;
+  text-align: center;
+}
+
+.event-row-button {
+  flex: 0 0 120px;
+  background: transparent;
+  color: #C8A84B;
+  padding: 8px 16px;
+  border: 1px solid #C8A84B;
+  border-radius: 4px;
+  font-family: var(--fc);
+  font-size: 0.9em;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all .3s ease;
+  white-space: nowrap;
+}
+
+.event-row-button:hover {
+  background: rgba(200, 168, 75, 0.15);
+  border-color: #FFB85C;
+  color: #FFB85C;
+  box-shadow: 0 0 15px rgba(200,168,75,.3);
+  transform: translateY(-1px);
+}
+
+/* EVENT DETAIL MODAL */
+#event-detail-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 2000;
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(3px);
+  overflow-y: auto;
+  padding: 40px 20px;
+}
+
+#event-detail-modal.show {
+  display: flex;
+}
+
+.modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  cursor: pointer;
+  z-index: 1999;
+}
+
+.modal-container {
+  position: relative;
+  z-index: 2001;
+  max-height: 85vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+  max-width: min(520px, 90vw);
+  width: 100%;
+  margin: auto;
+  padding: 24px;
+  box-sizing: border-box;
+}
+
+@media (max-width: 640px) {
+  .countdown-section {
+    padding: 40px 24px;
+  }
+  
+  .countdown-card {
+    padding: 24px 20px;
+  }
+  
+  .countdown-timer {
+    font-size: 2rem;
+  }
+  
+  .event-desc {
+    font-size: 0.95rem;
+  }
+  
+  .event-row-compact {
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  
+  .event-row-name {
+    flex: 0 0 100%;
+  }
+  
+  .event-row-countdown {
+    flex: 1 1 auto;
+    min-width: 120px;
+  }
+  
+  .event-row-duration {
+    flex: 0 0 auto;
+  }
+  
+  .event-row-button {
+    flex: 0 0 100%;
+  }
+}
+</style>
+</head>
+<body>
+
+  <a class="skip-link" href="#main">Skip to main content</a>
+
+<nav class="sitenav" aria-label="Main navigation">
+  <a href="home" class="active">Home</a>
+  <a href="about">About</a>
+  <a href="mods">Mod List</a>
+  <a href="patchnotes">Patch Notes</a>
+  <a href="apply">Apply</a>
+  <a href="download" class="nav-dl">⬇ Download</a>
+</nav>
+
+<main id="main">
+<section class="hero">
+  <div class="hero-glyph">v2.0.1</div>
+  <div class="hero-dragon">🐉</div>
+  <div class="hero-eyebrow">Reckt's</div>
+  <h1 class="hero-title">Dragon<br>Horizons</h1>
+  <div class="hero-ver">Forge 1.20.1 · Server Modpack</div>
+  <p class="hero-tag">A Soulslike survival experience where every horizon hides a dragon, every mob scales to your strength, and every death is a lesson carved in flame.</p>
+
+  <div class="hero-btns">
+    <a href="download" class="btn"><span class="btn-t">⬇ Download Mods</span></a>
+    <a href="patchnotes" class="btn"><span class="btn-t">📜 Patch Notes</span></a>
+    <a href="about" class="btn"><span class="btn-t">About</span></a>
+  </div>
+
+  <div class="srv-wrap">
+    <div class="srv-eyebrow">Connect to the Server</div>
+    <div class="srv-badge">
+      <div class="srv-pip"></div>
+      <div class="srv-info">
+        <div class="srv-lbl">Server Address</div>
+        <div class="srv-addr" id="saddr">recktsdragonhorizon.aternos.me:20126</div>
+      </div>
+      <button class="srv-cpbtn" id="cpbtn" onclick="cp()">Copy</button>
+    </div>
+    <div class="srv-note">Aternos · Turn on server before joining</div>
+  </div>
+
+  <div class="hero-rule"></div>
+</section>
+
+<!-- ═════════════════════════════════════════════════════
+     UPCOMING EVENTS COUNTDOWN TIMER
+═════════════════════════════════════════════════════ -->
+<section class="countdown-section" id="countdownSection" style="display:none;">
+  <div class="countdown-bg"></div>
+  <div class="countdown-wrapper">
+    <div class="countdown-label">⏱️ Events</div>
+    <div class="countdown-container" id="countdownContainer">
+      <!-- Events will be loaded here -->
+    </div>
+  </div>
+</section>
+
+<!-- Event Display Containers for EventCardRenderer -->
+<div id="ongoing-events" style="display:none;">
+  <div class="event-section-label">🔥 Ongoing Event</div>
+  <div id="ongoing-countdown"></div>
+  <div id="no-ongoing-msg" style="display:none; text-align:center; padding:20px; color:#999;">No ongoing events at this time.</div>
+</div>
+
+<div id="upcoming-events" style="display:none;">
+  <div class="event-section-label">📅 Upcoming Events</div>
+  <div id="upcoming-countdown"></div>
+  <div id="no-upcoming-msg" style="display:none; text-align:center; padding:20px; color:#999;">No upcoming events scheduled.</div>
+</div>
+
+<section class="features" style="padding-top:60px;padding-bottom:180px;margin-top:0;">
+  <div class="feat-eyebrow">What Awaits You</div>
+  <div class="feat-grid rv">
+    <div class="panel bl"><div class="p-icon">⚔️</div><div class="p-title">Soulslike Combat</div><div class="p-desc">Posture, bleed buildup, and 9 hand-crafted bosses. Armor caps at 75% — no build is invincible.</div></div>
+    <div class="panel ru"><div class="p-icon">📈</div><div class="p-title">Dynamic Difficulty</div><div class="p-desc">AutoLeveling scales mobs by distance from spawn. A zombie at base is manageable. 3000 blocks out, it's a threat.</div></div>
+    <div class="panel"><div class="p-icon">🧠</div><div class="p-title">Skill Gating</div><div class="p-desc">8 disciplines gate all gear. Diamond armor isn't worn on day one — it's earned kill by kill.</div></div>
+    <div class="panel bl"><div class="p-icon">🐉</div><div class="p-title">Dragon World</div><div class="p-desc">Ice and Fire, Alex's Mobs, and Alex's Caves fill every biome with things that hunt you before you find them.</div></div>
+    <div class="panel gd"><div class="p-icon">💀</div><div class="p-title">Permanent Progression</div><div class="p-desc">The Player Skill Tree turns kills into permanent power. Every boss you fell makes you permanently stronger.</div></div>
+    <div class="panel ru"><div class="p-icon">🗡️</div><div class="p-title">Arsenal of Steel</div><div class="p-desc">Spartan Weaponry and Marius Soulslike provide a full arsenal. Legendaries wait in boss loot only.</div></div>
+  </div>
+</section>
+
+<!-- EVENT DETAIL MODAL -->
+<div id="event-detail-modal">
+  <div class="modal-backdrop" onclick="eventRenderer.closeModal()"></div>
+  <div class="modal-container">
+    <div id="event-detail-content"></div>
+  </div>
+</div>
+
+</main>
+
+<footer>
+  <div class="ft-g">⚜</div>
+  <div class="ft-t">Reckt's Dragon Horizons — v2.0.1</div>
+  <div class="ft-l">Built for those who seek the horizon beyond the flame.</div>
+  <div class="ft-cr">Created by Ric Angelo Galo · With the help of Claude</div>
+</footer>
+
+<script>
+let serverAddr = 'recktsdragonhorizon.aternos.me:20126';
+
+function cp(){
+  navigator.clipboard.writeText(serverAddr);
+  var b=document.getElementById('cpbtn');
+  b.textContent='Copied!';b.classList.add('ok');
+  setTimeout(function(){b.textContent='Copy';b.classList.remove('ok');},2200);
+}
+
+async function loadPublicConfig(){
+  try{
+    const res = await fetch('/api/config');
+    if (!res.ok) throw new Error('Config load failed');
+    const data = await res.json();
+    const c = data.config || {};
+    if (c.server_address && c.server_address.trim()) {
+      serverAddr = `${c.server_address.trim()}${c.server_port ? ':'+c.server_port.trim() : ''}`;
+      const el = document.getElementById('saddr');
+      if (el) el.textContent = serverAddr;
+    }
+  }catch(e){ 
+    console.warn('Failed to load public config:', e.message);
+    // Keep fallback address if config load fails
+  }
+}
+
+document.querySelectorAll('.rv').forEach(function(el){
+  new IntersectionObserver(function(e){e.forEach(function(x){if(x.isIntersecting)x.target.classList.add('in');});},{threshold:.08}).observe(el);
+});
+
+loadPublicConfig();
+
+// ── Enhanced Event Card Renderer ────────────────────────────────
+class EventCardRenderer {
+  constructor() { 
+    this.intervals = new Map();
+    this.events = new Map(); // Store event data for detail view
+  }
+  
+  async loadEvents() {
+    try {
+      const res = await fetch('/api/events');
+      if (!res.ok) throw new Error('Events load failed');
+      const data = await res.json();
+      const events = data.events || [];
+      
+      if (!events || events.length === 0) {
+        document.getElementById('ongoing-events').style.display = 'none';
+        document.getElementById('upcoming-events').style.display = 'none';
+        return;
+      }
+
+      const now = new Date();
+      const ongoing = events.filter(e => new Date(e.event_time) <= now)
+        .sort((a,b) => new Date(b.event_time) - new Date(a.event_time));
+      const upcoming = events.filter(e => new Date(e.event_time) > now)
+        .sort((a,b) => new Date(a.event_time) - new Date(b.event_time));
+      
+      // Store events for detail modal
+      [...ongoing, ...upcoming].forEach(e => this.events.set(e.id, e));
+      
+      // Show sections if there are events
+      if (ongoing.length > 0) document.getElementById('ongoing-events').style.display = 'block';
+      if (upcoming.length > 0) document.getElementById('upcoming-events').style.display = 'block';
+      
+      this.render(ongoing, upcoming);
+    } catch(err) { 
+      console.error('Event load failed:', err);
+    }
+  }
+  
+  render(ongoing, upcoming) {
+    const onContainer = document.getElementById('ongoing-countdown');
+    const upContainer = document.getElementById('upcoming-countdown');
+    const onEmpty = document.getElementById('no-ongoing-msg');
+    const upEmpty = document.getElementById('no-upcoming-msg');
+    
+    if (!onContainer || !upContainer) {
+      console.error('Event containers not found in DOM');
+      return;
+    }
+    
+    if (ongoing.length > 0) {
+      onContainer.innerHTML = '';
+      ongoing.forEach(e => {
+        const card = this.createCard(e);
+        onContainer.appendChild(card);
+        this.updateTimer(e.id, e.event_time);
+        this.intervals.set(e.id, setInterval(() => this.updateTimer(e.id, e.event_time), 1000));
+      });
+      onContainer.style.display = 'flex';
+      if (onEmpty) onEmpty.style.display = 'none';
+    } else {
+      onContainer.style.display = 'none';
+      if (onEmpty) onEmpty.style.display = 'block';
+    }
+    
+    if (upcoming.length > 0) {
+      upContainer.innerHTML = '';
+      upcoming.forEach(e => {
+        const card = this.createCard(e);
+        upContainer.appendChild(card);
+        this.updateTimer(e.id, e.event_time);
+        this.intervals.set(e.id, setInterval(() => this.updateTimer(e.id, e.event_time), 1000));
+      });
+      upContainer.style.display = 'grid';
+      if (upEmpty) upEmpty.style.display = 'none';
+    } else {
+      upContainer.style.display = 'none';
+      if (upEmpty) upEmpty.style.display = 'block';
+    }
+  }
+  
+  createCard(event) {
+    const card = document.createElement('div');
+    card.className = 'event-row-compact';
+    card.id = 'event-' + event.id;
+    
+    const typeNames = {
+      'patch': 'Patch and Fixes',
+      'world_reset': 'World Reset',
+      'mystery': '??? Weapon Gacha'
+    };
+    const title = event.title || typeNames[event.event_type] || 'Event';
+    const duration = event.duration || '7-Day';
+    
+    card.innerHTML = `
+      <div class="event-row-name">${this.escape(title)}</div>
+      <div class="event-row-countdown" id="countdown-compact-${event.id}">-- d -- h -- m</div>
+      <div class="event-row-duration">${this.escape(duration)}</div>
+      <button class="event-row-button" onclick="eventRenderer.learnMore('${event.id}')">Learn More</button>
+    `;
+    return card;
+  }
+  
+  createDetailCard(event) {
+    const card = document.createElement('div');
+    card.className = 'event-card-redesign';
+    
+    const typeNames = {
+      'patch': 'Patch and Fixes',
+      'world_reset': 'World Reset',
+      'mystery': '??? Weapon Gacha'
+    };
+    const title = event.title || typeNames[event.event_type] || 'Event';
+    const durationText = event.duration || '7-Day Event';
+    
+    let desc = (event.description || 'A limited-time event with exclusive rewards.').split('\n').slice(0, 2);
+    desc = desc.map(line => line.replace(/\//g, '').replace(/\b(\d+)\s+Days?\b/g, '$1-Day'));
+    
+    // Calculate progress percentage (inverted: 100% at start, depletes to 0%)
+    const now = new Date();
+    const eventStart = new Date(event.event_time);
+    const durationMs = this.parseDurationToMs(event.duration || '7-Day');
+    const eventEnd = new Date(eventStart.getTime() + durationMs);
+    const totalDuration = eventEnd - eventStart;
+    const elapsed = Math.max(0, now - eventStart);
+    const progress = Math.max(0, 100 - (elapsed / totalDuration) * 100);
+    
+    const patchNotesLink = event.event_type === 'mystery' ? `<div class="event-patch-link"><a href="patchnotes" target="_blank">View full details in Patch Notes →</a></div>` : '';
+    
+    card.innerHTML = `
+      <div class="event-card-header">
+        <h2 class="event-title">${this.escape(title)}</h2>
+        <div class="event-duration-badge">${durationText}</div>
+      </div>
+      <div class="event-countdown-label" style="text-align:center;">⏱ Starts In</div>
+      <div class="countdown-timer" id="timer-detail-${event.id}">
+        <div class="countdown-unit"><div class="countdown-value">--</div><div class="countdown-label">Days</div></div>
+        <div class="countdown-unit"><div class="countdown-value">--</div><div class="countdown-label">Hours</div></div>
+        <div class="countdown-unit"><div class="countdown-value">--</div><div class="countdown-label">Minutes</div></div>
+        <div class="countdown-unit"><div class="countdown-value">--</div><div class="countdown-label">Seconds</div></div>
+      </div>
+      <div class="event-progress-bar">
+        <span class="progress-label-start">Start</span>
+        <div class="event-progress-fill" style="width: ${progress}%"></div>
+        <span class="progress-label-end">End</span>
+      </div>
+      <div class="event-description">
+        ${desc.map(line => `<div class="event-description-line">${this.escape(line)}</div>`).join('')}
+      </div>
+      ${patchNotesLink}
+      <div class="event-actions">
+        <button class="event-btn-primary" onclick="eventRenderer.setReminder('${event.id}')">📌 Set Reminder</button>
+        <button class="event-btn-secondary" onclick="eventRenderer.closeModal()">Close</button>
+      </div>
+    `;
+    return card;
+  }
+  
+  parseDurationToMs(duration) {
+    const match = duration.match(/(\d+)\s*-?(hour|day|week)/i);
+    if (!match) return 7 * 24 * 60 * 60 * 1000; // Default to 7 days
+    
+    const amount = parseInt(match[1]);
+    const unit = match[2].toLowerCase();
+    
+    if (unit.startsWith('h')) return amount * 60 * 60 * 1000;
+    if (unit.startsWith('d')) return amount * 24 * 60 * 60 * 1000;
+    if (unit.startsWith('w')) return amount * 7 * 24 * 60 * 60 * 1000;
+    
+    return 7 * 24 * 60 * 60 * 1000;
+  }
+  
+  updateTimer(eventId, eventTime) {
+    const compactEl = document.getElementById('countdown-compact-' + eventId);
+    const detailEl = document.getElementById('timer-detail-' + eventId);
+    
+    const now = new Date(), target = new Date(eventTime), diff = target - now;
+    
+    if (diff < 0) {
+      if (compactEl) compactEl.textContent = 'ENDED';
+      if (detailEl) detailEl.innerHTML = '<div class="countdown-unit" style="grid-column:span 4;text-align:center;"><div class="countdown-value">ENDED</div></div>';
+      return;
+    }
+    
+    const days = Math.floor(diff / 86400000);
+    const hours = Math.floor((diff % 86400000) / 3600000);
+    const mins = Math.floor((diff % 3600000) / 60000);
+    const secs = Math.floor((diff % 60000) / 1000);
+    
+    // Update compact row countdown
+    if (compactEl) {
+      compactEl.textContent = `${days}d ${String(hours).padStart(2,'0')}h ${String(mins).padStart(2,'0')}m`;
+    }
+    
+    // Update detail card countdown
+    if (detailEl) {
+      detailEl.innerHTML = `
+        <div class="countdown-unit"><div class="countdown-value">${String(days).padStart(2,'0')}</div><div class="countdown-label">Days</div></div>
+        <div class="countdown-unit"><div class="countdown-value">${String(hours).padStart(2,'0')}</div><div class="countdown-label">Hours</div></div>
+        <div class="countdown-unit"><div class="countdown-value">${String(mins).padStart(2,'0')}</div><div class="countdown-label">Minutes</div></div>
+        <div class="countdown-unit"><div class="countdown-value">${String(secs).padStart(2,'0')}</div><div class="countdown-label">Seconds</div></div>
+      `;
+    }
+  }
+  
+  setReminder(eventId) {
+    alert('✅ Reminder set! You will be notified when this event is about to start.');
+  }
+  
+  learnMore(eventId) {
+    const event = this.events.get(eventId);
+    if (!event) return;
+    
+    const modal = document.getElementById('event-detail-modal');
+    const modalContent = document.getElementById('event-detail-content');
+    
+    // Create and insert detail card
+    modalContent.innerHTML = '';
+    const detailCard = this.createDetailCard(event);
+    modalContent.appendChild(detailCard);
+    
+    // Start timer for detail card
+    this.updateTimer(eventId, event.event_time);
+    
+    // Show modal
+    modal.classList.add('show');
+    document.body.style.overflow = 'hidden';
+  }
+  
+  closeModal() {
+    const modal = document.getElementById('event-detail-modal');
+    modal.classList.remove('show');
+    document.body.style.overflow = 'auto';
+  }
+  
+  escape(text) {
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+  }
+}
+
+const eventRenderer = new EventCardRenderer();
+eventRenderer.loadEvents();
+
+function displayCountdownEvents(ongoingEvents, upcomingEvents) {
+  const section = document.getElementById('countdownSection');
+  const container = document.getElementById('countdownContainer');
+  
+  // Clear previous content
+  container.innerHTML = '';
+  
+  // Type names mapping
+  const typeNames = {
+    'patch': '🔧 Patch and Fixes',
+    'world_reset': '🌍 World Reset',
+    'mystery': '🎁 Mystery Event'
+  };
+  
+  // Create section for ongoing events (main view)
+  if (ongoingEvents.length > 0) {
+    const ongoingSection = document.createElement('div');
+    ongoingSection.className = 'event-section-ongoing';
+    ongoingSection.innerHTML = '<div class="event-section-label">🔥 Ongoing Event</div>';
+    
+    // Display only the most recent ongoing event as main view
+    const latestOngoing = ongoingEvents[0];
+    const ongoingCard = document.createElement('div');
+    ongoingCard.className = 'countdown-card ongoing';
+    
+    const badge = document.createElement('div');
+    badge.className = `event-type-badge ${latestOngoing.event_type}`;
+    badge.textContent = typeNames[latestOngoing.event_type] || 'Ongoing Event';
+    
+    const timer = document.createElement('div');
+    timer.className = 'countdown-timer';
+    timer.textContent = 'Loading...';
+    
+    const desc = document.createElement('div');
+    desc.className = 'event-desc';
+    desc.textContent = latestOngoing.description;
+    
+    ongoingCard.appendChild(badge);
+    ongoingCard.appendChild(timer);
+    ongoingCard.appendChild(desc);
+    ongoingSection.appendChild(ongoingCard);
+    
+    container.appendChild(ongoingSection);
+    
+    // Start countdown update
+    updateCountdown(latestOngoing.event_time, timer);
+    setInterval(() => updateCountdown(latestOngoing.event_time, timer), 1000);
+  }
+  
+  // Create section for upcoming events (sub view)
+  if (upcomingEvents.length > 0) {
+    const upcomingSection = document.createElement('div');
+    upcomingSection.className = 'event-section-upcoming';
+    upcomingSection.innerHTML = '<div class="event-section-label">⏳ Upcoming Events</div><div class="upcoming-cards">';
+    
+    const cardsContainer = upcomingSection.querySelector('.upcoming-cards');
+    
+    upcomingEvents.forEach(event => {
+      const card = document.createElement('div');
+      card.className = 'countdown-card upcoming';
+      
+      const badge = document.createElement('div');
+      badge.className = `event-type-badge ${event.event_type}`;
+      badge.textContent = typeNames[event.event_type] || 'Upcoming Event';
+      
+      const timer = document.createElement('div');
+      timer.className = 'countdown-timer';
+      timer.textContent = 'Loading...';
+      
+      const desc = document.createElement('div');
+      desc.className = 'event-desc';
+      desc.textContent = event.description;
+      
+      card.appendChild(badge);
+      card.appendChild(timer);
+      card.appendChild(desc);
+      cardsContainer.appendChild(card);
+      
+      // Start countdown update
+      updateCountdown(event.event_time, timer);
+      setInterval(() => updateCountdown(event.event_time, timer), 1000);
+    });
+    
+    container.appendChild(upcomingSection);
+  }
+  
+  // Show section
+  section.style.display = 'block';
+}
+
+function updateCountdown(eventIsoTime, timerEl) {
+  const now = new Date();
+  const event = new Date(eventIsoTime);
+  const diff = event - now;
+  
+  if (diff < 0) {
+    timerEl.textContent = '⏸️ Event Over';
+    return;
+  }
+  
+  const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+  const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+  const mins = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+  const secs = Math.floor((diff % (1000 * 60)) / 1000);
+  
+  if (days > 0) {
+    timerEl.textContent = `${days}d ${hours}h ${mins}m ${secs}s`;
+  } else if (hours > 0) {
+    timerEl.textContent = `${hours}h ${mins}m ${secs}s`;
+  } else {
+    timerEl.textContent = `${mins}m ${secs}s`;
+  }
+}
+
+eventRenderer.loadEvents();
+</script>
+</body>
+</html>

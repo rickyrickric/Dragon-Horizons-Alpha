@@ -2,7 +2,14 @@
   "version": 2,
   "cleanUrls": true,
   "rewrites": [
-    { "source": "/", "destination": "/home.html" }
+    { "source": "/", "destination": "/index.html" },
+    { "source": "/home", "destination": "/index.html" },
+    { "source": "/about", "destination": "/about.html" },
+    { "source": "/mods", "destination": "/mods.html" },
+    { "source": "/apply", "destination": "/apply.html" },
+    { "source": "/download", "destination": "/download.html" },
+    { "source": "/admin", "destination": "/admin.html" },
+    { "source": "/patchnotes", "destination": "/patchnotes.html" }
   ],
   "headers": [
     {
