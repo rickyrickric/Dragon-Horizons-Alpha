@@ -11,6 +11,9 @@
     { "source": "/admin", "destination": "/admin.html" },
     { "source": "/patchnotes", "destination": "/patchnotes.html" }
   ],
+  "routes": [
+    { "src": "/api/(.*)", "dest": "/api/[...slug].js" }
+  ],
   "headers": [
     {
       "source": "/api/(.*)",
