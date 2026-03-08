@@ -340,14 +340,14 @@
   min-height: auto;
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 8px;
+  gap: 4px;
   align-items: center;
   justify-content: center;
 }
 
 .countdown-unit {
   border: 2px solid var(--gold-d);
-  padding: 8px 6px;
+  padding: 6px;
   text-align: center;
   background: rgba(212, 168, 83, 0.08);
   border-radius: 4px;
@@ -355,7 +355,11 @@
   min-height: 100px;
   min-width: 0;
   overflow: hidden;
-  text-overflow: ellipsis;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
 }
 
 .countdown-unit:hover {
@@ -364,21 +368,28 @@
 }
 
 .countdown-value {
-  font-size: 1.8em;
+  font-size: clamp(16px, 5vw, 36px);
   font-weight: bold;
   color: var(--gold-l);
   font-family: var(--fc);
   letter-spacing: 0.05em;
   display: block;
-  margin-bottom: 4px;
+  margin: 0;
+  line-height: 1;
 }
 
 .countdown-label {
-  font-size: 0.65em;
+  font-size: clamp(8px, 1.5vw, 12px);
   color: var(--gold);
   text-transform: uppercase;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.05em;
   font-family: var(--fc);
+  margin: 0;
+  line-height: 1.1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 100%;
 }
 
 .countdown-card.upcoming .countdown-timer {
