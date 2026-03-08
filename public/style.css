@@ -320,9 +320,9 @@ footer{position:relative;z-index:1;text-align:center;padding:48px 28px 30px;bord
 .ft-cr{font-family:var(--fc);font-size:.48rem;letter-spacing:.25em;text-transform:uppercase;color:var(--gold-l);margin-top:11px;}
 
 /* ─ EVENT CARD REDESIGN ─ */
-.event-card-redesign {background:rgba(12,8,8,.95);border:2px solid #E94560;border-radius:8px;padding:32px;margin-bottom:20px;max-width:900px;margin-left:auto;margin-right:auto;display:flex;flex-direction:column;}
-.event-card-header {display:grid;grid-template-columns:1fr auto;gap:20px;align-items:start;margin-bottom:28px;padding-bottom:0;border-bottom:none;}
-.event-title {font-family:var(--fc);font-size:1.8em;color:#FFD700;margin:0;font-weight:700;text-align:center;}
+.event-card-redesign {background:rgba(12,8,8,.95);border:2px solid #E94560;border-radius:8px;padding:24px;margin-bottom:20px;max-width:100%;display:flex;flex-direction:column;box-sizing:border-box;}
+.event-card-header {display:flex;flex-direction:column;gap:12px;align-items:center;margin-bottom:20px;padding-bottom:0;border-bottom:none;}
+.event-title {font-family:var(--fc);font-size:1.6em;color:#FFD700;margin:0;font-weight:700;text-align:center;word-wrap:break-word;overflow-wrap:break-word;line-height:1.3;}
 .event-duration-badge {background:rgba(212,168,83,.15);border:1px solid #d4a853;color:#FFD700;padding:8px 16px;border-radius:4px;font-family:var(--fc);font-size:.9em;font-weight:600;text-align:center;white-space:nowrap;}
 .event-countdown-label {color:#FFD700;font-family:var(--fc);font-size:.9em;font-weight:600;letter-spacing:.1em;margin-bottom:16px;text-transform:uppercase;display:flex;align-items:center;gap:8px;justify-content:center;}
 .countdown-timer {display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:28px;}
