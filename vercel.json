@@ -14,47 +14,5 @@
         { "key": "Access-Control-Allow-Headers", "value": "Content-Type, Authorization" }
       ]
     }
-  ],
-  "redirects": [
-    {
-      "source": "/",
-      "destination": "/home.html",
-      "permanent": false
-    },
-    {
-      "source": "/home",
-      "destination": "/home.html",
-      "permanent": true
-    },
-    {
-      "source": "/about",
-      "destination": "/about.html",
-      "permanent": true
-    },
-    {
-      "source": "/admin",
-      "destination": "/admin.html",
-      "permanent": true
-    },
-    {
-      "source": "/apply",
-      "destination": "/apply.html",
-      "permanent": true
-    },
-    {
-      "source": "/download",
-      "destination": "/download.html",
-      "permanent": true
-    },
-    {
-      "source": "/mods",
-      "destination": "/mods.html",
-      "permanent": true
-    },
-    {
-      "source": "/patchnotes",
-      "destination": "/patchnotes.html",
-      "permanent": true
-    }
   ]
 }
