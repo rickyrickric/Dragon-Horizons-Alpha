@@ -570,7 +570,7 @@
   <a href="index.html" class="active">Home</a>
   <a href="about.html">About</a>
   <a href="mods.html">Mod List</a>
-  <a href="patchnotes.html">Patch Notes</a>
+  <a href="patchnotes">Patch Notes</a>
   <a href="apply.html">Apply</a>
   <a href="download.html" class="nav-dl">⬇ Download</a>
 </nav>
@@ -586,7 +586,7 @@
 
   <div class="hero-btns">
     <a href="download.html" class="btn"><span class="btn-t">⬇ Download Mods</span></a>
-    <a href="patchnotes.html" class="btn"><span class="btn-t">📜 Patch Notes</span></a>
+    <a href="patchnotes" class="btn"><span class="btn-t">📜 Patch Notes</span></a>
     <a href="about.html" class="btn"><span class="btn-t">About</span></a>
   </div>
 
@@ -821,7 +821,7 @@ class EventCardRenderer {
     const elapsed = Math.max(0, now - eventStart);
     const progress = Math.max(0, 100 - (elapsed / totalDuration) * 100);
     
-    const patchNotesLink = event.event_type === 'mystery' ? `<div class="event-patch-link"><a href="patchnotes.html" target="_blank">View full details in Patch Notes →</a></div>` : '';
+    const patchNotesLink = event.event_type === 'mystery' ? `<div class="event-patch-link"><a href="patchnotes" target="_blank">View full details in Patch Notes →</a></div>` : '';
     
     card.innerHTML = `
       <div class="event-card-header">
