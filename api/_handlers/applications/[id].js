@@ -22,6 +22,9 @@ export default async function handler(req, res) {
 
   if (req.method === 'PATCH') {
     const body = parseBody(req);
+    if (!body.status || !['pending', 'accepted', 'rejected'].includes(body.status)) {
+      return fail(res, 'Invalid or missing status. Must be pending, accepted, or rejected.', 400);
+    }
     const result = await appService.updateApplicationStatus(id, body.status, body.admin_note);
     if (!result.success) return fail(res, result.error, 500);
     return ok(res, { application: result.data });

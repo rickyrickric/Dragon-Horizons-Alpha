@@ -9,10 +9,8 @@
     { "source": "/apply", "destination": "/apply.html" },
     { "source": "/download", "destination": "/download.html" },
     { "source": "/admin", "destination": "/admin.html" },
-    { "source": "/patchnotes", "destination": "/patchnotes.html" }
-  ],
-  "routes": [
-    { "src": "/api/(.*)", "dest": "/api/[...slug].js" }
+    { "source": "/patchnotes", "destination": "/patchnotes.html" },
+    { "source": "/api/:path*", "destination": "/api/[...slug].js" }
   ],
   "headers": [
     {

@@ -1,3 +1,7 @@
+import { recordServerEntry } from '../../lib/supabase.js';
+import { ok, fail } from '../../lib/respond.js';
+import { cors, parseBody } from '../../lib/auth.js';
+
 function validateEntry(body) {
   const errors = [];
   const nickname = body.nickname ? String(body.nickname).trim() : '';
@@ -14,10 +18,6 @@ function validateEntry(body) {
 
   return { errors, sanitized: { nickname, discord, aternos_username: aternosNorm } };
 }
-
-import { recordServerEntry } from '../../lib/supabase.js';
-import { ok, fail } from '../../lib/respond.js';
-import { cors, parseBody } from '../../lib/auth.js';
 
 export default async function handler(req, res) {
   cors(res);
