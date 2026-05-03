@@ -40,7 +40,7 @@ Dragon Horizons transforms Minecraft survival into a challenging, rewarding expe
 
 ## Credits
 
-Created by **Ric Angelo Galo** with the help of **Claude (Anthropic)** for configuration, balance tuning, and web design.
+Created by **Ric Angelo Galo** with the help of **Claude (Anthropic)** for configuration, balance tuning, and **Gemini** for suggested web design.
 
 ## License
 
